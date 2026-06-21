@@ -92,7 +92,7 @@ export function HeadlineStats() {
   const total = onTrack + atRisk
 
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
       <MetricCard label="Active Clients" subtext="across 8 AMC relationships" index={0}>
         <CountUpNumber target={activeClients} delay={300} />
         <p className="text-xs text-[var(--color-text-tertiary)] mt-1">across 8 AMC relationships</p>

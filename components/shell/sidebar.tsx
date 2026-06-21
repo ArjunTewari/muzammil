@@ -36,7 +36,7 @@ export function Sidebar() {
     <motion.aside
       animate={{ width }}
       transition={{ duration, ease: [0.4, 0, 0.2, 1] }}
-      className="relative flex flex-col h-full bg-[var(--color-surface)] border-r border-[var(--color-border-brand)] flex-shrink-0 overflow-hidden"
+      className="relative hidden md:flex flex-col h-full bg-[var(--color-surface)] border-r border-[var(--color-border-brand)] flex-shrink-0 overflow-hidden"
     >
       {/* Wordmark */}
       <div className="flex items-center h-14 px-4 border-b border-[var(--color-border-brand)]">

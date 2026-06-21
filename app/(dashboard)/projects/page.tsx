@@ -41,7 +41,7 @@ export default function ProjectsPage() {
   const spentPct = Math.round((spent / budget) * 100)
 
   return (
-    <div className="p-6 max-w-[1400px] mx-auto space-y-6">
+    <div className="p-4 sm:p-6 max-w-[1400px] mx-auto space-y-4 sm:space-y-6">
       {/* Back */}
       <Link
         href="/overview"
@@ -131,7 +131,7 @@ export default function ProjectsPage() {
       </Section>
 
       {/* Two-column: Deliverables + Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <Section title="Deliverables" delay={0.2}>
           <Card goldRule>
             <CardHeader>

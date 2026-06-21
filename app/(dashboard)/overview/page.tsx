@@ -14,13 +14,16 @@ import { useReducedMotion } from '@/hooks/use-reduced-motion'
 function SectionWrapper({
   children,
   delay,
+  className,
 }: {
   children: React.ReactNode
   delay: number
+  className?: string
 }) {
   const prefersReduced = useReducedMotion()
   return (
     <motion.div
+      className={className}
       initial={{ opacity: 0, y: prefersReduced ? 0 : 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay, ease: [0.4, 0, 0.2, 1] }}
@@ -32,7 +35,7 @@ function SectionWrapper({
 
 export default function OverviewPage() {
   return (
-    <div className="p-6 max-w-[1400px] mx-auto space-y-6">
+    <div className="p-4 sm:p-6 max-w-[1400px] mx-auto space-y-4 sm:space-y-6">
       {/* Page header */}
       <motion.div
         initial={{ opacity: 0, y: -8 }}
@@ -40,7 +43,7 @@ export default function OverviewPage() {
         transition={{ duration: 0.3 }}
       >
         <h1
-          className="text-3xl text-[var(--color-text-primary)] mb-1"
+          className="text-2xl sm:text-3xl text-[var(--color-text-primary)] mb-1"
           style={{ fontFamily: 'var(--font-instrument-serif)' }}
         >
           Good morning, Muzammil.
@@ -56,11 +59,9 @@ export default function OverviewPage() {
       </SectionWrapper>
 
       {/* Two-column grid: Revenue + Approvals */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <SectionWrapper delay={0.2}>
-          <div className="lg:col-span-2">
-            <RevenueSnapshot />
-          </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+        <SectionWrapper delay={0.2} className="lg:col-span-2">
+          <RevenueSnapshot />
         </SectionWrapper>
         <SectionWrapper delay={0.25}>
           <Approvals />
@@ -73,7 +74,7 @@ export default function OverviewPage() {
       </SectionWrapper>
 
       {/* Two-column: Pipeline + Collections */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <SectionWrapper delay={0.35}>
           <PipelineLeads />
         </SectionWrapper>

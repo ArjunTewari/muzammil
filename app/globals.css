@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #111110;
+  --color-surface: #1c1c1a;
+  --color-surface-elevated: #242422;
+  --color-border-brand: #2e2e2b;
+  --color-text-primary: #e8e4d9;
+  --color-text-secondary: #8a8680;
+  --color-text-tertiary: #5a5753;
+  --color-gold: #c9a85c;
+  --color-gold-muted: #c9a85c1f;
+  --color-gold-border: #c9a85c33;
+  --color-status-green: #4caf7d;
+  --color-status-green-muted: #4caf7d1f;
+  --color-status-amber: #e89a3c;
+  --color-status-amber-muted: #e89a3c1f;
+  --color-status-red: #e05c5c;
+  --color-status-red-muted: #e05c5c1f;
+  --color-status-blue: #5b8dee;
+  --color-status-blue-muted: #5b8dee1f;
+
+  --font-serif: var(--font-instrument-serif);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-jetbrains-mono);
+
+  --radius-card: 12px;
+  --radius-badge: 6px;
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-ink);
+  color: var(--color-text-primary);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-ink);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-brand);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-tertiary);
+}
+
+/* Shimmer animation */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 25%,
+    var(--color-surface-elevated) 50%,
+    var(--color-surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Gold rule animation */
+@keyframes rule-grow {
+  from { height: 0; }
+  to { height: 100%; }
+}
+
+/* Count up number animation */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Focus ring */
+:focus-visible {
+  outline: 2px solid var(--color-gold);
+  outline-offset: 2px;
+}

@@ -1,3 +1,5 @@
+import type { NextStep } from './ai-insights'
+
 export type TaskStatus = 'in-progress' | 'blocked' | 'waiting' | 'done'
 export type TaskPriority = 'urgent' | 'normal' | 'low'
 
@@ -39,6 +41,7 @@ export interface OperatorData {
   stats: OperatorStats
   insight: string
   timeBreakdown: { label: string; hours: number }[]
+  nextSteps: NextStep[]
 }
 
 const DATA: Record<string, OperatorData> = {
@@ -62,6 +65,11 @@ const DATA: Record<string, OperatorData> = {
     ],
     stats: { hoursThisMonth: 18, avgPerMonth: 35, completedThisMonth: 12, activeCount: 5 },
     insight: 'Priya spends ~10 hrs/month chasing client status. Maestro sends automated follow-up nudges and surfaces blockers before they delay delivery.',
+    nextSteps: [
+      { action: 'Call the Axis MF contact directly on Reel v2 feedback', rationale: 'Blocked 3 days — email is not landing. A call unblocks the whole reel chain.', priority: 'urgent' },
+      { action: 'Finalize the DSP Tiger Fund revised brief', rationale: 'Rohan and Divya are both idle waiting to start.', priority: 'recommended' },
+      { action: 'Tee up the Nippon MF Q3 renewal with Sneha', rationale: 'Retainer lapses if it is not signed before quarter-end.', priority: 'opportunity' },
+    ],
     timeBreakdown: [
       { label: 'Brief clarification', hours: 12 },
       { label: 'Client comms', hours: 8 },
@@ -77,6 +85,7 @@ const DATA: Record<string, OperatorData> = {
       { id: 'r2', title: 'Competitor deep-dive: Mirae Asset vs Axis MF — SIP positioning', client: 'Axis MF', priority: 'urgent', status: 'in-progress', estimatedHours: 6, note: 'Needed for Divya\'s creative brief by EOD' },
       { id: 'r3', title: 'Pull AMFI flow data for DSP MF newsletter (Jul 2026)', client: 'DSP MF', priority: 'normal', status: 'waiting', estimatedHours: 2, note: 'AMFI data portal access issue' },
       { id: 'r4', title: 'Market sentiment report: Post-election retail MF behaviour', client: 'Internal', priority: 'low', status: 'in-progress', estimatedHours: 8 },
+      { id: 'r5', title: 'HDFC AMC — IFA education series: source data + fact-check pack', client: 'HDFC AMC', priority: 'normal', status: 'in-progress', estimatedHours: 5 },
     ],
     waiting: [
       { title: 'Final brief from Priya for Invesco Q3 scope', from: 'Priya Mehta', sinceDays: 1, urgent: false },
@@ -88,6 +97,11 @@ const DATA: Record<string, OperatorData> = {
     ],
     stats: { hoursThisMonth: 22, avgPerMonth: 32, completedThisMonth: 8, activeCount: 4 },
     insight: 'Rohan spends 16 hrs/month on first-draft research that gets partially reused. Maestro surfaces relevant prior research automatically, cutting this to ~6 hrs.',
+    nextSteps: [
+      { action: 'Ship the Mirae vs Axis SIP competitor deep-dive', rationale: 'Divya needs it by EOD to start the creative brief.', priority: 'urgent' },
+      { action: 'Resolve the AMFI portal access for DSP data', rationale: 'The newsletter data pull is blocked on it — ping IT now.', priority: 'recommended' },
+      { action: 'Pre-load Invesco Q3 research', rationale: 'You have capacity this month — get ahead before the brief lands.', priority: 'opportunity' },
+    ],
     timeBreakdown: [
       { label: 'Research', hours: 16 },
       { label: 'First drafts', hours: 6 },
@@ -104,6 +118,7 @@ const DATA: Record<string, OperatorData> = {
       { id: 'd3', title: 'Kotak MF — Q3 Newsletter copy (6 sections, 2000 words)', client: 'Kotak MF', priority: 'normal', status: 'waiting', estimatedHours: 4, note: 'Waiting on Rohan\'s source notes' },
       { id: 'd4', title: 'Nippon MF — Social hooks (Instagram + LinkedIn x3)', client: 'Nippon MF', priority: 'normal', status: 'in-progress', estimatedHours: 2 },
       { id: 'd5', title: 'DSP MF Tiger Fund 25th anniversary concept + territory', client: 'DSP MF', priority: 'low', status: 'in-progress', estimatedHours: 6 },
+      { id: 'd6', title: 'HDFC AMC — IFA education series: explainer scripts (Ep 4-6)', client: 'HDFC AMC', priority: 'normal', status: 'in-progress', estimatedHours: 4 },
     ],
     waiting: [
       { title: 'Research package for Motilal Oswal SIP creative', from: 'Rohan Sharma', sinceDays: 2, urgent: true },
@@ -116,6 +131,11 @@ const DATA: Record<string, OperatorData> = {
     ],
     stats: { hoursThisMonth: 14, avgPerMonth: 30, completedThisMonth: 9, activeCount: 5 },
     insight: 'Divya spends ~10 hrs/month redoing work after compliance flags things post-first-draft. Maestro pre-screens creative for SEBI guidelines before it hits compliance.',
+    nextSteps: [
+      { action: 'Rework Axis MF Script v2 against Arjit\'s 4 flags', rationale: 'This is the critical-path blocker for the entire reel.', priority: 'urgent' },
+      { action: 'Nudge Rohan for the Kotak newsletter source notes', rationale: '4 hours of copy is blocked waiting on it.', priority: 'recommended' },
+      { action: 'Batch Nippon social hooks with the Tata reels', rationale: 'Same retirement theme — reuse the framing and save a pass.', priority: 'opportunity' },
+    ],
     timeBreakdown: [
       { label: 'First drafts', hours: 20 },
       { label: 'Compliance & rework', hours: 10 },
@@ -143,6 +163,11 @@ const DATA: Record<string, OperatorData> = {
     ],
     stats: { hoursThisMonth: 8, avgPerMonth: 15, completedThisMonth: 6, activeCount: 4 },
     insight: 'Arjit manually reviews every piece of content against SEBI guidelines — 15 hrs/month. Maestro pre-flags potential violations in first draft, cutting review time by 60%.',
+    nextSteps: [
+      { action: 'Pre-brief Divya on the 4 recurring SEBI flags', rationale: 'The same issues recur every reel — fixing upstream saves a whole review cycle.', priority: 'urgent' },
+      { action: 'Clear the DSP Tiger Fund disclaimer placement', rationale: 'A quick check unblocks Karan\'s version control.', priority: 'recommended' },
+      { action: 'Codify a fair-comms checklist inside Maestro', rationale: 'Turn your manual review into an automated first-pass screen.', priority: 'opportunity' },
+    ],
     timeBreakdown: [
       { label: 'Compliance review', hours: 10 },
       { label: 'Compliance & rework', hours: 4 },
@@ -170,6 +195,11 @@ const DATA: Record<string, OperatorData> = {
     ],
     stats: { hoursThisMonth: 6, avgPerMonth: 15, completedThisMonth: 4, activeCount: 5 },
     insight: 'Sneha tracks 8+ client invoices manually each month. Maestro auto-generates invoices from project milestones and sends payment reminders, saving 8+ hrs/month.',
+    nextSteps: [
+      { action: 'Escalate Kotak + Invesco overdue (₹15.9L) to Muzammil', rationale: 'Both AP teams are unresponsive — this needs a founder-level nudge.', priority: 'urgent' },
+      { action: 'Send the 8 July invoices for sign-off', rationale: 'Drafts are ready — get them to Muzammil today.', priority: 'recommended' },
+      { action: 'Auto-generate invoices from project milestones', rationale: 'Karan\'s completion events can trigger billing automatically.', priority: 'opportunity' },
+    ],
     timeBreakdown: [
       { label: 'Finance tracking', hours: 8 },
       { label: 'Client status chasing', hours: 4 },
@@ -186,6 +216,7 @@ const DATA: Record<string, OperatorData> = {
       { id: 'k3', title: 'Nippon MF social reels (x3) — Post-production polish + caption pack', client: 'Nippon MF', priority: 'normal', status: 'in-progress', estimatedHours: 3 },
       { id: 'k4', title: 'DSP Tiger Fund deck — Version control + final file naming convention', client: 'DSP MF', priority: 'low', status: 'in-progress', estimatedHours: 1 },
       { id: 'k5', title: 'Tata MF retirement visuals — Asset organisation in shared drive', client: 'Tata MF', priority: 'normal', status: 'waiting', estimatedHours: 2, note: 'Waiting on design source files from Divya' },
+      { id: 'k6', title: 'HDFC AMC — IFA education series: video edit + upload (Ep 4)', client: 'HDFC AMC', priority: 'normal', status: 'in-progress', estimatedHours: 3 },
     ],
     waiting: [
       { title: 'Compliance clearance for Axis MF Reel (Script v2)', from: 'Arjit Singh', sinceDays: 2, urgent: true },
@@ -198,6 +229,11 @@ const DATA: Record<string, OperatorData> = {
     ],
     stats: { hoursThisMonth: 6, avgPerMonth: 20, completedThisMonth: 7, activeCount: 5 },
     insight: 'Karan spends ~14 hrs/month waiting for upstream approvals before he can start production. Maestro\'s automated workflow gates notify him the moment compliance clears.',
+    nextSteps: [
+      { action: 'Prep the Axis MF final-render pipeline now', rationale: 'So you can ship the instant Arjit clears Script v2 — zero idle time.', priority: 'urgent' },
+      { action: 'Finish the Kotak Q3 newsletter export', rationale: 'It is the only production step left before client delivery.', priority: 'recommended' },
+      { action: 'Standardize file-naming across all decks', rationale: 'One convention now saves version chaos later.', priority: 'opportunity' },
+    ],
     timeBreakdown: [
       { label: 'First drafts / production', hours: 20 },
       { label: 'Waiting for approvals', hours: 14 },

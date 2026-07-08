@@ -13,6 +13,7 @@ import {
 } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { AiInsights } from '@/components/shared/ai-insights'
 import type { AppUser } from '@/lib/users'
 import type { OperatorData, TaskStatus, TaskPriority } from '@/lib/operator-data'
 
@@ -87,6 +88,7 @@ export function OperatorDashboard({
   const totalHours = data.timeBreakdown.reduce((s, b) => s + b.hours, 0)
   const maxBar = Math.max(...data.timeBreakdown.map((b) => b.hours), 1)
   const blocked = data.tasks.filter((t) => t.status === 'blocked').length
+  const activeCount = data.tasks.length
 
   return (
     <div className="p-4 sm:p-6 max-w-[1400px] mx-auto space-y-4 sm:space-y-6">
@@ -104,7 +106,7 @@ export function OperatorDashboard({
             Good morning, {user.name.split(' ')[0]}.
           </h1>
           <p className="text-sm text-[var(--color-text-tertiary)]">
-            {user.title} · {data.stats.activeCount} active tasks
+            {user.title} · {activeCount} active tasks
             {blocked > 0 && (
               <span className="text-[var(--color-status-red)]"> · {blocked} blocked</span>
             )}
@@ -141,12 +143,16 @@ export function OperatorDashboard({
         <StatCard
           index={3}
           label="Active"
-          value={`${data.stats.activeCount}`}
+          value={`${activeCount}`}
           sub={blocked > 0 ? `${blocked} blocked` : 'all moving'}
           icon={Layers}
           accent="var(--color-gold)"
         />
       </div>
+
+      {/* AI next steps */}
+      <AiInsights steps={data.nextSteps} subtitle={`Prioritised for ${user.name.split(' ')[0]}'s queue`} />
+
 
       {/* Active tasks + time breakdown */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">

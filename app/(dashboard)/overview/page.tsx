@@ -9,6 +9,8 @@ import { Collections } from '@/components/overview/collections'
 import { Approvals } from '@/components/overview/approvals'
 import { ClientHealth } from '@/components/overview/client-health'
 import { OpportunityAlerts } from '@/components/overview/opportunity-alerts'
+import { AiInsights } from '@/components/shared/ai-insights'
+import { overviewNextSteps } from '@/lib/ai-insights'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 function SectionWrapper({
@@ -56,6 +58,11 @@ export default function OverviewPage() {
       {/* Headline stats */}
       <SectionWrapper delay={0.1}>
         <HeadlineStats />
+      </SectionWrapper>
+
+      {/* AI next steps */}
+      <SectionWrapper delay={0.15}>
+        <AiInsights steps={overviewNextSteps} subtitle="What needs the founder's attention today" />
       </SectionWrapper>
 
       {/* Two-column grid: Revenue + Approvals */}

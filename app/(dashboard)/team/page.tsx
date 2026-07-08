@@ -4,10 +4,12 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, AlertTriangle } from 'lucide-react'
 import { ProcessFlow } from '@/components/operator/process-flow'
+import { AiInsights } from '@/components/shared/ai-insights'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { USERS } from '@/lib/users'
 import { getOperatorData } from '@/lib/operator-data'
+import { teamNextSteps } from '@/lib/ai-insights'
 
 const OPERATOR_IDS = ['priya', 'rohan', 'divya', 'arjit', 'sneha', 'karan']
 
@@ -52,6 +54,15 @@ export default function TeamPage() {
         transition={{ duration: 0.4, delay: 0.1 }}
       >
         <ProcessFlow />
+      </motion.div>
+
+      {/* AI next steps */}
+      <motion.div
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, delay: 0.12 }}
+      >
+        <AiInsights steps={teamNextSteps} subtitle="Where to intervene across the team" />
       </motion.div>
 
       {/* Operator grid */}

@@ -10,6 +10,7 @@ import { Approvals } from '@/components/overview/approvals'
 import { ClientHealth } from '@/components/overview/client-health'
 import { OpportunityAlerts } from '@/components/overview/opportunity-alerts'
 import { AiInsights } from '@/components/shared/ai-insights'
+import { TeamShipping } from '@/components/agents/team-shipping'
 import { overviewNextSteps } from '@/lib/ai-insights'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
@@ -63,6 +64,11 @@ export default function OverviewPage() {
       {/* AI next steps */}
       <SectionWrapper delay={0.15}>
         <AiInsights steps={overviewNextSteps} subtitle="What needs the founder's attention today" />
+      </SectionWrapper>
+
+      {/* What the team is shipping via their agents */}
+      <SectionWrapper delay={0.2}>
+        <TeamShipping />
       </SectionWrapper>
 
       {/* Two-column grid: Revenue + Approvals */}

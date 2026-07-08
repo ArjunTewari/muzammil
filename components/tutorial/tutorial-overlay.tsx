@@ -3,10 +3,10 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import {
+  Workflow,
+  Send,
+  Database,
   LayoutDashboard,
-  TrendingUp,
-  FolderKanban,
-  Users,
   Sparkles,
   CheckCircle2,
   X,
@@ -18,37 +18,37 @@ const STEPS = [
     icon: Sparkles,
     iconColor: 'var(--color-gold)',
     title: 'Welcome to Maestro',
-    body: 'Your operating system for ZiWorks. Everything you need to run a BFSI marketing agency — clients, projects, revenue, and pipeline — in one command center.',
+    body: "Maestro takes Muzammil's judgment — his standards, his experience — out of his head and puts it into a system, so quality doesn't depend on him being in the room.",
+  },
+  {
+    icon: Workflow,
+    iconColor: 'var(--color-gold)',
+    title: 'A suite of AI agents',
+    body: 'Six specialist agents — brief decoder, researcher, copywriter, compliance guardian, client liaison, finance tracker — with a Master Agent orchestrating them. They pass context to each other so nothing falls through the gaps.',
+  },
+  {
+    icon: Send,
+    iconColor: '#60a5fa',
+    title: 'Every employee gets the full agency',
+    body: 'An employee just describes what they need — the Master Agent handles the routing and sequencing. A junior team member can carry a full client campaign: strategy, copy, compliance, delivery, without waiting on anyone.',
+  },
+  {
+    icon: Database,
+    iconColor: '#a78bfa',
+    title: 'A memory that learns',
+    body: 'Every brief, approved script, compliance correction, client preference and piece of feedback is remembered and reused on the next project. The system gets smarter with every job it runs.',
   },
   {
     icon: LayoutDashboard,
     iconColor: 'var(--color-gold)',
-    title: 'Command Center Overview',
-    body: 'The Overview tab shows 5 live headline metrics at the top — active clients, projects, leads, quarterly revenue, and project health. Numbers animate in on load so the data always feels fresh.',
-  },
-  {
-    icon: TrendingUp,
-    iconColor: '#4ade80',
-    title: 'Revenue & Collections',
-    body: 'Track monthly revenue against targets on the chart, see retainer breakdown by client, and catch overdue invoices before they become problems. Overdue rows are flagged in amber automatically.',
-  },
-  {
-    icon: FolderKanban,
-    iconColor: 'var(--color-gold)',
-    title: 'Project Workspace',
-    body: 'Head to Projects to see the Campaign Architect output for the Axis MF Retirement Reel. Decoded ask, creative territories, workflow tracker, deliverables — one view per campaign.',
-  },
-  {
-    icon: Users,
-    iconColor: '#60a5fa',
-    title: 'Client Health at a Glance',
-    body: 'Each client card is color-coded: gold for high-value, green for active, amber for at-risk. Spot which relationships need attention without opening a single file.',
+    title: "The founder's one screen",
+    body: 'Muzammil sees every employee, the campaign each is running, and exactly what their agents are producing — plus every invoice, approval and lead — without asking anyone for an update.',
   },
   {
     icon: CheckCircle2,
     iconColor: '#4ade80',
     title: "You're all set",
-    body: 'Explore the dashboard. Click any section header to dive deeper. The sidebar collapses on desktop to give you more space — try it!',
+    body: 'Sign in as Muzammil to see the whole business, or as any employee to run a campaign with their agent suite. Re-open this tour anytime from the ? in the top bar.',
   },
 ]
 

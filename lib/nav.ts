@@ -5,6 +5,7 @@ import {
   Receipt,
   Settings,
   ClipboardList,
+  Globe,
   type LucideIcon,
 } from 'lucide-react'
 import type { UserRole } from './users'
@@ -21,6 +22,7 @@ const MASTER_NAV: NavItem[] = [
   { label: 'Projects', href: '/projects', icon: FolderKanban },
   { label: 'Clients', href: '/clients', icon: ClipboardList },
   { label: 'Finance', href: '/finance', icon: Receipt },
+  { label: 'Web & Social', href: '/digital', icon: Globe },
   { label: 'Settings', href: '/settings', icon: Settings },
 ]
 
@@ -35,7 +37,7 @@ export function getNavForRole(role: UserRole): NavItem[] {
 }
 
 // Routes only the master may open. Operators hitting these are redirected to /my-work.
-export const MASTER_ONLY_ROUTES = ['/overview', '/team', '/clients', '/finance']
+export const MASTER_ONLY_ROUTES = ['/overview', '/team', '/clients', '/finance', '/digital']
 
 // The landing route for a given role after login.
 export function homeForRole(role: UserRole): string {

@@ -1,21 +1,16 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { LayoutDashboard, FolderKanban, Users, Receipt, Settings } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { getNavForRole } from '@/lib/nav'
+import type { AppUser } from '@/lib/users'
 
-const navItems = [
-  { label: 'Overview', href: '/overview', icon: LayoutDashboard },
-  { label: 'Projects', href: '/projects', icon: FolderKanban },
-  { label: 'Clients', href: '/clients', icon: Users },
-  { label: 'Finance', href: '/finance', icon: Receipt },
-  { label: 'Settings', href: '/settings', icon: Settings },
-]
-
-export function BottomNav() {
+export function BottomNav({ user }: { user: AppUser }) {
   const pathname = usePathname()
+  // Cap at 5 for a comfortable mobile bar
+  const navItems = getNavForRole(user.role).slice(0, 5)
 
   return (
     <nav
@@ -32,9 +27,7 @@ export function BottomNav() {
               href={item.href}
               className={cn(
                 'relative flex flex-col items-center justify-center flex-1 gap-1 text-[10px] font-medium transition-colors duration-150',
-                isActive
-                  ? 'text-[var(--color-gold)]'
-                  : 'text-[var(--color-text-tertiary)]',
+                isActive ? 'text-[var(--color-gold)]' : 'text-[var(--color-text-tertiary)]',
               )}
             >
               {isActive && (

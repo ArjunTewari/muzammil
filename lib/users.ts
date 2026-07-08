@@ -73,7 +73,7 @@ export const USERS: AppUser[] = [
     username: 'sneha',
     password: 'ziworks123',
     name: 'Sneha Patel',
-    role: 'Finance Manager',
+    role: 'finance',
     title: 'Finance Manager',
     initials: 'SP',
     accentColor: '#C9A85C',

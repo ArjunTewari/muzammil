@@ -283,6 +283,15 @@ export function getEmployeeProject(employeeId: string): EmployeeProject | null {
   return PROJECTS[employeeId] ?? null
 }
 
+// A client's campaign is owned by exactly one employee (or none).
+export function getEmployeeProjectByClient(clientShortName: string): EmployeeProject | null {
+  return Object.values(PROJECTS).find((p) => p.client === clientShortName) ?? null
+}
+
+export function allEmployeeProjects(): EmployeeProject[] {
+  return Object.values(PROJECTS)
+}
+
 export function agentProgress(project: EmployeeProject) {
   const done = project.agentStates.filter((a) => a.status === 'done').length
   const working = project.agentStates.find((a) => a.status === 'working')

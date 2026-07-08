@@ -4,27 +4,21 @@ import { use } from 'react'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { ArrowLeft, AlertCircle, Users, Layers, Wallet } from 'lucide-react'
+import { ArrowLeft, ArrowRight, AlertCircle, Layers, Wallet, UserRound } from 'lucide-react'
+import { AgentPipeline } from '@/components/agents/agent-pipeline'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { clients, invoices } from '@/lib/mock-data'
-import { getClientWorkload, getClientAgents } from '@/lib/client-tasks'
+import { getEmployeeProjectByClient, agentProgress } from '@/lib/employee-projects'
+import { getUserById } from '@/lib/users'
 import { formatLakhs, formatDateShort } from '@/lib/utils'
 import type { ClientStatus } from '@/lib/types'
-import type { TaskStatus } from '@/lib/operator-data'
 
 const clientStatusBadge: Record<ClientStatus, { variant: 'gold' | 'green' | 'amber' | 'default'; label: string }> = {
   'high-value': { variant: 'gold', label: 'High Value' },
   active: { variant: 'green', label: 'Active' },
   'at-risk': { variant: 'amber', label: 'At Risk' },
   'low-margin': { variant: 'default', label: 'Low Margin' },
-}
-
-const taskStatusBadge: Record<TaskStatus, { variant: 'blue' | 'red' | 'amber' | 'green'; label: string }> = {
-  'in-progress': { variant: 'blue', label: 'In progress' },
-  blocked: { variant: 'red', label: 'Blocked' },
-  waiting: { variant: 'amber', label: 'Waiting' },
-  done: { variant: 'green', label: 'Done' },
 }
 
 const invoiceBadge = {
@@ -43,9 +37,9 @@ export default function ClientDetailPage({
   const client = clients.find((c) => c.id === clientId)
   if (!client) notFound()
 
-  const workload = getClientWorkload(client.shortName)
-  const agents = getClientAgents(client.shortName)
-  const blocked = workload.filter((w) => w.task.status === 'blocked').length
+  const project = getEmployeeProjectByClient(client.shortName)
+  const owner = project ? getUserById(project.employeeId) : null
+  const progress = project ? agentProgress(project) : null
   const clientInvoices = invoices.filter((inv) => inv.clientId === client.id)
   const outstanding = clientInvoices
     .filter((i) => i.status !== 'paid')
@@ -67,31 +61,27 @@ export default function ClientDetailPage({
         initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
-        className="flex flex-wrap items-start justify-between gap-3"
       >
-        <div>
-          <div className="flex items-center gap-3 mb-1">
-            <h1
-              className="text-2xl sm:text-3xl text-[var(--color-text-primary)]"
-              style={{ fontFamily: 'var(--font-instrument-serif)' }}
-            >
-              {client.name}
-            </h1>
-            <Badge variant={sb.variant}>{sb.label}</Badge>
-          </div>
-          <p className="text-sm text-[var(--color-text-tertiary)]">
-            {client.industry} · {formatLakhs(client.retainerValue)}/mo retainer · Account:{' '}
-            {client.accountManager}
-          </p>
+        <div className="flex items-center gap-3 mb-1">
+          <h1
+            className="text-2xl sm:text-3xl text-[var(--color-text-primary)]"
+            style={{ fontFamily: 'var(--font-instrument-serif)' }}
+          >
+            {client.name}
+          </h1>
+          <Badge variant={sb.variant}>{sb.label}</Badge>
         </div>
+        <p className="text-sm text-[var(--color-text-tertiary)]">
+          {client.industry} · {formatLakhs(client.retainerValue)}/mo retainer
+        </p>
       </motion.div>
 
       {/* Summary cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {[
-          { label: 'Active Tasks', value: `${workload.length}`, icon: Layers, accent: 'var(--color-gold)' },
-          { label: 'Agents Involved', value: `${agents.length}`, icon: Users, accent: 'var(--color-status-blue)' },
-          { label: 'Blocked', value: `${blocked}`, icon: AlertCircle, accent: blocked > 0 ? 'var(--color-status-red)' : 'var(--color-text-tertiary)' },
+          { label: 'Campaign Owner', value: owner ? owner.name.split(' ')[0] : '—', icon: UserRound, accent: owner?.accentColor ?? 'var(--color-text-tertiary)' },
+          { label: 'Agents Complete', value: progress ? `${progress.done}/${progress.total}` : '—', icon: Layers, accent: 'var(--color-gold)' },
+          { label: 'Needs You', value: progress ? `${progress.needsInput}` : '0', icon: AlertCircle, accent: (progress?.needsInput ?? 0) > 0 ? 'var(--color-status-red)' : 'var(--color-text-tertiary)' },
           { label: 'Outstanding', value: formatLakhs(outstanding), icon: Wallet, accent: 'var(--color-status-amber)' },
         ].map((s, i) => {
           const Icon = s.icon
@@ -121,94 +111,33 @@ export default function ClientDetailPage({
         })}
       </div>
 
-      {/* Work divided across the team */}
-      <div>
-        <h2 className="text-sm font-medium text-[var(--color-text-secondary)] uppercase tracking-wider mb-3">
-          Work divided across the team
-        </h2>
-
-        {agents.length === 0 ? (
-          <Card hover={false} className="p-8 text-center">
-            <p className="text-sm text-[var(--color-text-tertiary)]">
-              No active production tasks — this account is running at retainer-maintenance level.
-            </p>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-            {agents.map((agent, ai) => {
-              const agentTasks = workload
-                .filter((w) => w.operatorId === agent.id)
-                .map((w) => w.task)
-              return (
-                <motion.div
-                  key={agent.id}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.35, delay: 0.1 + ai * 0.06 }}
-                >
-                  <Card goldRule hover={false}>
-                    <CardHeader>
-                      <div className="flex items-center gap-3">
-                        <div
-                          className="w-9 h-9 rounded-full flex items-center justify-center text-xs font-semibold flex-shrink-0"
-                          style={{ background: `${agent.accentColor}22`, color: agent.accentColor }}
-                        >
-                          {agent.initials}
-                        </div>
-                        <div>
-                          <Link
-                            href={`/team/${agent.id}`}
-                            className="text-sm font-medium text-[var(--color-text-primary)] hover:text-[var(--color-gold)] transition-colors duration-100"
-                          >
-                            {agent.name}
-                          </Link>
-                          <p className="text-xs text-[var(--color-text-tertiary)]">{agent.title}</p>
-                        </div>
-                        <span
-                          className="ml-auto text-xs text-[var(--color-text-tertiary)]"
-                          style={{ fontFamily: 'var(--font-jetbrains-mono)' }}
-                        >
-                          {agentTasks.length} task{agentTasks.length !== 1 ? 's' : ''}
-                        </span>
-                      </div>
-                    </CardHeader>
-                    <CardContent className="pt-2 space-y-2">
-                      {agentTasks.map((task) => {
-                        const tb = taskStatusBadge[task.status]
-                        return (
-                          <div
-                            key={task.id}
-                            className="rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface-elevated)] p-3"
-                            style={task.status === 'blocked' ? { background: 'var(--color-status-red-muted)' } : undefined}
-                          >
-                            <p className="text-sm text-[var(--color-text-primary)] leading-snug">
-                              {task.title}
-                            </p>
-                            <div className="flex items-center gap-2 mt-1.5">
-                              <Badge variant={tb.variant}>{tb.label}</Badge>
-                              <span
-                                className="text-xs text-[var(--color-text-tertiary)]"
-                                style={{ fontFamily: 'var(--font-jetbrains-mono)' }}
-                              >
-                                ~{task.estimatedHours}h
-                              </span>
-                            </div>
-                            {task.note && (
-                              <p className="text-xs text-[var(--color-text-tertiary)] mt-1.5">
-                                {task.note}
-                              </p>
-                            )}
-                          </div>
-                        )
-                      })}
-                    </CardContent>
-                  </Card>
-                </motion.div>
-              )
-            })}
+      {/* Campaign run by the agent suite */}
+      {project && owner ? (
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="text-sm font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">
+              {project.projectTitle}
+            </h2>
+            <Link
+              href={`/team/${owner.id}`}
+              className="text-xs text-[var(--color-gold)] hover:underline flex items-center gap-1"
+            >
+              Open {owner.name.split(' ')[0]}&apos;s workspace <ArrowRight size={12} />
+            </Link>
           </div>
-        )}
-      </div>
+          <p className="text-sm text-[var(--color-text-secondary)] mb-3">
+            Run end-to-end by <span className="text-[var(--color-text-primary)]">{owner.name}</span> on the Maestro
+            agent suite. {project.objective}
+          </p>
+          <AgentPipeline project={project} />
+        </div>
+      ) : (
+        <Card hover={false} className="p-8 text-center">
+          <p className="text-sm text-[var(--color-text-tertiary)]">
+            No live campaign — this account is running at retainer-maintenance level.
+          </p>
+        </Card>
+      )}
 
       {/* Invoices */}
       {clientInvoices.length > 0 && (

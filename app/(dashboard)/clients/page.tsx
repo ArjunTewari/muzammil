@@ -2,13 +2,15 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowRight, AlertTriangle } from 'lucide-react'
+import { ArrowRight, AlertCircle, Loader, CheckCircle2 } from 'lucide-react'
 import { AiInsights } from '@/components/shared/ai-insights'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { clients } from '@/lib/mock-data'
 import { clientsNextSteps } from '@/lib/ai-insights'
-import { getClientWorkload, getClientAgents } from '@/lib/client-tasks'
+import { getEmployeeProjectByClient, agentProgress } from '@/lib/employee-projects'
+import { getUserById } from '@/lib/users'
+import { getAgent } from '@/lib/agents'
 import { formatLakhs } from '@/lib/utils'
 import type { ClientStatus } from '@/lib/types'
 
@@ -20,7 +22,7 @@ const statusBadge: Record<ClientStatus, { variant: 'gold' | 'green' | 'amber' | 
 }
 
 export default function ClientsPage() {
-  const totalTasks = clients.reduce((s, c) => s + getClientWorkload(c.shortName).length, 0)
+  const managed = clients.filter((c) => getEmployeeProjectByClient(c.shortName)).length
 
   return (
     <div className="p-4 sm:p-6 max-w-[1400px] mx-auto space-y-4 sm:space-y-6">
@@ -37,7 +39,7 @@ export default function ClientsPage() {
           Clients
         </h1>
         <p className="text-sm text-[var(--color-text-tertiary)]">
-          {clients.length} active relationships · {totalTasks} tasks across the team
+          {clients.length} relationships · {managed} with a live campaign on the agent suite
         </p>
       </motion.div>
 
@@ -47,9 +49,10 @@ export default function ClientsPage() {
       {/* Client grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
         {clients.map((client, i) => {
-          const workload = getClientWorkload(client.shortName)
-          const agents = getClientAgents(client.shortName)
-          const blocked = workload.filter((w) => w.task.status === 'blocked').length
+          const project = getEmployeeProjectByClient(client.shortName)
+          const owner = project ? getUserById(project.employeeId) : null
+          const progress = project ? agentProgress(project) : null
+          const working = progress?.working ? getAgent(progress.working.agentId) : null
           const sb = statusBadge[client.status]
 
           return (
@@ -74,49 +77,60 @@ export default function ClientsPage() {
                     <Badge variant={sb.variant}>{sb.label}</Badge>
                   </div>
 
-                  {/* Agents on the account */}
-                  <div className="mb-3">
-                    <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-tertiary)] mb-1.5">
-                      {agents.length > 0 ? `${agents.length} agents working` : 'Retainer maintenance'}
-                    </p>
-                    <div className="flex items-center">
-                      {agents.map((a, idx) => (
-                        <div
-                          key={a.id}
-                          className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-semibold border-2 border-[var(--color-surface)]"
-                          style={{
-                            background: `${a.accentColor}22`,
-                            color: a.accentColor,
-                            marginLeft: idx === 0 ? 0 : -8,
-                            zIndex: agents.length - idx,
-                          }}
-                          title={`${a.name} · ${a.title}`}
-                        >
-                          {a.initials}
+                  {project && owner && progress ? (
+                    <>
+                      {/* Owner + campaign */}
+                      <div className="rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface-elevated)] p-2.5 mb-3">
+                        <div className="flex items-center gap-2 mb-1">
+                          <div
+                            className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-semibold flex-shrink-0"
+                            style={{ background: `${owner.accentColor}22`, color: owner.accentColor }}
+                          >
+                            {owner.initials}
+                          </div>
+                          <span className="text-xs text-[var(--color-text-secondary)]">
+                            {owner.name.split(' ')[0]} owns this campaign
+                          </span>
                         </div>
-                      ))}
-                    </div>
-                  </div>
+                        <p className="text-xs text-[var(--color-text-tertiary)] leading-snug">
+                          {project.projectTitle}
+                        </p>
+                      </div>
 
-                  {/* Footer */}
-                  <div className="flex items-center justify-between pt-2 border-t border-[var(--color-border-brand)]">
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline">
-                        <span style={{ fontFamily: 'var(--font-jetbrains-mono)' }}>{workload.length}</span>{' '}
-                        tasks
-                      </Badge>
-                      {blocked > 0 && (
-                        <Badge variant="red">
-                          <AlertTriangle size={10} />
-                          <span style={{ fontFamily: 'var(--font-jetbrains-mono)' }}>{blocked}</span>
-                        </Badge>
-                      )}
+                      {/* Agent progress */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span
+                            className="text-xs text-[var(--color-text-secondary)]"
+                            style={{ fontFamily: 'var(--font-jetbrains-mono)' }}
+                          >
+                            {progress.done}/{progress.total} agents
+                          </span>
+                          {working ? (
+                            <Badge variant="gold"><Loader size={10} className="animate-spin" />{working.name}</Badge>
+                          ) : progress.needsInput > 0 ? (
+                            <Badge variant="red"><AlertCircle size={10} />{progress.needsInput} needs you</Badge>
+                          ) : (
+                            <Badge variant="green"><CheckCircle2 size={10} />On track</Badge>
+                          )}
+                        </div>
+                        <ArrowRight
+                          size={15}
+                          className="text-[var(--color-text-tertiary)] opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-150"
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex items-center justify-between pt-1">
+                      <span className="text-xs text-[var(--color-text-tertiary)]">
+                        Retainer maintenance · no live campaign
+                      </span>
+                      <ArrowRight
+                        size={15}
+                        className="text-[var(--color-text-tertiary)] opacity-0 group-hover:opacity-100 transition-all duration-150"
+                      />
                     </div>
-                    <ArrowRight
-                      size={15}
-                      className="text-[var(--color-text-tertiary)] opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-150"
-                    />
-                  </div>
+                  )}
                 </Card>
               </Link>
             </motion.div>

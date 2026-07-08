@@ -31,7 +31,12 @@ Sign in at `/login`. On the login screen you can **tap any account to auto-fill*
 **Master (Muzammil)** sees the whole company:
 - **Overview** — CEO command center: headline metrics, revenue, project health, pipeline, collections, approvals, client health, opportunity alerts
 - **Team** — the delivery pipeline (Account → Research → Creative → Compliance → Production, with Finance alongside) plus a card per operator. Click any operator to open their full dashboard.
-- **Projects**, **Clients**, **Finance**, **Settings**
+- **Clients** — every client with its status and the agents on the account; open a client to see its work **divided task-by-task across the agents**, plus that client's invoices
+- **Finance** — revenue, collections and billing, kept **in sync with Sneha (Finance Manager)** — her live finance queue is shown here with a link into her dashboard
+- **Web & Social** — website management (uptime, traffic, pending updates), social channels (followers, growth, engagement, approvals) and a content calendar
+- **Projects**, **Settings**
+
+Every dashboard opens with an **AI · Recommended Next Steps** panel — prioritised (urgent / recommended / opportunity) actions generated from the live workspace state.
 
 **Operators** each see **My Work** — their personal dashboard:
 - Hours this month vs typical, time saved, completed, active
@@ -58,8 +63,11 @@ Next.js 16 · TypeScript · Tailwind CSS v4 · Framer Motion · Recharts · luci
 ## How the demo data is wired
 
 - `lib/users.ts` — the 7 accounts (1 master + 6 operators), roles, credentials
-- `lib/operator-data.ts` — each operator's tasks, dependencies, handoffs, time breakdown
+- `lib/operator-data.ts` — each operator's tasks, dependencies, handoffs, time breakdown, AI next steps
 - `lib/mock-data.ts` — company-wide clients, projects, leads, revenue, invoices
+- `lib/client-tasks.ts` — aggregates operator tasks per client (powers the Clients view)
+- `lib/digital-data.ts` — websites, social channels, content calendar (Web & Social)
+- `lib/ai-insights.ts` — AI "next step" recommendations per view
 - `lib/nav.ts` — per-role navigation + route access
 
 Everything is mock data with `// TODO: replace with GET /api/...`-style structure so it can later be swapped for real API calls.

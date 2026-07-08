@@ -1,3 +1,5 @@
+'use client'
+
 import { cn } from '@/lib/utils'
 import { forwardRef } from 'react'
 
@@ -7,17 +9,30 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const Card = forwardRef<HTMLDivElement, CardProps>(
-  ({ className, goldRule = false, hover = true, children, ...props }, ref) => (
+  ({ className, goldRule = false, hover = true, children, onMouseMove, ...props }, ref) => (
     <div
       ref={ref}
+      onMouseMove={(e) => {
+        // Feed the cursor spotlight (CSS vars, no re-render)
+        const r = e.currentTarget.getBoundingClientRect()
+        e.currentTarget.style.setProperty('--spot-x', `${e.clientX - r.left}px`)
+        e.currentTarget.style.setProperty('--spot-y', `${e.clientY - r.top}px`)
+        onMouseMove?.(e)
+      }}
       className={cn(
-        'relative rounded-[12px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] overflow-hidden',
-        hover && 'transition-all duration-150 hover:-translate-y-0.5 hover:shadow-[var(--shadow-card-hover)] cursor-default',
+        'group/card relative rounded-[12px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] overflow-hidden',
+        hover &&
+          'transition-all duration-200 ease-out hover:-translate-y-1 hover:border-[var(--color-gold-border)] hover:shadow-[var(--shadow-card-hover-gold)] cursor-default',
         className,
       )}
       style={{ boxShadow: 'var(--shadow-card)' }}
       {...props}
     >
+      {/* Cursor spotlight — desktop pointers only (see .card-spot) */}
+      <div
+        aria-hidden
+        className="card-spot pointer-events-none absolute inset-0 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300"
+      />
       {goldRule && (
         <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-[var(--color-gold)]" />
       )}

@@ -26,7 +26,7 @@ function MetricCard({
       initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 12 }}
       animate={prefersReduced ? { opacity: 1 } : { opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: index * 0.07, ease: [0.4, 0, 0.2, 1] }}
-      className="relative rounded-[12px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] overflow-hidden p-5 group transition-all duration-150 hover:-translate-y-0.5 hover:border-[var(--color-gold-border)]"
+      className="relative rounded-[12px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] overflow-hidden p-5 group transition-all duration-200 ease-out hover:-translate-y-1 hover:border-[var(--color-gold-border)] hover:shadow-[var(--shadow-card-hover-gold)]"
       style={{ boxShadow: 'var(--shadow-card)' }}
     >
       {/* Gold rule */}

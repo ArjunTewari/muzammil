@@ -26,7 +26,7 @@ export function BottomNav({ user }: { user: AppUser }) {
   return (
     <>
       <nav
-        className="md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-[var(--color-border-brand)] bg-[var(--color-surface)]"
+        className="glass-bar md:hidden fixed bottom-0 inset-x-0 z-40 border-t border-[var(--color-border-brand)]"
         style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
         <div className="flex items-stretch h-16">

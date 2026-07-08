@@ -11,9 +11,9 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses: Record<ButtonVariant, string> = {
   primary:
-    'bg-[var(--color-gold)] text-[var(--color-ink)] font-medium hover:bg-[#d4b46a] active:bg-[#b8943e]',
+    'bg-[var(--color-gold)] text-[var(--color-ink)] font-medium hover:bg-[#d4b46a] active:bg-[#b8943e] hover:shadow-[var(--shadow-glow-gold)]',
   secondary:
-    'bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] border border-[var(--color-border-brand)] hover:bg-[var(--color-border-brand)]',
+    'bg-[var(--color-surface-elevated)] text-[var(--color-text-primary)] border border-[var(--color-border-brand)] hover:bg-[var(--color-border-brand)] hover:border-[var(--color-gold-border)]',
   ghost:
     'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface)]',
   danger:
@@ -31,7 +31,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     <button
       ref={ref}
       className={cn(
-        'inline-flex items-center gap-2 transition-all duration-150 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-[var(--color-gold)] focus-visible:outline-offset-2',
+        'inline-flex items-center gap-2 transition-all duration-200 ease-out cursor-pointer active:scale-[0.97] disabled:opacity-40 disabled:cursor-not-allowed disabled:active:scale-100 focus-visible:outline-2 focus-visible:outline-[var(--color-gold)] focus-visible:outline-offset-2',
         variantClasses[variant],
         sizeClasses[size],
         className,

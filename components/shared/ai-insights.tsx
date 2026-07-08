@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Sparkles, ArrowRight, AlertTriangle, Lightbulb, TrendingUp } from 'lucide-react'
+import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import type { NextStep, StepPriority } from '@/lib/ai-insights'
 
 const priorityMeta: Record<
@@ -20,6 +21,8 @@ export function AiInsights({
   steps: NextStep[]
   subtitle?: string
 }) {
+  const prefersReduced = useReducedMotion()
+
   return (
     <div
       className="relative rounded-[12px] border overflow-hidden"
@@ -29,11 +32,18 @@ export function AiInsights({
           'linear-gradient(180deg, var(--color-gold-muted) 0%, var(--color-surface) 42%)',
       }}
     >
+      {/* Animated gold hairline along the top edge */}
+      <span aria-hidden className="gold-sweep" />
+
       {/* Header */}
       <div className="flex items-center gap-2.5 px-5 pt-5 pb-3">
-        <div className="w-8 h-8 rounded-[8px] bg-[var(--color-gold)] flex items-center justify-center flex-shrink-0">
+        <motion.div
+          className="w-8 h-8 rounded-[8px] bg-[var(--color-gold)] flex items-center justify-center flex-shrink-0"
+          animate={prefersReduced ? undefined : { scale: [1, 1.07, 1] }}
+          transition={prefersReduced ? undefined : { duration: 3.4, repeat: Infinity, ease: 'easeInOut' }}
+        >
           <Sparkles size={16} className="text-[var(--color-ink)]" />
-        </div>
+        </motion.div>
         <div>
           <div className="flex items-center gap-2">
             <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">

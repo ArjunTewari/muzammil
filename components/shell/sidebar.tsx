@@ -23,7 +23,7 @@ export function Sidebar({ user, onLogout }: { user: AppUser; onLogout: () => voi
     <motion.aside
       animate={{ width }}
       transition={{ duration, ease: [0.4, 0, 0.2, 1] }}
-      className="relative hidden md:flex flex-col h-full bg-[var(--color-surface)] border-r border-[var(--color-border-brand)] flex-shrink-0 overflow-hidden"
+      className="glass-rail relative z-10 hidden md:flex flex-col h-full border-r border-[var(--color-border-brand)] flex-shrink-0 overflow-hidden"
     >
       {/* Wordmark */}
       <div className="flex items-center h-14 px-4 border-b border-[var(--color-border-brand)]">
@@ -76,7 +76,11 @@ export function Sidebar({ user, onLogout }: { user: AppUser; onLogout: () => voi
                   <motion.div
                     layoutId="activeIndicator"
                     className="absolute left-0 top-2 bottom-2 w-0.5 rounded-r-full bg-[var(--color-gold)]"
-                    transition={{ duration: prefersReduced ? 0 : 0.2 }}
+                    transition={
+                      prefersReduced
+                        ? { duration: 0 }
+                        : { type: 'spring', stiffness: 400, damping: 32 }
+                    }
                   />
                 )}
 

@@ -33,7 +33,7 @@ export function Topbar({
   const pageTitle = titleFor(pathname)
 
   return (
-    <header className="h-14 flex items-center justify-between px-4 sm:px-6 border-b border-[var(--color-border-brand)] bg-[var(--color-ink)] flex-shrink-0">
+    <header className="glass-bar relative z-10 h-14 flex items-center justify-between px-4 sm:px-6 border-b border-[var(--color-border-brand)] flex-shrink-0">
       {/* Mobile: logo + page title | Desktop: search bar */}
       <div className="flex items-center gap-3">
         <div className="md:hidden flex-shrink-0 w-7 h-7 rounded-[6px] bg-[var(--color-gold)] flex items-center justify-center">

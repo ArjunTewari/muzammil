@@ -7,6 +7,7 @@ import { ArrowRight, Lock } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
 import { USERS } from '@/lib/users'
 import { homeForRole } from '@/lib/nav'
+import { AmbientBackground } from '@/components/backdrop/ambient-background'
 
 export default function LoginPage() {
   const router = useRouter()
@@ -38,8 +39,11 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-[100dvh] flex items-center justify-center bg-[var(--color-ink)] px-4 py-10">
-      <div className="w-full max-w-4xl grid lg:grid-cols-2 gap-8 items-center">
+    <div className="relative min-h-[100dvh] flex items-center justify-center bg-[var(--color-ink)] px-4 py-10 overflow-hidden">
+      {/* Living hero backdrop */}
+      <AmbientBackground hero />
+
+      <div className="relative z-10 w-full max-w-4xl grid lg:grid-cols-2 gap-8 items-center">
         {/* Left — brand + login form */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -49,7 +53,7 @@ export default function LoginPage() {
         >
           {/* Wordmark */}
           <div className="flex items-center gap-2.5 mb-8">
-            <div className="w-9 h-9 rounded-[8px] bg-[var(--color-gold)] flex items-center justify-center">
+            <div className="logo-float w-9 h-9 rounded-[8px] bg-[var(--color-gold)] flex items-center justify-center shadow-[var(--shadow-glow-gold)]">
               <span
                 className="text-[var(--color-ink)] text-lg font-semibold"
                 style={{ fontFamily: 'var(--font-instrument-serif)' }}
@@ -118,7 +122,7 @@ export default function LoginPage() {
 
             <button
               type="submit"
-              className="w-full h-11 rounded-[10px] bg-[var(--color-gold)] text-[var(--color-ink)] text-sm font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity duration-150 cursor-pointer"
+              className="w-full h-11 rounded-[10px] bg-[var(--color-gold)] text-[var(--color-ink)] text-sm font-semibold flex items-center justify-center gap-2 hover:bg-[#d4b46a] hover:shadow-[var(--shadow-glow-gold)] active:scale-[0.98] transition-all duration-200 ease-out cursor-pointer"
             >
               Sign in
               <ArrowRight size={15} />
@@ -131,7 +135,7 @@ export default function LoginPage() {
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.12, ease: [0.4, 0, 0.2, 1] }}
-          className="rounded-[16px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] p-5 sm:p-6"
+          className="glass-panel rounded-[16px] border border-[var(--color-border-brand)] p-5 sm:p-6"
         >
           <p className="text-xs text-[var(--color-text-tertiary)] uppercase tracking-widest mb-1 font-medium">
             Demo accounts
@@ -146,7 +150,7 @@ export default function LoginPage() {
                 key={u.id}
                 type="button"
                 onClick={() => quickFill(u)}
-                className="w-full flex items-center gap-3 rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface-elevated)] p-2.5 text-left hover:border-[var(--color-gold-border)] transition-colors duration-150 cursor-pointer group"
+                className="w-full flex items-center gap-3 rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface-elevated)] p-2.5 text-left hover:border-[var(--color-gold-border)] hover:translate-x-0.5 active:scale-[0.99] transition-all duration-200 ease-out cursor-pointer group"
               >
                 <div
                   className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-[11px] font-semibold"

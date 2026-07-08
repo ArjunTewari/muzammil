@@ -128,7 +128,7 @@ export function EmployeeWorkspace({
             — describe what you need, it routes the rest
           </span>
         </div>
-        <div className="flex items-center gap-2 rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] px-3 py-2">
+        <div className="flex items-center gap-2 rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] px-3 py-2 transition-all duration-200 focus-within:border-[var(--color-gold-border)] focus-within:shadow-[var(--shadow-glow-gold)]">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}

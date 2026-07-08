@@ -2,28 +2,25 @@
 
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowRight, AlertTriangle } from 'lucide-react'
-import { ProcessFlow } from '@/components/operator/process-flow'
+import { ArrowRight, AlertCircle, Loader } from 'lucide-react'
+import { AgentSuiteStrip } from '@/components/agents/agent-suite-strip'
 import { AiInsights } from '@/components/shared/ai-insights'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { USERS } from '@/lib/users'
-import { getOperatorData } from '@/lib/operator-data'
+import { getEmployeeProject, agentProgress } from '@/lib/employee-projects'
+import { getAgent } from '@/lib/agents'
 import { teamNextSteps } from '@/lib/ai-insights'
 
-const OPERATOR_IDS = ['priya', 'rohan', 'divya', 'arjit', 'sneha', 'karan']
+const EMPLOYEE_IDS = ['priya', 'rohan', 'divya', 'arjit', 'sneha', 'karan']
 
 export default function TeamPage() {
-  const operators = OPERATOR_IDS.map((id) => USERS.find((u) => u.id === id)!)
+  const employees = EMPLOYEE_IDS.map((id) => USERS.find((u) => u.id === id)!)
 
-  const totalActive = OPERATOR_IDS.reduce(
-    (s, id) => s + (getOperatorData(id)?.tasks.length ?? 0),
-    0,
-  )
-  const totalBlocked = OPERATOR_IDS.reduce(
-    (s, id) => s + (getOperatorData(id)?.tasks.filter((t) => t.status === 'blocked').length ?? 0),
-    0,
-  )
+  const totalNeedsInput = EMPLOYEE_IDS.reduce((s, id) => {
+    const p = getEmployeeProject(id)
+    return s + (p ? agentProgress(p).needsInput : 0)
+  }, 0)
 
   return (
     <div className="p-4 sm:p-6 max-w-[1400px] mx-auto space-y-4 sm:space-y-6">
@@ -40,20 +37,20 @@ export default function TeamPage() {
           Team
         </h1>
         <p className="text-sm text-[var(--color-text-tertiary)]">
-          6 operators · {totalActive} active tasks
-          {totalBlocked > 0 && (
-            <span className="text-[var(--color-status-red)]"> · {totalBlocked} blocked</span>
+          6 employees · each running a full campaign on the agent suite
+          {totalNeedsInput > 0 && (
+            <span className="text-[var(--color-status-red)]"> · {totalNeedsInput} agents need a human</span>
           )}
         </p>
       </motion.div>
 
-      {/* Pipeline */}
+      {/* Agent suite explainer */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.1 }}
+        transition={{ duration: 0.4, delay: 0.08 }}
       >
-        <ProcessFlow />
+        <AgentSuiteStrip />
       </motion.div>
 
       {/* AI next steps */}
@@ -65,13 +62,12 @@ export default function TeamPage() {
         <AiInsights steps={teamNextSteps} subtitle="Where to intervene across the team" />
       </motion.div>
 
-      {/* Operator grid */}
+      {/* Employee grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-        {operators.map((user, i) => {
-          const data = getOperatorData(user.id)!
-          const blocked = data.tasks.filter((t) => t.status === 'blocked').length
-          const waiting = data.waiting.length
-          const hoursPct = Math.round((data.stats.hoursThisMonth / data.stats.avgPerMonth) * 100)
+        {employees.map((user, i) => {
+          const project = getEmployeeProject(user.id)!
+          const progress = agentProgress(project)
+          const workingAgent = progress.working ? getAgent(progress.working.agentId) : null
 
           return (
             <motion.div
@@ -83,7 +79,7 @@ export default function TeamPage() {
               <Link href={`/team/${user.id}`}>
                 <Card goldRule className="p-4 group cursor-pointer h-full">
                   {/* Head */}
-                  <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center gap-3 mb-3">
                     <div
                       className="w-11 h-11 rounded-full flex items-center justify-center text-sm font-semibold flex-shrink-0"
                       style={{ background: `${user.accentColor}22`, color: user.accentColor }}
@@ -102,45 +98,51 @@ export default function TeamPage() {
                     />
                   </div>
 
-                  {/* Hours bar */}
+                  {/* Project */}
+                  <div className="rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface-elevated)] p-2.5 mb-3">
+                    <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-tertiary)]">
+                      Running · {project.client}
+                    </p>
+                    <p className="text-sm text-[var(--color-text-primary)] leading-snug mt-0.5">
+                      {project.projectTitle}
+                    </p>
+                  </div>
+
+                  {/* Agent progress bar */}
                   <div className="mb-3">
                     <div className="flex justify-between text-xs mb-1">
-                      <span className="text-[var(--color-text-tertiary)]">Hours this month</span>
+                      <span className="text-[var(--color-text-tertiary)]">Agents complete</span>
                       <span
                         className="text-[var(--color-text-secondary)]"
                         style={{ fontFamily: 'var(--font-jetbrains-mono)' }}
                       >
-                        {data.stats.hoursThisMonth}h / {data.stats.avgPerMonth}h
+                        {progress.done}/{progress.total}
                       </span>
                     </div>
                     <div className="h-1.5 rounded-full bg-[var(--color-border-brand)] overflow-hidden">
                       <div
-                        className="h-full rounded-full"
-                        style={{ width: `${Math.min(hoursPct, 100)}%`, background: user.accentColor }}
+                        className="h-full rounded-full bg-[var(--color-gold)]"
+                        style={{ width: `${(progress.done / progress.total) * 100}%` }}
                       />
                     </div>
                   </div>
 
-                  {/* Stats row */}
+                  {/* Status row */}
                   <div className="flex items-center gap-2 flex-wrap">
-                    <Badge variant="outline">
-                      <span style={{ fontFamily: 'var(--font-jetbrains-mono)' }}>
-                        {data.tasks.length}
-                      </span>{' '}
-                      active
-                    </Badge>
-                    {waiting > 0 && (
-                      <Badge variant="amber">
-                        <span style={{ fontFamily: 'var(--font-jetbrains-mono)' }}>{waiting}</span>{' '}
-                        waiting
+                    {workingAgent && (
+                      <Badge variant="gold">
+                        <Loader size={10} className="animate-spin" />
+                        {workingAgent.name}
                       </Badge>
                     )}
-                    {blocked > 0 && (
+                    {progress.needsInput > 0 && (
                       <Badge variant="red">
-                        <AlertTriangle size={10} />
-                        <span style={{ fontFamily: 'var(--font-jetbrains-mono)' }}>{blocked}</span>{' '}
-                        blocked
+                        <AlertCircle size={10} />
+                        {progress.needsInput} needs you
                       </Badge>
+                    )}
+                    {!workingAgent && progress.needsInput === 0 && (
+                      <Badge variant="green">On track</Badge>
                     )}
                   </div>
                 </Card>

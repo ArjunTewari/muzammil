@@ -29,14 +29,14 @@ const STEPS = [
   {
     icon: Send,
     iconColor: '#60a5fa',
-    title: 'Every employee gets the full agency',
-    body: 'An employee just describes what they need — the Master Agent handles the routing and sequencing. A junior team member can carry a full client campaign: strategy, copy, compliance, delivery, without waiting on anyone.',
+    title: 'Brief new work by talking',
+    body: 'Hit "New Project" and the Architect interviews you — one sharp question at a time — until it can write a full brief, then assigns it to an employee with your instructions attached. A thinking agent, not a form.',
   },
   {
     icon: Database,
     iconColor: '#a78bfa',
     title: 'A memory that learns',
-    body: 'Every brief, approved script, compliance correction, client preference and piece of feedback is remembered and reused on the next project. The system gets smarter with every job it runs.',
+    body: 'Every instruction you give and every step you approve or flag — with the reason why — is remembered and applied on the next project. See it all under Memory. The system gets smarter with every job.',
   },
   {
     icon: LayoutDashboard,

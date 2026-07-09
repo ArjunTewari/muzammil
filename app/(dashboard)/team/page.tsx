@@ -1,8 +1,9 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowRight, AlertCircle, Loader } from 'lucide-react'
+import { ArrowRight, AlertCircle, Loader, Sparkles } from 'lucide-react'
 import { AgentSuiteStrip } from '@/components/agents/agent-suite-strip'
 import { AiInsights } from '@/components/shared/ai-insights'
 import { Card } from '@/components/ui/card'
@@ -11,11 +12,16 @@ import { USERS } from '@/lib/users'
 import { getEmployeeProject, agentProgress } from '@/lib/employee-projects'
 import { getAgent } from '@/lib/agents'
 import { teamNextSteps } from '@/lib/ai-insights'
+import { newProjectCount, subscribeProjects } from '@/lib/project-store'
 
 const EMPLOYEE_IDS = ['priya', 'rohan', 'divya', 'arjit', 'sneha', 'karan']
 
 export default function TeamPage() {
   const employees = EMPLOYEE_IDS.map((id) => USERS.find((u) => u.id === id)!)
+
+  // Re-render when the Architect assigns a new project.
+  const [, setTick] = useState(0)
+  useEffect(() => subscribeProjects(() => setTick((t) => t + 1)), [])
 
   const totalNeedsInput = EMPLOYEE_IDS.reduce((s, id) => {
     const p = getEmployeeProject(id)
@@ -129,6 +135,12 @@ export default function TeamPage() {
 
                   {/* Status row */}
                   <div className="flex items-center gap-2 flex-wrap">
+                    {newProjectCount(user.id) > 0 && (
+                      <Badge variant="gold">
+                        <Sparkles size={10} />
+                        {newProjectCount(user.id)} new brief{newProjectCount(user.id) > 1 ? 's' : ''}
+                      </Badge>
+                    )}
                     {workingAgent && (
                       <Badge variant="gold">
                         <Loader size={10} className="animate-spin" />
@@ -141,7 +153,7 @@ export default function TeamPage() {
                         {progress.needsInput} needs you
                       </Badge>
                     )}
-                    {!workingAgent && progress.needsInput === 0 && (
+                    {!workingAgent && progress.needsInput === 0 && newProjectCount(user.id) === 0 && (
                       <Badge variant="green">On track</Badge>
                     )}
                   </div>

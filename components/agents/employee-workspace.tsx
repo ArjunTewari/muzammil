@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Send, Sparkles, Database, Activity, CornerDownRight, CalendarClock } from 'lucide-react'
 import { AgentPipeline } from '@/components/agents/agent-pipeline'
+import { AssignedProjects } from '@/components/agents/assigned-projects'
 import { AiInsights } from '@/components/shared/ai-insights'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { agentProgress, type EmployeeProject } from '@/lib/employee-projects'
@@ -55,6 +56,9 @@ export function EmployeeWorkspace({
           </>
         )}
       </motion.div>
+
+      {/* Projects Muzammil assigned via the Architect */}
+      <AssignedProjects employeeId={user.id} viewedByMaster={viewedByMaster} />
 
       {/* Project banner */}
       <motion.div

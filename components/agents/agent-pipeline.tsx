@@ -1,10 +1,14 @@
 'use client'
 
+import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { CheckCircle2, Loader, Clock, AlertCircle, Workflow, ChevronRight } from 'lucide-react'
-import { AGENTS, MASTER_AGENT } from '@/lib/agents'
+import { CheckCircle2, Loader, Clock, AlertCircle, Workflow, ChevronRight, ThumbsUp, Flag } from 'lucide-react'
+import { AGENTS, MASTER_AGENT, getAgent } from '@/lib/agents'
 import { AGENT_ICON } from '@/components/agents/agent-icon'
+import { ReasonDialog } from '@/components/architect/reason-dialog'
+import { addMemory } from '@/lib/memory-store'
 import type { EmployeeProject, AgentStatus } from '@/lib/employee-projects'
+import type { AgentId } from '@/lib/agents'
 
 const statusMeta: Record<
   AgentStatus,
@@ -18,6 +22,36 @@ const statusMeta: Record<
 
 export function AgentPipeline({ project }: { project: EmployeeProject }) {
   const stateFor = (agentId: string) => project.agentStates.find((s) => s.agentId === agentId)!
+
+  // Human-in-the-loop: approve or flag a step that needs input. Each decision,
+  // with its reason, becomes a memory the system learns from.
+  const [acted, setActed] = useState<Record<string, 'approved' | 'flagged'>>({})
+  const [dialog, setDialog] = useState<{ agentId: AgentId; action: 'approve' | 'flag' } | null>(null)
+
+  function record(reason: string) {
+    if (!dialog) return
+    const agent = getAgent(dialog.agentId)
+    if (dialog.action === 'approve') {
+      addMemory({
+        type: 'approval',
+        content: `Approved ${agent.name}'s work on ${project.client} — ${project.projectTitle}`,
+        reason: reason || undefined,
+        client: project.client,
+        source: `${agent.name} · pipeline`,
+      })
+      setActed((a) => ({ ...a, [dialog.agentId]: 'approved' }))
+    } else {
+      addMemory({
+        type: 'rejection',
+        content: `Flagged ${agent.name}'s output on ${project.client} — ${project.projectTitle}`,
+        reason,
+        client: project.client,
+        source: `${agent.name} · pipeline`,
+      })
+      setActed((a) => ({ ...a, [dialog.agentId]: 'flagged' }))
+    }
+    setDialog(null)
+  }
 
   return (
     <div className="relative rounded-[12px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] overflow-hidden" style={{ boxShadow: 'var(--shadow-card)' }}>
@@ -101,12 +135,62 @@ export function AgentPipeline({ project }: { project: EmployeeProject }) {
                   <p className="text-xs text-[var(--color-text-tertiary)] mt-1 leading-relaxed pl-4">
                     {state.output}
                   </p>
+
+                  {/* Human-in-the-loop on steps that need a decision */}
+                  {state.status === 'needs-input' && (
+                    <div className="pl-4 mt-2">
+                      {acted[agent.id] ? (
+                        <span
+                          className="inline-flex items-center gap-1 text-[11px] font-medium"
+                          style={{ color: acted[agent.id] === 'approved' ? 'var(--color-status-green)' : 'var(--color-status-red)' }}
+                        >
+                          {acted[agent.id] === 'approved' ? <ThumbsUp size={11} /> : <Flag size={11} />}
+                          {acted[agent.id] === 'approved' ? 'Approved — remembered' : 'Flagged — remembered'}
+                        </span>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => setDialog({ agentId: agent.id, action: 'approve' })}
+                            className="inline-flex items-center gap-1 text-[11px] font-medium rounded-[6px] border border-[var(--color-status-green)] text-[var(--color-status-green)] px-2 py-1 hover:bg-[var(--color-status-green-muted)] active:scale-95 transition-all cursor-pointer"
+                          >
+                            <ThumbsUp size={11} /> Approve
+                          </button>
+                          <button
+                            onClick={() => setDialog({ agentId: agent.id, action: 'flag' })}
+                            className="inline-flex items-center gap-1 text-[11px] font-medium rounded-[6px] border border-[var(--color-status-red)] text-[var(--color-status-red)] px-2 py-1 hover:bg-[var(--color-status-red-muted)] active:scale-95 transition-all cursor-pointer"
+                          >
+                            <Flag size={11} /> Flag
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </motion.div>
           )
         })}
       </div>
+
+      <ReasonDialog
+        open={dialog !== null}
+        title={dialog?.action === 'flag' ? 'Flag this step' : 'Approve this step'}
+        label={
+          dialog?.action === 'flag'
+            ? "What's wrong, and why? The Architect will avoid this next time."
+            : 'Anything worth remembering about why this is good? (optional)'
+        }
+        placeholder={
+          dialog?.action === 'flag'
+            ? 'e.g. Return figure needs the standard disclaimer before it can go out.'
+            : 'e.g. Nailed the calm, no-hype tone Axis wants.'
+        }
+        confirmLabel={dialog?.action === 'flag' ? 'Flag & remember' : 'Approve & remember'}
+        confirmTone={dialog?.action === 'flag' ? 'red' : 'gold'}
+        required={dialog?.action === 'flag'}
+        onConfirm={record}
+        onClose={() => setDialog(null)}
+      />
     </div>
   )
 }

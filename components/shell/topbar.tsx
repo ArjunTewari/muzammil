@@ -1,11 +1,14 @@
 'use client'
 
-import { Search, Bell, LogOut } from 'lucide-react'
+import { Search, Bell, LogOut, Plus } from 'lucide-react'
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { AppUser } from '@/lib/users'
 
 const pageTitles: Record<string, string> = {
   '/overview': 'Overview',
+  '/architect': 'The Architect',
+  '/memory': 'Memory',
   '/team': 'Team',
   '/my-work': 'My Work',
   '/projects': 'Projects',
@@ -67,6 +70,17 @@ export function Topbar({
 
       {/* Right side */}
       <div className="flex items-center gap-2 sm:gap-3">
+        {/* Master primary CTA — start a new project via the Architect */}
+        {user.role === 'master' && (
+          <Link
+            href="/architect"
+            className="inline-flex items-center gap-1.5 h-8 pl-2.5 pr-3 rounded-[8px] bg-[var(--color-gold)] text-[var(--color-ink)] text-xs font-semibold hover:bg-[#d4b46a] hover:shadow-[var(--shadow-glow-gold)] active:scale-95 transition-all duration-200 cursor-pointer"
+          >
+            <Plus size={14} />
+            <span className="hidden sm:inline">New Project</span>
+          </Link>
+        )}
+
         {onHelpClick && (
           <button
             onClick={onHelpClick}

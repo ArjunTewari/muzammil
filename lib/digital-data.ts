@@ -1,25 +1,36 @@
-// Website + social media management data for the master's Web & Social view.
+// ZiWorks's OWN web + social presence — the agency's own website and the
+// company/founder social handles. (Client campaign channels live under
+// Projects/Team, not here.)
 // TODO: replace with GET /api/digital
 
-export type SiteStatus = 'live' | 'staging' | 'in-dev' | 'maintenance'
-export type SocialPlatform = 'Instagram' | 'LinkedIn' | 'YouTube' | 'Twitter'
+export type SiteStatus = 'operational' | 'degraded' | 'maintenance'
+export type SocialPlatform = 'LinkedIn' | 'Instagram' | 'Twitter' | 'YouTube'
+export type SocialOwner = 'ZiWorks' | 'Muzammil'
 export type PostStatus = 'scheduled' | 'awaiting-approval' | 'published' | 'draft'
 
-export interface WebsiteEntry {
-  id: string
-  client: string
-  siteName: string
-  url: string
+export interface SitePage {
+  path: string
+  label: string
+  views30d: number
+  changePct: number
+}
+
+export interface WebsiteHealth {
+  domain: string
   status: SiteStatus
   uptime: number // %
   monthlyVisitors: number
-  pendingUpdates: number
-  owner: string
+  visitorChangePct: number
+  avgSessionSec: number
+  bounceRate: number // %
+  leadsThisMonth: number
+  pendingUpdates: string[]
+  topPages: SitePage[]
 }
 
 export interface SocialAccount {
   id: string
-  client: string
+  owner: SocialOwner
   platform: SocialPlatform
   handle: string
   followers: number
@@ -27,234 +38,164 @@ export interface SocialAccount {
   engagementRate: number // %
   scheduledThisWeek: number
   awaitingApproval: number
-  manager: string
 }
 
 export interface ScheduledPost {
   id: string
-  client: string
+  owner: SocialOwner
   platform: SocialPlatform
   title: string
   date: string
   status: PostStatus
-  owner: string
 }
 
-export const websites: WebsiteEntry[] = [
-  {
-    id: 'w1',
-    client: 'Axis MF',
-    siteName: 'Retirement Planning Microsite',
-    url: 'retire.axismf-campaign.in',
-    status: 'staging',
-    uptime: 99.98,
-    monthlyVisitors: 42800,
-    pendingUpdates: 3,
-    owner: 'Karan Malhotra',
-  },
-  {
-    id: 'w2',
-    client: 'HDFC AMC',
-    siteName: 'IFA Education Hub',
-    url: 'learn.hdfcamc-ifa.in',
-    status: 'live',
-    uptime: 99.99,
-    monthlyVisitors: 118400,
-    pendingUpdates: 1,
-    owner: 'Karan Malhotra',
-  },
-  {
-    id: 'w3',
-    client: 'DSP MF',
-    siteName: 'Tiger Fund 25th Anniversary',
-    url: 'tiger25.dspmf-campaign.in',
-    status: 'in-dev',
-    uptime: 100,
-    monthlyVisitors: 0,
-    pendingUpdates: 6,
-    owner: 'Divya Nair',
-  },
-  {
-    id: 'w4',
-    client: 'Motilal Oswal',
-    siteName: 'SIP Calculator + Landing',
-    url: 'sip.motilaloswal-mf.in',
-    status: 'live',
-    uptime: 99.94,
-    monthlyVisitors: 87200,
-    pendingUpdates: 2,
-    owner: 'Karan Malhotra',
-  },
-  {
-    id: 'w5',
-    client: 'Kotak MF',
-    siteName: 'Flexi Cap Campaign Page',
-    url: 'flexicap.kotakmf-campaign.in',
-    status: 'maintenance',
-    uptime: 98.71,
-    monthlyVisitors: 23100,
-    pendingUpdates: 4,
-    owner: 'Karan Malhotra',
-  },
-]
+// The single company website Maestro monitors.
+export const ziworksSite: WebsiteHealth = {
+  domain: 'ziworks.in',
+  status: 'operational',
+  uptime: 99.97,
+  monthlyVisitors: 8420,
+  visitorChangePct: 12.4,
+  avgSessionSec: 132,
+  bounceRate: 41.8,
+  leadsThisMonth: 14,
+  pendingUpdates: [
+    'Add 2 new case studies to /work',
+    'Refresh the team page with 2 recent hires',
+  ],
+  topPages: [
+    { path: '/', label: 'Home', views30d: 3120, changePct: 9.1 },
+    { path: '/work', label: 'Work / Portfolio', views30d: 2040, changePct: 18.6 },
+    { path: '/services', label: 'Services', views30d: 1180, changePct: 4.2 },
+    { path: '/about', label: 'About / Team', views30d: 860, changePct: -3.4 },
+    { path: '/blog', label: 'Blog', views30d: 740, changePct: 22.0 },
+    { path: '/contact', label: 'Contact', views30d: 480, changePct: 6.8 },
+  ],
+}
 
+// ZiWorks company handles + Muzammil's founder handles.
 export const socialAccounts: SocialAccount[] = [
   {
     id: 's1',
-    client: 'Axis MF',
-    platform: 'Instagram',
-    handle: '@axismf.official',
-    followers: 214000,
-    growth30d: 4.2,
-    engagementRate: 3.8,
-    scheduledThisWeek: 5,
-    awaitingApproval: 2,
-    manager: 'Divya Nair',
+    owner: 'Muzammil',
+    platform: 'LinkedIn',
+    handle: 'Muzammil Rashid',
+    followers: 18900,
+    growth30d: 6.8,
+    engagementRate: 7.1,
+    scheduledThisWeek: 2,
+    awaitingApproval: 1,
   },
   {
     id: 's2',
-    client: 'Axis MF',
+    owner: 'ZiWorks',
     platform: 'LinkedIn',
-    handle: 'Axis Mutual Fund',
-    followers: 96500,
-    growth30d: 2.1,
-    engagementRate: 5.4,
+    handle: 'ZiWorks Advertising',
+    followers: 6200,
+    growth30d: 5.4,
+    engagementRate: 4.8,
     scheduledThisWeek: 3,
     awaitingApproval: 1,
-    manager: 'Priya Mehta',
   },
   {
     id: 's3',
-    client: 'Motilal Oswal',
+    owner: 'ZiWorks',
     platform: 'Instagram',
-    handle: '@motilaloswalamc',
-    followers: 178300,
-    growth30d: 6.8,
-    engagementRate: 6.1,
-    scheduledThisWeek: 4,
-    awaitingApproval: 0,
-    manager: 'Divya Nair',
+    handle: '@ziworks.advertising',
+    followers: 3100,
+    growth30d: 3.1,
+    engagementRate: 3.2,
+    scheduledThisWeek: 2,
+    awaitingApproval: 2,
   },
   {
     id: 's4',
-    client: 'Nippon MF',
-    platform: 'Instagram',
-    handle: '@nipponindiamf',
-    followers: 142900,
-    growth30d: 3.4,
-    engagementRate: 4.0,
-    scheduledThisWeek: 3,
-    awaitingApproval: 3,
-    manager: 'Karan Malhotra',
+    owner: 'Muzammil',
+    platform: 'Twitter',
+    handle: '@muzammilrashid',
+    followers: 4500,
+    growth30d: 2.2,
+    engagementRate: 2.4,
+    scheduledThisWeek: 1,
+    awaitingApproval: 0,
   },
   {
     id: 's5',
-    client: 'HDFC AMC',
+    owner: 'ZiWorks',
     platform: 'YouTube',
-    handle: 'HDFC AMC',
-    followers: 312000,
-    growth30d: 1.9,
-    engagementRate: 2.7,
-    scheduledThisWeek: 2,
-    awaitingApproval: 1,
-    manager: 'Karan Malhotra',
-  },
-  {
-    id: 's6',
-    client: 'DSP MF',
-    platform: 'LinkedIn',
-    handle: 'DSP Mutual Fund',
-    followers: 71200,
-    growth30d: 2.8,
-    engagementRate: 4.9,
-    scheduledThisWeek: 2,
+    handle: 'ZiWorks Advertising',
+    followers: 1250,
+    growth30d: 1.5,
+    engagementRate: 2.9,
+    scheduledThisWeek: 0,
     awaitingApproval: 0,
-    manager: 'Priya Mehta',
   },
 ]
 
+// ZiWorks's OWN brand content pipeline (thought leadership, case studies, hiring).
 export const contentCalendar: ScheduledPost[] = [
   {
     id: 'p1',
-    client: 'Nippon MF',
-    platform: 'Instagram',
-    title: 'SIP-day retirement reel (1 of 3)',
-    date: '2026-06-22',
+    owner: 'ZiWorks',
+    platform: 'LinkedIn',
+    title: 'Case study: how we grew an AMC\'s SIP sign-ups 3x',
+    date: '2026-06-23',
     status: 'awaiting-approval',
-    owner: 'Karan Malhotra',
   },
   {
     id: 'p2',
-    client: 'Nippon MF',
-    platform: 'Instagram',
-    title: 'SIP-day retirement reel (2 of 3)',
-    date: '2026-06-22',
+    owner: 'Muzammil',
+    platform: 'LinkedIn',
+    title: 'Founder POV: compliance is a creative constraint, not a blocker',
+    date: '2026-06-24',
     status: 'awaiting-approval',
-    owner: 'Karan Malhotra',
   },
   {
     id: 'p3',
-    client: 'Nippon MF',
+    owner: 'ZiWorks',
     platform: 'Instagram',
-    title: 'SIP-day retirement reel (3 of 3)',
-    date: '2026-06-22',
+    title: 'Behind the scenes: shooting a retirement reel',
+    date: '2026-06-24',
     status: 'awaiting-approval',
-    owner: 'Karan Malhotra',
   },
   {
     id: 'p4',
-    client: 'Axis MF',
-    platform: 'Instagram',
-    title: 'Retirement myth-buster carousel',
-    date: '2026-06-23',
+    owner: 'ZiWorks',
+    platform: 'LinkedIn',
+    title: 'We\'re hiring: Senior Copywriter (BFSI)',
+    date: '2026-06-25',
     status: 'scheduled',
-    owner: 'Divya Nair',
   },
   {
     id: 'p5',
-    client: 'Axis MF',
-    platform: 'LinkedIn',
-    title: 'Founder POV: Why retirement is a math problem',
-    date: '2026-06-24',
-    status: 'awaiting-approval',
-    owner: 'Priya Mehta',
+    owner: 'Muzammil',
+    platform: 'Twitter',
+    title: '3 SEBI rules every MF marketer gets wrong',
+    date: '2026-06-26',
+    status: 'draft',
   },
   {
     id: 'p6',
-    client: 'Motilal Oswal',
+    owner: 'ZiWorks',
     platform: 'Instagram',
-    title: 'SIP compounding explainer (boost candidate)',
-    date: '2026-06-24',
-    status: 'scheduled',
-    owner: 'Divya Nair',
-  },
-  {
-    id: 'p7',
-    client: 'HDFC AMC',
-    platform: 'YouTube',
-    title: 'IFA education — Episode 4',
-    date: '2026-06-25',
+    title: 'Team spotlight: meet the creative desk',
+    date: '2026-06-27',
     status: 'draft',
-    owner: 'Karan Malhotra',
-  },
-  {
-    id: 'p8',
-    client: 'DSP MF',
-    platform: 'LinkedIn',
-    title: 'Tiger Fund 25th anniversary teaser',
-    date: '2026-06-26',
-    status: 'draft',
-    owner: 'Divya Nair',
   },
 ]
 
 export function digitalSummary() {
-  const liveSites = websites.filter((w) => w.status === 'live').length
   const totalFollowers = socialAccounts.reduce((s, a) => s + a.followers, 0)
-  const postsAwaiting =
-    contentCalendar.filter((p) => p.status === 'awaiting-approval').length
-  const pendingSiteUpdates = websites.reduce((s, w) => s + w.pendingUpdates, 0)
-  const avgUptime =
-    websites.reduce((s, w) => s + w.uptime, 0) / (websites.length || 1)
-  return { liveSites, totalSites: websites.length, totalFollowers, postsAwaiting, pendingSiteUpdates, avgUptime }
+  const postsAwaiting = contentCalendar.filter((p) => p.status === 'awaiting-approval').length
+  const scheduled = contentCalendar.filter((p) => p.status === 'scheduled').length
+  return {
+    monthlyVisitors: ziworksSite.monthlyVisitors,
+    visitorChangePct: ziworksSite.visitorChangePct,
+    leadsThisMonth: ziworksSite.leadsThisMonth,
+    totalFollowers,
+    postsAwaiting,
+    scheduled,
+    uptime: ziworksSite.uptime,
+    pendingUpdates: ziworksSite.pendingUpdates.length,
+  }
 }

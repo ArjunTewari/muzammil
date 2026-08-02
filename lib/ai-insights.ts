@@ -100,18 +100,18 @@ export const teamNextSteps: NextStep[] = [
 
 export const digitalNextSteps: NextStep[] = [
   {
-    action: 'Approve 3 Nippon MF reels scheduled for tomorrow',
-    rationale: 'Awaiting your sign-off; compliance already cleared. Miss the slot and the SIP-day window closes.',
+    action: 'Approve the SIP case-study post for ZiWorks LinkedIn',
+    rationale: "It's the agency's strongest proof point and it's sitting in the approval queue.",
     priority: 'urgent',
   },
   {
-    action: 'Review the Axis MF retirement microsite (staging)',
-    rationale: 'Landing page build is on staging, ready for a founder review before go-live.',
+    action: "Publish Muzammil's compliance POV",
+    rationale: 'Founder-led posts drive the most inbound to ziworks.in — this one is written and waiting.',
     priority: 'recommended',
   },
   {
-    action: 'Boost the top Motilal Oswal organic post',
-    rationale: '+240% organic reach — a small paid boost could compound an already-winning creative.',
+    action: 'Add 2 case studies to ziworks.in/work',
+    rationale: '14 inbound leads this month against a thin portfolio page — more proof lifts conversion.',
     priority: 'opportunity',
   },
 ]

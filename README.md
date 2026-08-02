@@ -34,7 +34,7 @@ Sign in at `/login`. On the login screen you can **tap any account to auto-fill*
 - **Team** — the agent suite + a card per employee showing their campaign and agent progress. Open any employee to see their full agent workspace.
 - **Clients** — every client with its owning employee and agent progress; open a client to see the agent pipeline running that campaign, plus invoices
 - **Finance** — revenue, collections and billing, run by the **Finance Agent** across every campaign
-- **Web & Social** — website management, social channels, and a content calendar
+- **Web & Social** — the agency's *own* presence: ziworks.in health + page traffic + inbound leads, and the ZiWorks / Muzammil founder social handles with their own brand content calendar (not client channels — those live under Projects)
 - **Memory** — everything the system has learned (see below)
 - **Projects**, **Settings**
 

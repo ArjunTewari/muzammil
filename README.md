@@ -1,104 +1,70 @@
-# Maestro — ZiWorks Operating System (Demo)
+# Maestro — ZiWorks agent platform
 
-Interactive demo of Maestro, the internal business operating system for ZiWorks Advertising (a BFSI marketing agency). Role-based dashboards for the founder and every operator in the delivery pipeline.
+Maestro is a human-controlled marketing operations platform. The existing Next.js dashboard remains on Vercel; a Python control service owns CRM data and approval state on Google Cloud; Google ADK specialists execute one authorized stage at a time on Vertex AI Agent Engine.
 
-## Quick Start
+## Production architecture
+
+- **Vercel / Next.js 16:** dashboard, secure HTTP-only session cookies, and the `/api/v1` server gateway.
+- **Cloud Run / FastAPI:** CRM, onboarding, uploads, calibrations, runs, approvals, memory governance, audit records, metrics, and vault synchronization.
+- **Vertex AI Agent Engine:** Architect → Researcher → Copywriter → Compliance Guardian. Production failures remain visible; the old Architect simulation is not a fallback for this workflow.
+- **Cloud SQL PostgreSQL + pgvector:** source of truth for operational data, agent versions, artifacts, approvals, and approved memory.
+- **Memory Bank:** semantic copy of approved memory. PostgreSQL remains authoritative if this preview service is unavailable.
+- **Private Git-backed Obsidian vault:** a sanitized Markdown mirror of owner-approved knowledge. Incoming vault edits are proposals only.
+- **Cloud Tasks, Pub/Sub, Storage, Secret Manager:** retryable execution, events, training files, and secrets.
+
+Every stage pauses at `awaiting_owner`. Version 1 has no tools that publish, send, invoice, or mutate third-party systems.
+
+## Local dashboard
 
 ```bash
 npm install
 npm run dev
-# → http://localhost:3000  (redirects to /login)
 ```
 
-## Demo Accounts
+Copy `.env.example` to `.env.local`. With no control-service URL, development login remains available for local UI work only. Production returns an error instead of falling back to demo authentication.
 
-Sign in at `/login`. On the login screen you can **tap any account to auto-fill** the credentials.
+## MVP wedge — Agent Studio (`/studio`)
 
-| Name | Role | Username | Password | Lands on |
-|------|------|----------|----------|----------|
-| **Muzammil Rashid** | Founder & CEO (master) | `muzammil` | `maestro2026` | Overview + Team |
-| Priya Mehta | Account Manager | `priya` | `ziworks123` | My Work |
-| Rohan Sharma | Research Analyst | `rohan` | `ziworks123` | My Work |
-| Divya Nair | Creative Lead | `divya` | `ziworks123` | My Work |
-| Arjit Singh | Compliance Officer | `arjit` | `ziworks123` | My Work |
-| Sneha Patel | Finance Manager | `sneha` | `ziworks123` | My Work |
-| Karan Malhotra | Content & Production | `karan` | `ziworks123` | My Work |
+A **self-contained**, ship-today slice built to prove instant value to the owner (no control service required). Muzammil **builds a trainable agent himself**: he defines its **goal, task, and rules**, then runs inputs, checks the result, and corrects it — corrections and rules become per-agent memory injected into every future run, so it visibly gets smarter. A live counter (runs · risks caught · time saved) makes the ROI obvious. It ships seeded with a ready-to-use **SEBI & AMFI Compliance Guardian**, but agents aren't fixed to any preset roles.
 
-> Auth is a client-side demo (localStorage). No real backend, no server-side sessions — safe to deploy as a static/edge app.
+- **Runtime:** `app/api/studio/run/route.ts` calls the Anthropic Messages API directly with **extended thinking** (mirrors `/api/architect`); falls back to a deterministic BFSI red-flag simulation when `ANTHROPIC_API_KEY` is absent, so the demo never breaks.
+- **State:** `lib/studio/*` on `localStorage` for the demo — shapes are forward-compatible with the control service's agent-scoped memory (`PlatformMemory.scope:'agent'`), so this can migrate onto `/api/v1` later without a redesign.
+- **Env:** set `ANTHROPIC_API_KEY` (and optional `MAESTRO_MODEL`, default `claude-sonnet-5`) to make it a live thinking agent.
 
-## Roles & Views
+This is deliberately separate from the production **Agent Control** / Vertex pipeline above: the Studio is the wedge that gets a "yes"; the control service is the platform it grows into.
 
-**Master (Muzammil)** sees the whole company:
-- **Overview** — CEO command center: headline metrics, revenue, "what your team is shipping", project health, pipeline, collections, approvals, client health, opportunity alerts
-- **The Architect** — a **thinking agent** that interviews you to spin up a new project (see below)
-- **Team** — the agent suite + a card per employee showing their campaign and agent progress. Open any employee to see their full agent workspace.
-- **Clients** — every client with its owning employee and agent progress; open a client to see the agent pipeline running that campaign, plus invoices
-- **Finance** — revenue, collections and billing, run by the **Finance Agent** across every campaign
-- **Web & Social** — the agency's *own* presence: ziworks.in health + page traffic + inbound leads, and the ZiWorks / Muzammil founder social handles with their own brand content calendar (not client channels — those live under Projects)
-- **Memory** — everything the system has learned (see below)
-- **Projects**, **Settings**
+## Local control service
 
-Each employee runs a full client campaign end-to-end through the **agent suite** (Brief Decoder → Researcher → Copywriter → Compliance Guardian → Client Liaison → Finance Tracker, orchestrated by the Master Agent). Every dashboard opens with an **AI · Recommended Next Steps** panel.
+From `services/control`:
 
-## The Architect (thinking agent) + learning memory
-
-Click **New Project**. The Architect interviews Muzammil one question at a time, tracking a live checklist of what it knows, showing its reasoning each turn, and **deciding for itself** when it has enough — then it writes a structured brief, suggests the least-loaded capable owner, and (on approval) drops the project onto that employee's dashboard with the verbatim instructions attached.
-
-**It is a real agent, not a one-shot LLM call:**
-- **Extended thinking** on every turn (`app/api/architect/route.ts` → Anthropic Messages API), so it reasons before it speaks.
-- A forced-schema `architect_turn` decision each turn: `reasoningSummary`, `updatedSlots`, and `ask` vs `finalize`.
-- Explicit interview state, a stopping rule, and a hard finalize by turn 8 with assumptions listed.
-
-**Memory learns from two sources** and is injected into every future interview (`lib/memory-store.ts`):
-1. **Muzammil's instructions** (captured verbatim from interviews).
-2. **Every approval / correction, with the reason why** — approve or flag any agent step in a workspace, or revise a brief with a reason, and it becomes a weighted memory (corrections outrank approvals). Browse it all under **Memory**.
-
-### Why Anthropic API and not SageMaker
-
-SageMaker's no-code (Canvas) is AutoML for tabular/forecasting and model hosting — it does **not** orchestrate a multi-turn thinking agent, so you'd still build all the interview/memory/stopping logic yourself, on top of an always-on GPU endpoint and weaker models. The "thinking" comes from the **agent design** here, not the hosting. The AWS-native path for agents is **Amazon Bedrock** (the same Claude models); this route is written so the transport can be swapped Anthropic ↔ Bedrock in ~20 lines if a BFSI client later needs AWS residency.
-
-## Environment
-
-The demo runs with **no keys** — the Architect falls back to a deterministic simulation (flagged "Simulation" in the UI) so it never breaks. To make it a live thinking agent, add on Vercel (Project → Settings → Environment Variables):
-
-```
-ANTHROPIC_API_KEY = sk-ant-...        # required for the live agent
-MAESTRO_MODEL      = claude-sonnet-5  # optional, this is the default
+```bash
+uv sync --extra dev
+uv run uvicorn app.main:app --reload
+uv run pytest -q -p no:cacheprovider
 ```
 
-**Operators** each see **My Work** — their personal dashboard:
-- Hours this month vs typical, time saved, completed, active
-- Active task queue (with priority, status, blockers)
-- Where their time goes (breakdown bars)
-- Waiting-on-others and their own handoffs downstream
-- A per-person note on how Maestro helps them
+Copy `services/control/.env.example` to `.env`. SQLite is suitable for local workflow tests; production uses the Cloud SQL URL injected by Secret Manager.
 
-Operators are restricted to their own routes; master-only pages redirect them back to My Work.
+## Deployment order
 
-## Deploy to Vercel
+1. Create a Google Cloud project with billing and set the Terraform variables documented in `infra/terraform/README.md`.
+2. Build `services/control/Dockerfile`, push it to Artifact Registry, and apply Terraform.
+3. Create the owner in Identity Platform and set `owner_identity_uid` to that account's Firebase UID.
+4. Run `python -m app.migrate` against Cloud SQL to create tables, pgvector indexes, the four agent records, and the owner role.
+5. Deploy `services/control/agents/agent.py` with the ADK Agent Engine CLI in `asia-south1`, then set `agent_engine_id` and re-apply Terraform.
+6. Set `control_service_url` to Terraform's first `control_api_url` output and re-apply so Cloud Tasks can call the private job endpoint.
+7. Copy the `vercel_environment` output into the Vercel production environment and redeploy.
+8. Configure the private vault repository and GitHub webhook only after core run acceptance passes.
 
-Standard Next.js App Router project. Deploy as usual, then add `ANTHROPIC_API_KEY` in the project's Environment Variables (see **Environment** above) to enable the live Architect. Without it, everything still works in simulation mode.
+## Verification
 
-## Stack
+```bash
+npm run lint
+npx tsc --noEmit
+npm run build
+cd services/control
+uv run --extra dev ruff check app agents tests
+uv run --extra dev pytest -q -p no:cacheprovider
+```
 
-Next.js 16 · TypeScript · Tailwind CSS v4 · Framer Motion · Recharts · lucide-react · Anthropic Messages API (extended thinking)
-
-## How it's wired
-
-- `lib/users.ts` — the 7 accounts (1 master + 6 employees), roles, credentials
-- `lib/agents.ts` — the 6-agent suite + Master Agent
-- `lib/employee-projects.ts` — each employee's campaign + per-agent state, memory, activity
-- `lib/architect/` — the thinking-agent types, system prompt, and simulation fallback
-- `app/api/architect/route.ts` — the agent loop (Anthropic API + fallbacks)
-- `lib/memory-store.ts` — the learning memory (instructions + approvals/corrections)
-- `lib/project-store.ts` — briefs assigned to employees + workload signal
-- `lib/mock-data.ts` — company-wide clients, projects, leads, revenue, invoices
-- `lib/digital-data.ts` — websites, social channels, content calendar
-- `lib/ai-insights.ts` — AI "next step" recommendations per view
-- `lib/nav.ts` — per-role navigation + route access
-
-Memory and assigned projects use `localStorage` for the demo (documented in-file as swap-for-DB later). Everything else is mock data with `// TODO: replace with GET /api/...` markers.
-
-## Out of scope (next steps)
-
-Real DB + cross-device memory sync · SSE streaming of the agent's turns · Bedrock transport (designed swap-ready) · production auth hardening.
+The owner should pilot one real client through training, five calibrations per agent, activation, all four approval gates, a revision, approved memory, and vault synchronization before expanding the suite.

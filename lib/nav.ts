@@ -8,6 +8,8 @@ import {
   Globe,
   Workflow,
   Database,
+  Bot,
+  FlaskConical,
   type LucideIcon,
 } from 'lucide-react'
 import type { UserRole } from './users'
@@ -20,6 +22,8 @@ export interface NavItem {
 
 const MASTER_NAV: NavItem[] = [
   { label: 'Overview', href: '/overview', icon: LayoutDashboard },
+  { label: 'Agent Studio', href: '/studio', icon: FlaskConical },
+  { label: 'Agent Control', href: '/agent-control', icon: Bot },
   { label: 'Architect', href: '/architect', icon: Workflow },
   { label: 'Team', href: '/team', icon: Users },
   { label: 'Clients', href: '/clients', icon: ClipboardList },
@@ -41,7 +45,7 @@ export function getNavForRole(role: UserRole): NavItem[] {
 }
 
 // Routes only the master may open. Operators hitting these are redirected to /my-work.
-export const MASTER_ONLY_ROUTES = ['/overview', '/architect', '/team', '/clients', '/finance', '/digital', '/memory']
+export const MASTER_ONLY_ROUTES = ['/overview', '/studio', '/agent-control', '/architect', '/team', '/clients', '/finance', '/digital', '/memory']
 
 // The landing route for a given role after login.
 export function homeForRole(role: UserRole): string {

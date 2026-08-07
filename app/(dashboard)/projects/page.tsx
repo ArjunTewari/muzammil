@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { ArrowLeft, Calendar, DollarSign } from 'lucide-react'
 import Link from 'next/link'
 import { CampaignArchitect } from '@/components/project/campaign-architect'
-import { WorkflowTracker } from '@/components/project/workflow-tracker'
+import { GatedWorkflow } from '@/components/project/gated-workflow'
 import { DeliverablesList } from '@/components/project/deliverables-list'
 import { ActivityLog } from '@/components/project/activity-log'
 import { Badge } from '@/components/ui/badge'
@@ -106,17 +106,17 @@ export default function ProjectsPage() {
         </div>
       </motion.div>
 
-      {/* Workflow Tracker */}
+      {/* Gated workflow (Blueprint) */}
       <Section title="Workflow" delay={0.1}>
         <Card goldRule>
           <CardHeader>
-            <CardTitle>Workflow Progress</CardTitle>
+            <CardTitle>Workflow — Gated Process</CardTitle>
             <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">
-              Stage 5 of 11 · Currently in Script
+              Each stage clears its gate before the work can move on — the founder&apos;s standard, enforced.
             </p>
           </CardHeader>
           <CardContent className="pt-2">
-            <WorkflowTracker currentStageIndex={project.currentStageIndex} />
+            <GatedWorkflow projectId={project.id} initialStageIndex={project.currentStageIndex} />
           </CardContent>
         </Card>
       </Section>

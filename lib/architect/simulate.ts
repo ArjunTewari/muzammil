@@ -1,5 +1,6 @@
 import type { ArchitectRequest, ArchitectTurn, BriefSlots } from './types'
 import { REQUIRED_SLOTS } from './types'
+import { inferDeliverableType } from '../deliverable-type'
 
 // Deterministic fallback interviewer. Follows the SAME checklist and output
 // contract as the live agent, so the demo never breaks without an API key.
@@ -13,6 +14,8 @@ const QUESTIONS: Record<string, (s: BriefSlots) => string> = {
     `What's the goal for ${s.client ?? 'this client'}? What should it make people think, feel, or do?`,
   deliverables: (s) =>
     `What are we actually producing for ${s.client ?? 'them'} — reels, statics, a newsletter, a film, a deck?`,
+  deliverableType: () =>
+    'And which format is this, exactly — static, carousel, video, or AI video? This is step 2 of the project: Work to be done.',
   budget: () => 'Roughly what budget are we working with? (e.g. ₹2L, ₹5L)',
   timeline: () => 'When does this need to land? A go-live date or a rough deadline is fine.',
   audience: (s) =>
@@ -23,7 +26,8 @@ const QUESTIONS: Record<string, (s: BriefSlots) => string> = {
 const REASONING: Record<string, string> = {
   client: 'Starting with the client anchors everything else — brand voice, compliance history, past winners.',
   objective: 'I have the client; now I need the real objective so the work is aimed, not decorative.',
-  deliverables: 'Objective is clear — I need the format to scope effort and route the right agents.',
+  deliverables: 'Objective is clear — I need to know what we\'re producing to scope effort and route the right agents.',
+  deliverableType: 'Every project needs its format pinned down explicitly — static, carousel, video, or AI video — before it can move to work.',
   budget: 'Scope is taking shape; budget tells me how ambitious the production can be.',
   timeline: 'Almost there — the deadline drives sequencing and how much the agents parallelise.',
   audience: 'Core scope is locked. Nailing the audience sharpens the creative brief.',
@@ -75,6 +79,7 @@ function absorbAnswer(slots: BriefSlots, lastUser: string | undefined): BriefSlo
   const order: (keyof BriefSlots)[] = [...REQUIRED_SLOTS, ...ENRICHERS]
   const next = order.find((k) => !slots[k])
   if (!next) return slots
+  if (next === 'deliverableType') return { ...slots, deliverableType: inferDeliverableType(lastUser) }
   return { ...slots, [next]: lastUser.trim() }
 }
 
@@ -139,6 +144,7 @@ export function simulateTurn(req: ArchitectRequest): { turn: ArchitectTurn; turn
         objective: slots.objective ?? 'Drive awareness and consideration.',
         decodedAsk: `Beyond the literal ask, the real objective is to move ${slots.audience ?? 'the target investor'} from passive awareness to action for ${client}, using ${deliverables.join(', ')}.`,
         deliverables,
+        deliverableType: slots.deliverableType ?? inferDeliverableType(slots.deliverables ?? ''),
         budget,
         dueDate: slots.timeline ?? '4 weeks from kickoff',
         complianceNotes: [

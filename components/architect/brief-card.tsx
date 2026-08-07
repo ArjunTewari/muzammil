@@ -6,6 +6,7 @@ import { Check, RotateCcw, ShieldCheck, Quote, Lightbulb, Target, Package, UserR
 import { USERS, getUserById } from '@/lib/users'
 import { formatLakhs } from '@/lib/utils'
 import type { ProjectBrief } from '@/lib/architect/types'
+import { DeliverableBadge } from '@/components/shared/deliverable-badge'
 
 const EMPLOYEES = USERS.filter((u) => u.role !== 'master')
 
@@ -52,9 +53,12 @@ export function BriefCard({
         <h2 className="text-xl text-[var(--color-text-primary)] leading-tight" style={{ fontFamily: 'var(--font-instrument-serif)' }}>
           {brief.title}
         </h2>
-        <p className="text-xs text-[var(--color-text-tertiary)] mt-1">
-          {brief.client} · {formatLakhs(brief.budget)} · due {brief.dueDate}
-        </p>
+        <div className="flex items-center flex-wrap gap-2 mt-1.5">
+          <DeliverableBadge type={brief.deliverableType} />
+          <p className="text-xs text-[var(--color-text-tertiary)]">
+            {brief.client} · {formatLakhs(brief.budget)} · due {brief.dueDate}
+          </p>
+        </div>
       </div>
 
       {/* Body */}

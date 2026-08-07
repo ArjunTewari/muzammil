@@ -3,6 +3,7 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { Check, Circle } from 'lucide-react'
 import { REQUIRED_SLOTS, SLOT_LABELS, type BriefSlots } from '@/lib/architect/types'
+import { DeliverableBadge } from '@/components/shared/deliverable-badge'
 
 const ENRICHERS: (keyof BriefSlots)[] = [
   'audience',
@@ -51,7 +52,16 @@ export function SlotChecklist({ slots }: { slots: BriefSlots }) {
                   {SLOT_LABELS[key]}
                 </p>
                 <AnimatePresence>
-                  {done && (
+                  {done && key === 'deliverableType' && slots.deliverableType && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: 'auto' }}
+                      className="mt-0.5"
+                    >
+                      <DeliverableBadge type={slots.deliverableType} size="sm" />
+                    </motion.div>
+                  )}
+                  {done && key !== 'deliverableType' && (
                     <motion.p
                       initial={{ opacity: 0, height: 0 }}
                       animate={{ opacity: 1, height: 'auto' }}

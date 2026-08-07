@@ -11,6 +11,7 @@ import { getNavForRole } from '@/lib/nav'
 import type { AppUser } from '@/lib/users'
 import { getProjectRows, type ProjectRow } from '@/lib/project-rows'
 import { subscribeProjects } from '@/lib/project-store'
+import { DeliverableBadge } from '@/components/shared/deliverable-badge'
 
 function openPalette() {
   window.dispatchEvent(new CustomEvent('maestro:open-command-palette'))
@@ -173,7 +174,10 @@ export function Sidebar({ user, onLogout }: { user: AppUser; onLogout: () => voi
                     <p className="text-[13px] text-[var(--color-text-primary)] truncate leading-tight group-hover:text-[var(--color-gold)] transition-colors">
                       {row.title}
                     </p>
-                    <p className="text-[11px] text-[var(--color-text-tertiary)] truncate">{row.subtitle}</p>
+                    <div className="flex items-center gap-1.5 min-w-0">
+                      <p className="text-[11px] text-[var(--color-text-tertiary)] truncate">{row.subtitle}</p>
+                      <DeliverableBadge type={row.deliverableType} size="sm" />
+                    </div>
                   </div>
                   {row.isNew && <Sparkles size={11} className="text-[var(--color-gold)] flex-shrink-0" />}
                 </Link>

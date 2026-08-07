@@ -1,18 +1,24 @@
 // Shared types for the Architect agent — the thinking interviewer that
 // turns Muzammil's intent into a structured, assignable project brief.
 
+import type { DeliverableType } from '../deliverable-type'
+
 export interface ChatMessage {
   role: 'user' | 'assistant'
   content: string
 }
 
 // The information checklist the agent fills over the interview.
-// Required to finalize: client, objective, deliverables, budget, timeline.
+// Required to finalize: client, objective, deliverables, deliverableType,
+// budget, timeline. Every project moves through 3 steps: Brief Cracking
+// (this interview) → Work to be done (deliverableType, chosen here) →
+// Review & Delivery (the gated workflow / client share stages later).
 export interface BriefSlots {
   client?: string
   objective?: string
   audience?: string
   deliverables?: string
+  deliverableType?: DeliverableType
   keyMessage?: string
   compliance?: string
   budget?: string
@@ -25,6 +31,7 @@ export const REQUIRED_SLOTS: (keyof BriefSlots)[] = [
   'client',
   'objective',
   'deliverables',
+  'deliverableType',
   'budget',
   'timeline',
 ]
@@ -33,6 +40,7 @@ export const SLOT_LABELS: Record<keyof BriefSlots, string> = {
   client: 'Client',
   objective: 'Objective',
   deliverables: 'Deliverables',
+  deliverableType: 'Format',
   budget: 'Budget',
   timeline: 'Timeline',
   audience: 'Audience',
@@ -53,6 +61,7 @@ export interface ProjectBrief {
   objective: string
   decodedAsk: string
   deliverables: string[]
+  deliverableType: DeliverableType
   budget: number
   dueDate: string
   complianceNotes: string[]

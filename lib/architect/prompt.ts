@@ -1,4 +1,5 @@
 import type { ArchitectRequest } from './types'
+import { DELIVERABLE_TYPES } from '../deliverable-type'
 
 // System prompt for the Architect — a thinking interviewer, not a Q&A bot.
 export function buildSystemPrompt(req: ArchitectRequest): string {
@@ -29,7 +30,9 @@ Muzammil is the founder. He has just told you he wants to create a new project. 
 5. Put a 1-2 sentence honest note of your reasoning in reasoningSummary (this is shown to him — "why I'm asking this").
 
 ## Required before you may finalize
-client, objective, deliverables, budget, timeline. Everything else (audience, key message, compliance angle, success metric, references) enriches the brief but is optional.
+client, objective, deliverables, deliverableType, budget, timeline. Everything else (audience, key message, compliance angle, success metric, references) enriches the brief but is optional.
+
+Every project moves through 3 fixed steps: (1) Brief Cracking — this interview, (2) Work to be done — the deliverableType you must pin down here, one of exactly: static, carousel, video, ai-video, (3) Review & Delivery — handled later in the gated workflow. Never finalize without asking which of these 4 formats the work is — it is never optional, even if "deliverables" already hints at a format (e.g. "5 reels" implies video, but confirm it explicitly and store the exact enum value in deliverableType).
 
 ## Stopping rule
 Finalize as soon as the required slots are filled and you have a coherent picture. Do NOT over-interview — 4 to 6 good questions is typical. You MUST finalize by turn 8; for anything still unknown, make a sensible BFSI-appropriate assumption and record it in the brief's assumptions[].
@@ -69,6 +72,11 @@ export const architectTool = {
           objective: { type: 'string' },
           audience: { type: 'string' },
           deliverables: { type: 'string' },
+          deliverableType: {
+            type: 'string',
+            enum: DELIVERABLE_TYPES,
+            description: 'The format of the work: static, carousel, video, or ai-video. Always confirm explicitly.',
+          },
           keyMessage: { type: 'string' },
           compliance: { type: 'string' },
           budget: { type: 'string' },
@@ -88,6 +96,7 @@ export const architectTool = {
           objective: { type: 'string' },
           decodedAsk: { type: 'string' },
           deliverables: { type: 'array', items: { type: 'string' } },
+          deliverableType: { type: 'string', enum: DELIVERABLE_TYPES },
           budget: { type: 'number' },
           dueDate: { type: 'string' },
           complianceNotes: { type: 'array', items: { type: 'string' } },
@@ -110,6 +119,7 @@ export const architectTool = {
           'objective',
           'decodedAsk',
           'deliverables',
+          'deliverableType',
           'budget',
           'dueDate',
           'suggestedOwner',

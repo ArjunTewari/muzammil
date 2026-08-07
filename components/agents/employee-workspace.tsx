@@ -5,11 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, Database, Activity, CornerDownRight, CalendarClock } from 'lucide-react'
 import { AgentPipeline } from '@/components/agents/agent-pipeline'
 import { AssignedProjects } from '@/components/agents/assigned-projects'
+import { ProjectMemory } from '@/components/agents/project-memory'
 import { Composer } from '@/components/shared/composer'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { agentProgress, type EmployeeProject } from '@/lib/employee-projects'
 import type { AppUser } from '@/lib/users'
 import { formatLakhs } from '@/lib/utils'
+import { DeliverableBadge } from '@/components/shared/deliverable-badge'
 
 export function EmployeeWorkspace({
   user,
@@ -71,9 +73,12 @@ export function EmployeeWorkspace({
         <div className="absolute left-0 top-0 bottom-0 w-0.5 bg-[var(--color-gold)]" />
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
-            <p className="text-xs uppercase tracking-widest text-[var(--color-text-tertiary)] mb-1">
-              Running · {project.client}
-            </p>
+            <div className="flex items-center gap-2 mb-1">
+              <p className="text-xs uppercase tracking-widest text-[var(--color-text-tertiary)]">
+                Running · {project.client}
+              </p>
+              <DeliverableBadge type={project.deliverableType} size="sm" />
+            </div>
             <h2
               className="text-xl text-[var(--color-text-primary)] leading-tight"
               style={{ fontFamily: 'var(--font-instrument-serif)' }}
@@ -235,6 +240,9 @@ export function EmployeeWorkspace({
           </CardContent>
         </Card>
       </div>
+
+      {/* Files attached to this project — its uploadable memory */}
+      <ProjectMemory projectId={user.id} />
     </div>
   )
 }

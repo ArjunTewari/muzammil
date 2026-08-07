@@ -1,5 +1,6 @@
 import type { AgentId } from './agents'
 import type { NextStep } from './ai-insights'
+import type { DeliverableType } from './deliverable-type'
 
 // Each employee owns one client campaign and runs it end-to-end through the
 // full agent suite. The Master Agent orchestrates; these are the per-agent
@@ -24,6 +25,7 @@ export interface EmployeeProject {
   employeeId: string
   client: string
   projectTitle: string
+  deliverableType: DeliverableType
   objective: string
   dueDate: string
   budget: number
@@ -41,6 +43,7 @@ const PROJECTS: Record<string, EmployeeProject> = {
     employeeId: 'priya',
     client: 'Axis MF',
     projectTitle: 'Retirement Planning — 10-part Reel IP',
+    deliverableType: 'video',
     objective:
       'Make retirement planning feel urgent and personal to 30-something SIP investors, without fear-mongering.',
     dueDate: '2026-07-04',
@@ -82,6 +85,7 @@ const PROJECTS: Record<string, EmployeeProject> = {
     employeeId: 'rohan',
     client: 'Kotak MF',
     projectTitle: 'Flexi Cap — Reel Campaign (6-part)',
+    deliverableType: 'carousel',
     objective:
       'Explain flexi-cap flexibility to first-time equity investors without jargon.',
     dueDate: '2026-07-10',
@@ -122,6 +126,7 @@ const PROJECTS: Record<string, EmployeeProject> = {
     employeeId: 'divya',
     client: 'DSP MF',
     projectTitle: 'Tiger Fund — 25th Anniversary Campaign',
+    deliverableType: 'video',
     objective:
       'Celebrate 25 years of DSP Tiger Fund and turn heritage into fresh relevance.',
     dueDate: '2026-07-18',
@@ -162,6 +167,7 @@ const PROJECTS: Record<string, EmployeeProject> = {
     employeeId: 'arjit',
     client: 'Motilal Oswal',
     projectTitle: 'SIP Compounding — Explainer Series',
+    deliverableType: 'static',
     objective:
       'Make compounding tangible for young investors through simple, correct math.',
     dueDate: '2026-07-12',
@@ -202,6 +208,7 @@ const PROJECTS: Record<string, EmployeeProject> = {
     employeeId: 'sneha',
     client: 'HDFC AMC',
     projectTitle: 'IFA Education Series (YouTube, 6 episodes)',
+    deliverableType: 'video',
     objective:
       'Equip independent financial advisors with shareable, compliant explainer content.',
     dueDate: '2026-07-20',
@@ -242,6 +249,7 @@ const PROJECTS: Record<string, EmployeeProject> = {
     employeeId: 'karan',
     client: 'Nippon MF',
     projectTitle: 'SIP-Day Reels (3-part Instagram burst)',
+    deliverableType: 'ai-video',
     objective:
       'Turn the monthly SIP debit date into a habit-reinforcing content moment.',
     dueDate: '2026-06-22',

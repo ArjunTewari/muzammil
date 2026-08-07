@@ -11,6 +11,7 @@ import { USERS } from '@/lib/users'
 import { getEmployeeProject, agentProgress } from '@/lib/employee-projects'
 import { getAgent } from '@/lib/agents'
 import { newProjectCount, subscribeProjects } from '@/lib/project-store'
+import { DeliverableBadge } from '@/components/shared/deliverable-badge'
 
 const EMPLOYEE_IDS = ['priya', 'rohan', 'divya', 'arjit', 'sneha', 'karan']
 
@@ -105,9 +106,12 @@ export default function TeamPage() {
 
                   {/* Project */}
                   <div className="rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface-elevated)] p-2.5 mb-3">
-                    <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-tertiary)]">
-                      Running · {project.client}
-                    </p>
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-tertiary)]">
+                        Running · {project.client}
+                      </p>
+                      <DeliverableBadge type={project.deliverableType} size="sm" />
+                    </div>
                     <p className="text-sm text-[var(--color-text-primary)] leading-snug mt-0.5">
                       {project.projectTitle}
                     </p>

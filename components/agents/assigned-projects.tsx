@@ -12,6 +12,7 @@ import {
 } from '@/lib/project-store'
 import { getRelevantMemories } from '@/lib/memory-store'
 import { formatLakhs } from '@/lib/utils'
+import { DeliverableBadge } from '@/components/shared/deliverable-badge'
 
 export function AssignedProjects({
   employeeId,
@@ -65,6 +66,9 @@ export function AssignedProjects({
                     <h3 className="text-lg text-[var(--color-text-primary)] leading-tight" style={{ fontFamily: 'var(--font-instrument-serif)' }}>
                       {p.title}
                     </h3>
+                    <div className="mt-1.5">
+                      <DeliverableBadge type={p.brief.deliverableType} size="sm" />
+                    </div>
                   </div>
                   <Badge variant={isNew ? 'gold' : 'green'}>{isNew ? 'New' : 'Accepted'}</Badge>
                 </div>

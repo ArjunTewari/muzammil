@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { ArrowLeft, ArrowRight, AlertCircle, Layers, Wallet, UserRound } from 'lucide-react'
 import { AgentPipeline } from '@/components/agents/agent-pipeline'
+import { ClientTimeline } from '@/components/clients/client-timeline'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { clients, invoices } from '@/lib/mock-data'
@@ -138,6 +139,9 @@ export default function ClientDetailPage({
           </p>
         </Card>
       )}
+
+      {/* Client 360 — unified activity + notes */}
+      <ClientTimeline client={client} project={project} invoices={clientInvoices} />
 
       {/* Invoices */}
       {clientInvoices.length > 0 && (

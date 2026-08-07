@@ -30,7 +30,8 @@ export function CommandPalette() {
 
   const isMaster = user?.role === 'master'
 
-  // Global ⌘K / Ctrl+K
+  // Global ⌘K / Ctrl+K, plus an external trigger (the sidebar search field
+  // dispatches this so it doesn't need to own palette state itself).
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
@@ -39,8 +40,15 @@ export function CommandPalette() {
       }
       if (e.key === 'Escape') setOpen(false)
     }
+    function onExternalOpen() {
+      setOpen(true)
+    }
     window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
+    window.addEventListener('maestro:open-command-palette', onExternalOpen)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('maestro:open-command-palette', onExternalOpen)
+    }
   }, [])
 
   useEffect(() => {

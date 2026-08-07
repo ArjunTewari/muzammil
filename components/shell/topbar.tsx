@@ -7,6 +7,7 @@ import type { AppUser } from '@/lib/users'
 
 const pageTitles: Record<string, string> = {
   '/overview': 'Overview',
+  '/agent-control': 'Agent Control',
   '/architect': 'The Architect',
   '/memory': 'Memory',
   '/team': 'Team',
@@ -54,18 +55,12 @@ export function Topbar({
           {pageTitle}
         </span>
 
-        <div className="hidden md:flex items-center gap-2 bg-[var(--color-surface)] border border-[var(--color-border-brand)] rounded-[8px] px-3 py-2 w-72">
-          <Search size={14} className="text-[var(--color-text-tertiary)] flex-shrink-0" />
-          <input
-            type="text"
-            placeholder="Search clients, projects, tasks..."
-            className="bg-transparent text-sm text-[var(--color-text-secondary)] placeholder:text-[var(--color-text-tertiary)] outline-none w-full"
-            readOnly
-          />
-          <kbd className="text-[10px] text-[var(--color-text-tertiary)] bg-[var(--color-border-brand)] px-1.5 py-0.5 rounded font-mono">
-            ⌘K
-          </kbd>
-        </div>
+        {/* Desktop: page title only — search + New Project now live in the sidebar */}
+        <span
+          className="hidden md:block text-sm font-medium text-[var(--color-text-secondary)]"
+        >
+          {pageTitle}
+        </span>
       </div>
 
       {/* Right side */}
@@ -74,7 +69,7 @@ export function Topbar({
         {user.role === 'master' && (
           <Link
             href="/architect"
-            className="inline-flex items-center gap-1.5 h-8 pl-2.5 pr-3 rounded-[8px] bg-[var(--color-gold)] text-[var(--color-ink)] text-xs font-semibold hover:bg-[#d4b46a] hover:shadow-[var(--shadow-glow-gold)] active:scale-95 transition-all duration-200 cursor-pointer"
+            className="md:hidden inline-flex items-center gap-1.5 h-8 pl-2.5 pr-3 rounded-[8px] bg-[var(--color-gold)] text-[var(--color-ink)] text-xs font-semibold hover:bg-[#d4b46a] hover:shadow-[var(--shadow-glow-gold)] active:scale-95 transition-all duration-200 cursor-pointer"
           >
             <Plus size={14} />
             <span className="hidden sm:inline">New Project</span>

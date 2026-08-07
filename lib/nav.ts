@@ -1,6 +1,5 @@
 import {
   LayoutDashboard,
-  Workflow,
   Receipt,
   Globe,
   Bot,
@@ -16,22 +15,19 @@ export interface NavItem {
   icon: LucideIcon
 }
 
-// The founder's home is the chat (the Architect). Three persistent tabs:
-// Dashboard (the numbers), Execution (the /team hub — every project, one
-// row each), and Finance (billing/collections) — kept separate so each
-// has its own clear job. Everything else lives under Settings or is
-// reachable via the command palette (⌘K).
-const MASTER_NAV: NavItem[] = [
-  { label: 'Dashboard', href: '/overview', icon: LayoutDashboard },
-  { label: 'Execution', href: '/team', icon: Workflow },
-  { label: 'Finance', href: '/finance', icon: Receipt },
-]
+// The founder's home is the chat (the Architect); Dashboard is the only
+// persistent tab. Execution (/team) and Finance are clubbed back under
+// Dashboard rather than getting their own top-nav tabs — reachable via the
+// sidebar's live Projects list, "Back to Team" from any workspace, Settings,
+// or the command palette (⌘K).
+const MASTER_NAV: NavItem[] = [{ label: 'Dashboard', href: '/overview', icon: LayoutDashboard }]
 
 const OPERATOR_NAV: NavItem[] = [{ label: 'My Work', href: '/my-work', icon: LayoutDashboard }]
 
 // Reachable from the sidebar's Settings entry (and the command palette) —
 // not top-level tabs, but still real, still master-only.
 export const SETTINGS_NAV: NavItem[] = [
+  { label: 'Finance', href: '/finance', icon: Receipt },
   { label: 'Web & Social', href: '/digital', icon: Globe },
   { label: 'Agent Studio', href: '/studio', icon: FlaskConical },
   { label: 'Agent Control', href: '/agent-control', icon: Bot },

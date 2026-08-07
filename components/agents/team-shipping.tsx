@@ -8,7 +8,7 @@ import { USERS } from '@/lib/users'
 import { getEmployeeProject, agentProgress } from '@/lib/employee-projects'
 import { getAgent } from '@/lib/agents'
 
-const EMPLOYEE_IDS = ['priya', 'rohan', 'divya', 'arjit', 'sneha', 'karan']
+const EMPLOYEE_IDS = ['priya', 'rohan', 'divya', 'arjit', 'sneha']
 
 export function TeamShipping() {
   return (

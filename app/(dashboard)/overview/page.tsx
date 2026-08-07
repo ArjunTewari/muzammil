@@ -2,13 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { HeadlineStats } from '@/components/overview/headline-stats'
-import { RevenueSnapshot } from '@/components/overview/revenue-snapshot'
-import { ProjectHealth } from '@/components/overview/project-health'
-import { PipelineLeads } from '@/components/overview/pipeline-leads'
-import { Collections } from '@/components/overview/collections'
 import { Approvals } from '@/components/overview/approvals'
-import { ClientHealth } from '@/components/overview/client-health'
-import { OpportunityAlerts } from '@/components/overview/opportunity-alerts'
 import { TeamShipping } from '@/components/agents/team-shipping'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
@@ -47,7 +41,7 @@ export default function OverviewPage() {
           className="text-2xl sm:text-3xl text-[var(--color-text-primary)] mb-1"
           style={{ fontFamily: 'var(--font-instrument-serif)' }}
         >
-          Good morning, Muzammil.
+          Good morning, Muzzammil.
         </h1>
         <p className="text-sm text-[var(--color-text-tertiary)]">
           Saturday, 21 June 2026 · ZiWorks Advertising
@@ -59,44 +53,14 @@ export default function OverviewPage() {
         <HeadlineStats />
       </SectionWrapper>
 
-      {/* What the team is shipping via their agents */}
+      {/* Needs your decision */}
       <SectionWrapper delay={0.15}>
+        <Approvals />
+      </SectionWrapper>
+
+      {/* What the team is shipping via their agents */}
+      <SectionWrapper delay={0.2}>
         <TeamShipping />
-      </SectionWrapper>
-
-      {/* Two-column grid: Revenue + Approvals */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-        <SectionWrapper delay={0.2} className="lg:col-span-2">
-          <RevenueSnapshot />
-        </SectionWrapper>
-        <SectionWrapper delay={0.25}>
-          <Approvals />
-        </SectionWrapper>
-      </div>
-
-      {/* Project Health */}
-      <SectionWrapper delay={0.3}>
-        <ProjectHealth />
-      </SectionWrapper>
-
-      {/* Two-column: Pipeline + Collections */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        <SectionWrapper delay={0.35}>
-          <PipelineLeads />
-        </SectionWrapper>
-        <SectionWrapper delay={0.4}>
-          <Collections />
-        </SectionWrapper>
-      </div>
-
-      {/* Client Health */}
-      <SectionWrapper delay={0.45}>
-        <ClientHealth />
-      </SectionWrapper>
-
-      {/* Opportunity Alerts */}
-      <SectionWrapper delay={0.5}>
-        <OpportunityAlerts />
       </SectionWrapper>
     </div>
   )

@@ -4,7 +4,7 @@ import { motion } from 'framer-motion'
 import { useCountUp } from '@/hooks/use-count-up'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import { formatLakhs } from '@/lib/utils'
-import { clients, projects, leads, revenueData } from '@/lib/mock-data'
+import { projects, leads, revenueData } from '@/lib/mock-data'
 
 function MetricCard({
   label,
@@ -83,34 +83,25 @@ function CountUpNumber({
 }
 
 export function HeadlineStats() {
-  const activeClients = clients.filter((c) => c.status !== 'at-risk').length
   const activeProjects = projects.filter((p) => p.status === 'on-track' || p.status === 'awaiting-review').length
   const openLeads = leads.filter((l) => l.stage !== 'won' && l.stage !== 'lost').length
   const q1Revenue = revenueData.slice(-3).reduce((s, d) => s + d.revenue, 0)
-  const onTrack = projects.filter((p) => p.status === 'on-track').length
-  const atRisk = projects.filter((p) => p.status !== 'on-track').length
-  const total = onTrack + atRisk
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
-      <MetricCard label="Active Clients" subtext="across 8 AMC relationships" index={0}>
-        <CountUpNumber target={activeClients} delay={300} />
-        <p className="text-xs text-[var(--color-text-tertiary)] mt-1">across 8 AMC relationships</p>
-      </MetricCard>
-
-      <MetricCard label="Active Projects" subtext="across all clients" index={1}>
-        <CountUpNumber target={activeProjects} delay={380} />
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+      <MetricCard label="Active Projects" subtext="one per client" index={0}>
+        <CountUpNumber target={activeProjects} delay={300} />
         <p className="text-xs text-[var(--color-text-tertiary)] mt-1">{projects.length} total this quarter</p>
       </MetricCard>
 
-      <MetricCard label="Open Leads" subtext="in pipeline" index={2}>
-        <CountUpNumber target={openLeads} delay={460} />
+      <MetricCard label="Open Leads" subtext="in pipeline" index={1}>
+        <CountUpNumber target={openLeads} delay={380} />
         <p className="text-xs text-[var(--color-text-tertiary)] mt-1">
           ₹{Math.round(leads.filter(l => l.stage !== 'won' && l.stage !== 'lost').reduce((s, l) => s + l.expectedValue, 0) / 100000)}L pipeline value
         </p>
       </MetricCard>
 
-      <MetricCard label="Q2 Revenue" index={3}>
+      <MetricCard label="Q2 Revenue" index={2}>
         <span
           className="text-2xl text-[var(--color-text-primary)]"
           style={{ fontFamily: 'var(--font-jetbrains-mono)' }}
@@ -118,27 +109,6 @@ export function HeadlineStats() {
           {formatLakhs(q1Revenue)}
         </span>
         <p className="text-xs text-[var(--color-status-green)] mt-1">↑ 8.4% vs last quarter</p>
-      </MetricCard>
-
-      <MetricCard label="Project Health" index={4}>
-        <div className="flex items-center gap-2 mb-2">
-          <div className="flex-1 h-2 rounded-full bg-[var(--color-border-brand)] overflow-hidden">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${(onTrack / total) * 100}%` }}
-              transition={{ duration: 0.8, delay: 0.6, ease: 'easeOut' }}
-              className="h-full bg-[var(--color-status-green)] rounded-full"
-            />
-          </div>
-        </div>
-        <div className="flex gap-3 text-xs">
-          <span className="text-[var(--color-status-green)]">
-            <span style={{ fontFamily: 'var(--font-jetbrains-mono)' }}>{onTrack}</span> on track
-          </span>
-          <span className="text-[var(--color-status-amber)]">
-            <span style={{ fontFamily: 'var(--font-jetbrains-mono)' }}>{atRisk}</span> need attention
-          </span>
-        </div>
       </MetricCard>
     </div>
   )

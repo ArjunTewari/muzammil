@@ -36,7 +36,7 @@ export function AssignedProjects({
       <div className="flex items-center gap-2">
         <Sparkles size={15} className="text-[var(--color-gold)]" />
         <h2 className="text-sm font-medium text-[var(--color-text-secondary)] uppercase tracking-wider">
-          Assigned by Muzammil
+          Assigned by Muzzammil
         </h2>
         <Badge variant="gold">{projects.length}</Badge>
       </div>
@@ -61,7 +61,7 @@ export function AssignedProjects({
                 <div className="flex items-start justify-between gap-3 mb-2">
                   <div className="min-w-0">
                     <p className="text-[10px] uppercase tracking-widest text-[var(--color-gold)] font-semibold mb-0.5">
-                      New brief · {p.client}
+                      New brief
                     </p>
                     <h3 className="text-lg text-[var(--color-text-primary)] leading-tight" style={{ fontFamily: 'var(--font-instrument-serif)' }}>
                       {p.title}
@@ -90,11 +90,11 @@ export function AssignedProjects({
                   </span>
                 </div>
 
-                {/* Muzammil's instructions */}
+                {/* Muzzammil's instructions */}
                 {p.instructions.length > 0 && (
                   <div className="mb-3">
                     <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-[var(--color-text-tertiary)] font-medium mb-1.5">
-                      <Quote size={11} /> Muzammil&apos;s instructions
+                      <Quote size={11} /> Muzzammil&apos;s instructions
                     </p>
                     <div className="space-y-1.5">
                       {p.instructions.map((q, i) => (

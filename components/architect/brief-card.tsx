@@ -56,7 +56,7 @@ export function BriefCard({
         <div className="flex items-center flex-wrap gap-2 mt-1.5">
           <DeliverableBadge type={brief.deliverableType} />
           <p className="text-xs text-[var(--color-text-tertiary)]">
-            {brief.client} · {formatLakhs(brief.budget)} · due {brief.dueDate}
+            {formatLakhs(brief.budget)} · due {brief.dueDate}
           </p>
         </div>
       </div>

@@ -40,7 +40,6 @@ const OWNER_BY_CLIENT: Record<string, string> = {
   'dsp mf': 'divya',
   'motilal oswal': 'arjit',
   'hdfc amc': 'sneha',
-  'nippon mf': 'karan',
 }
 
 function parseBudget(text?: string): { value: number; assumed: boolean } {

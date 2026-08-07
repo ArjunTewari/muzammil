@@ -13,7 +13,7 @@ import { getAgent } from '@/lib/agents'
 import { newProjectCount, subscribeProjects } from '@/lib/project-store'
 import { DeliverableBadge } from '@/components/shared/deliverable-badge'
 
-const EMPLOYEE_IDS = ['priya', 'rohan', 'divya', 'arjit', 'sneha', 'karan']
+const EMPLOYEE_IDS = ['priya', 'rohan', 'divya', 'arjit', 'sneha']
 
 export default function TeamPage() {
   const employees = EMPLOYEE_IDS.map((id) => USERS.find((u) => u.id === id)!)
@@ -44,7 +44,7 @@ export default function TeamPage() {
               Projects
             </h1>
             <p className="text-sm text-[var(--color-text-tertiary)]">
-              6 employees · each running a full campaign on the agent suite
+              {EMPLOYEE_IDS.length} employees · each running a full campaign on the agent suite
               {totalNeedsInput > 0 && (
                 <span className="text-[var(--color-status-red)]"> · {totalNeedsInput} agents need a human</span>
               )}
@@ -107,13 +107,11 @@ export default function TeamPage() {
                   {/* Project */}
                   <div className="rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface-elevated)] p-2.5 mb-3">
                     <div className="flex items-center justify-between gap-2">
-                      <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-tertiary)]">
-                        Running · {project.client}
-                      </p>
+                      <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-tertiary)]">Running</p>
                       <DeliverableBadge type={project.deliverableType} size="sm" />
                     </div>
                     <p className="text-sm text-[var(--color-text-primary)] leading-snug mt-0.5">
-                      {project.projectTitle}
+                      {project.client} — {project.projectTitle}
                     </p>
                   </div>
 

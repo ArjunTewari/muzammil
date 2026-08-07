@@ -5,7 +5,7 @@
 
 export type SiteStatus = 'operational' | 'degraded' | 'maintenance'
 export type SocialPlatform = 'LinkedIn' | 'Instagram' | 'Twitter' | 'YouTube'
-export type SocialOwner = 'ZiWorks' | 'Muzammil'
+export type SocialOwner = 'ZiWorks' | 'Muzzammil'
 export type PostStatus = 'scheduled' | 'awaiting-approval' | 'published' | 'draft'
 
 export interface SitePage {
@@ -73,13 +73,13 @@ export const ziworksSite: WebsiteHealth = {
   ],
 }
 
-// ZiWorks company handles + Muzammil's founder handles.
+// ZiWorks company handles + Muzzammil's founder handles.
 export const socialAccounts: SocialAccount[] = [
   {
     id: 's1',
-    owner: 'Muzammil',
+    owner: 'Muzzammil',
     platform: 'LinkedIn',
-    handle: 'Muzammil Rashid',
+    handle: 'Muzzammil Sayed',
     followers: 18900,
     growth30d: 6.8,
     engagementRate: 7.1,
@@ -110,7 +110,7 @@ export const socialAccounts: SocialAccount[] = [
   },
   {
     id: 's4',
-    owner: 'Muzammil',
+    owner: 'Muzzammil',
     platform: 'Twitter',
     handle: '@muzammilrashid',
     followers: 4500,
@@ -144,7 +144,7 @@ export const contentCalendar: ScheduledPost[] = [
   },
   {
     id: 'p2',
-    owner: 'Muzammil',
+    owner: 'Muzzammil',
     platform: 'LinkedIn',
     title: 'Founder POV: compliance is a creative constraint, not a blocker',
     date: '2026-06-24',
@@ -168,7 +168,7 @@ export const contentCalendar: ScheduledPost[] = [
   },
   {
     id: 'p5',
-    owner: 'Muzammil',
+    owner: 'Muzzammil',
     platform: 'Twitter',
     title: '3 SEBI rules every MF marketer gets wrong',
     date: '2026-06-26',

@@ -12,7 +12,7 @@ import { USERS } from '@/lib/users'
 import { getEmployeeProject, type AgentStatus } from '@/lib/employee-projects'
 import { formatLakhs } from '@/lib/utils'
 
-const EMPLOYEE_IDS = ['priya', 'rohan', 'divya', 'arjit', 'sneha', 'karan']
+const EMPLOYEE_IDS = ['priya', 'rohan', 'divya', 'arjit', 'sneha']
 
 const agentBadge: Record<AgentStatus, { variant: 'green' | 'gold' | 'default' | 'red'; label: string }> = {
   done: { variant: 'green', label: 'Clear' },

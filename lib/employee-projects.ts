@@ -60,7 +60,7 @@ const PROJECTS: Record<string, EmployeeProject> = {
     ],
     memory: [
       'Applied Axis MF brand voice guide v3 (calm, precise, never salesy).',
-      'Reused the "retirement math" angle Muzammil approved for Axis last quarter.',
+      'Reused the "retirement math" angle Muzzammil approved for Axis last quarter.',
       'Remembered: Axis compliance always requires a past-performance disclaimer on return figures.',
     ],
     activity: [
@@ -111,7 +111,7 @@ const PROJECTS: Record<string, EmployeeProject> = {
       { agent: 'Client Liaison', action: 'sent concept note to Kotak', time: '1d ago' },
     ],
     nextSteps: [
-      { action: 'Escalate the ₹7.5L overdue to Muzammil before shipping more', rationale: 'Finance flagged it; Kotak is already at-risk.', priority: 'urgent' },
+      { action: 'Escalate the ₹7.5L overdue to Muzzammil before shipping more', rationale: 'Finance flagged it; Kotak is already at-risk.', priority: 'urgent' },
       { action: 'Unblock AMFI portal access for the Researcher', rationale: 'The category data pull is the only thing gating the Copywriter.', priority: 'recommended' },
       { action: 'Chase Kotak on the concept note', rationale: 'Client Liaison can send a nudge to keep scripting on schedule.', priority: 'opportunity' },
     ],
@@ -245,46 +245,6 @@ const PROJECTS: Record<string, EmployeeProject> = {
     ],
   },
 
-  karan: {
-    employeeId: 'karan',
-    client: 'Nippon MF',
-    projectTitle: 'SIP-Day Reels (3-part Instagram burst)',
-    deliverableType: 'ai-video',
-    objective:
-      'Turn the monthly SIP debit date into a habit-reinforcing content moment.',
-    dueDate: '2026-06-22',
-    budget: 340000,
-    spent: 210000,
-    stagePct: 78,
-    agentStates: [
-      { agentId: 'brief', status: 'done', lastAction: 'Reframed SIP day as a "win" not a debit', output: 'Objective: make the auto-debit feel like progress, not an expense.' },
-      { agentId: 'research', status: 'done', lastAction: 'Found the behavioural hook', output: 'Insight: investors who "see" the SIP grow stay invested 3x longer.' },
-      { agentId: 'copy', status: 'done', lastAction: 'Wrote all 3 reel scripts + captions', output: 'Punchy 15-sec scripts, caption pack, and hashtag set delivered.' },
-      { agentId: 'compliance', status: 'done', lastAction: 'Cleared all 3 reels', output: 'Passed — no return claims, disclaimer in caption. Ready to post.' },
-      { agentId: 'client', status: 'done', lastAction: 'Nippon approved the reels', output: 'Client sign-off received. Scheduled for tomorrow, SIP day.' },
-      { agentId: 'finance', status: 'working', lastAction: 'Milestone invoice queued on delivery', output: 'Final invoice will auto-raise when the reels publish.' },
-    ],
-    memory: [
-      'Nippon posts land best at 9am on SIP day — schedule accordingly.',
-      'Reused the "watch it grow" visual motif from a prior winning reel.',
-      'Remembered Nippon wants the disclaimer in the caption, not burned in.',
-    ],
-    activity: [
-      { agent: 'Client Liaison', action: 'secured Nippon sign-off', time: '5h ago' },
-      { agent: 'Compliance Guardian', action: 'cleared all 3 reels', time: '7h ago' },
-      { agent: 'Master Agent', action: 'scheduled reels for SIP day 9am', time: '4h ago' },
-    ],
-    nextSteps: [
-      { action: 'Give final go on the 3 reels scheduled for tomorrow', rationale: 'Everything is cleared — this is the last human gate before they post.', priority: 'urgent' },
-      { action: 'Confirm the auto-invoice triggers on publish', rationale: 'Finance queued it against the delivery milestone.', priority: 'recommended' },
-      { action: 'Template this SIP-day format for other AMCs', rationale: 'It is a repeatable monthly content engine.', priority: 'opportunity' },
-    ],
-    commandExamples: [
-      'Schedule the 3 reels for 9am tomorrow',
-      'Write 5 caption variants for reel 2',
-      'Check reel 3 against SEBI rules',
-    ],
-  },
 }
 
 export function getEmployeeProject(employeeId: string): EmployeeProject | null {

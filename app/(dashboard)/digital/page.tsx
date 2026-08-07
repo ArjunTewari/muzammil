@@ -45,7 +45,7 @@ const siteStatusBadge: Record<SiteStatus, { variant: 'green' | 'amber' | 'defaul
 
 const ownerMeta: Record<SocialOwner, { color: string }> = {
   ZiWorks: { color: 'var(--color-gold)' },
-  Muzammil: { color: 'var(--color-status-blue)' },
+  Muzzammil: { color: 'var(--color-status-blue)' },
 }
 
 const postStatusBadge: Record<PostStatus, { variant: 'amber' | 'blue' | 'green' | 'default'; label: string }> = {
@@ -218,7 +218,7 @@ export default function DigitalPage() {
         <CardHeader>
           <CardTitle>Social Presence</CardTitle>
           <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">
-            ZiWorks company handles &amp; Muzammil&apos;s founder accounts
+            ZiWorks company handles &amp; Muzzammil&apos;s founder accounts
           </p>
         </CardHeader>
         <CardContent className="pt-3">

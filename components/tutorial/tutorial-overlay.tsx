@@ -18,7 +18,7 @@ const STEPS = [
     icon: Sparkles,
     iconColor: 'var(--color-gold)',
     title: 'Welcome to Maestro',
-    body: "Maestro takes Muzammil's judgment — his standards, his experience — out of his head and puts it into a system, so quality doesn't depend on him being in the room.",
+    body: "Maestro takes Muzzammil's judgment — his standards, his experience — out of his head and puts it into a system, so quality doesn't depend on him being in the room.",
   },
   {
     icon: Workflow,
@@ -42,13 +42,13 @@ const STEPS = [
     icon: LayoutDashboard,
     iconColor: 'var(--color-gold)',
     title: "The founder's one screen",
-    body: 'Muzammil sees every employee, the campaign each is running, and exactly what their agents are producing — plus every invoice, approval and lead — without asking anyone for an update.',
+    body: 'Muzzammil sees every employee, the campaign each is running, and exactly what their agents are producing — plus every invoice, approval and lead — without asking anyone for an update.',
   },
   {
     icon: CheckCircle2,
     iconColor: '#4ade80',
     title: "You're all set",
-    body: 'Sign in as Muzammil to see the whole business, or as any employee to run a campaign with their agent suite. Re-open this tour anytime from the ? in the top bar.',
+    body: 'Sign in as Muzzammil to see the whole business, or as any employee to run a campaign with their agent suite. Re-open this tour anytime from the ? in the top bar.',
   },
 ]
 

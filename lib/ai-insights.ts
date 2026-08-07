@@ -13,18 +13,18 @@ export const overviewNextSteps: NextStep[] = [
   {
     action: 'Approve Axis MF Retirement Reel — Script v2',
     rationale:
-      'Blocks Divya\'s rework, Arjit\'s compliance re-check and Karan\'s final render — 3 people idle downstream.',
+      'Blocks Dipin\'s rework and Vikas\'s compliance re-check — 2 people idle downstream.',
     priority: 'urgent',
   },
   {
     action: 'Escalate Kotak MF & Invesco overdue invoices (₹15.9L, up to 52 days)',
     rationale:
-      'Sneha\'s follow-ups have stalled at both AP teams. A founder-level nudge typically unblocks within 48 hours.',
+      'Mupen\'s follow-ups have stalled at both AP teams. A founder-level nudge typically unblocks within 48 hours.',
     priority: 'urgent',
   },
   {
-    action: 'Sign off Nippon MF Q3 retainer scope',
-    rationale: 'Priya is waiting to renew — a delay risks a gap in the retainer between quarters.',
+    action: 'Sign off Axis MF Q3 retainer scope',
+    rationale: 'Kriti is waiting to renew — a delay risks a gap in the retainer between quarters.',
     priority: 'recommended',
   },
   {
@@ -52,7 +52,7 @@ export const financeNextSteps: NextStep[] = [
   },
   {
     action: 'Approve & issue July retainer invoices (8 clients)',
-    rationale: 'Drafts are ready in Sneha\'s queue awaiting your sign-off.',
+    rationale: 'Drafts are ready in Mupen\'s queue awaiting your sign-off.',
     priority: 'recommended',
   },
   {
@@ -70,7 +70,7 @@ export const clientsNextSteps: NextStep[] = [
   },
   {
     action: 'Rebalance Kotak MF workload',
-    rationale: 'At-risk client with overdue AR — Divya & Karan are loaded while account chasing has stalled.',
+    rationale: 'At-risk client with overdue AR — Dipin is loaded while account chasing has stalled.',
     priority: 'recommended',
   },
   {
@@ -82,17 +82,17 @@ export const clientsNextSteps: NextStep[] = [
 
 export const teamNextSteps: NextStep[] = [
   {
-    action: 'Clear the compliance bottleneck at Arjit',
-    rationale: 'Axis MF Script v2 is holding up Karan\'s production. Arjit is waiting on Divya\'s revised draft.',
+    action: 'Clear the compliance bottleneck at Vikas',
+    rationale: 'Axis MF Script v2 is holding up production. Vikas is waiting on Dipin\'s revised draft.',
     priority: 'urgent',
   },
   {
-    action: 'Pull Divya\'s Kotak newsletter forward',
-    rationale: 'Blocked on Rohan\'s source notes — a quick handoff unblocks 4h of creative work.',
+    action: 'Pull Dipin\'s Kotak newsletter forward',
+    rationale: 'Blocked on Trisha\'s source notes — a quick handoff unblocks 4h of creative work.',
     priority: 'recommended',
   },
   {
-    action: 'Rohan has research capacity this month',
+    action: 'Trisha has research capacity this month',
     rationale: '22h logged vs 32h typical — room to pre-load Invesco Q3 research before the brief lands.',
     priority: 'opportunity',
   },
@@ -105,7 +105,7 @@ export const digitalNextSteps: NextStep[] = [
     priority: 'urgent',
   },
   {
-    action: "Publish Muzammil's compliance POV",
+    action: "Publish Muzzammil's compliance POV",
     rationale: 'Founder-led posts drive the most inbound to ziworks.in — this one is written and waiting.',
     priority: 'recommended',
   },

@@ -73,16 +73,14 @@ export function EmployeeWorkspace({
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <p className="text-xs uppercase tracking-widest text-[var(--color-text-tertiary)]">
-                Running · {project.client}
-              </p>
+              <p className="text-xs uppercase tracking-widest text-[var(--color-text-tertiary)]">Running</p>
               <DeliverableBadge type={project.deliverableType} size="sm" />
             </div>
             <h2
               className="text-xl text-[var(--color-text-primary)] leading-tight"
               style={{ fontFamily: 'var(--font-instrument-serif)' }}
             >
-              {project.projectTitle}
+              {project.client} — {project.projectTitle}
             </h2>
             <p className="text-sm text-[var(--color-text-secondary)] mt-1 max-w-xl">{project.objective}</p>
           </div>

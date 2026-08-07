@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PanelLeftClose, PanelLeft, LogOut, Search, Sparkles, Settings as SettingsIcon } from 'lucide-react'
+import { PanelLeftClose, PanelLeft, LogOut, Search, Sparkles, SquarePen, Settings as SettingsIcon } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -74,8 +74,29 @@ export function Sidebar({ user, onLogout }: { user: AppUser; onLogout: () => voi
         </button>
       </div>
 
-      {/* Search — projects are already listed below, so this is the one entry point */}
+      {/* New Project + Search */}
       <div className="px-2 pt-3 space-y-1.5 flex-shrink-0">
+        {user.role === 'master' && (
+          <a
+            href="/architect"
+            onClick={(e) => {
+              // The Architect is a live chat with in-page state — a client-side
+              // nav to the same route won't reset it, so force a hard reload.
+              if (pathname === '/architect') {
+                e.preventDefault()
+                window.location.href = '/architect'
+              }
+            }}
+            className={cn(
+              'flex items-center gap-2.5 w-full rounded-[10px] border border-[var(--color-gold-border)] bg-[var(--color-gold-muted)] text-[var(--color-gold)] hover:bg-[var(--color-gold)] hover:text-[var(--color-ink)] transition-all duration-150 cursor-pointer font-medium',
+              collapsed ? 'w-10 h-10 justify-center mx-auto' : 'px-3 py-2',
+            )}
+            title="New Project"
+          >
+            <SquarePen size={15} className="flex-shrink-0" />
+            {!collapsed && <span className="flex-1 text-left text-sm whitespace-nowrap overflow-hidden">New Project</span>}
+          </a>
+        )}
         <button
           onClick={openPalette}
           className={cn(

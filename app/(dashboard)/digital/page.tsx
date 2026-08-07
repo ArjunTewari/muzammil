@@ -16,7 +16,6 @@ import {
   ArrowDownRight,
   Wrench,
 } from 'lucide-react'
-import { AiInsights } from '@/components/shared/ai-insights'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
@@ -29,7 +28,6 @@ import {
   type SocialOwner,
   type PostStatus,
 } from '@/lib/digital-data'
-import { digitalNextSteps } from '@/lib/ai-insights'
 import { formatDateShort } from '@/lib/utils'
 
 const platformIcon: Record<SocialPlatform, typeof Camera> = {
@@ -115,9 +113,6 @@ export default function DigitalPage() {
           ZiWorks&apos;s own website and the team&apos;s social presence — how the agency markets itself
         </p>
       </motion.div>
-
-      {/* AI next steps */}
-      <AiInsights steps={digitalNextSteps} subtitle="Across ziworks.in and the team's handles" />
 
       {/* Summary stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">

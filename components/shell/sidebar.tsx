@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PanelLeftClose, PanelLeft, LogOut, Plus, Search, Sparkles } from 'lucide-react'
+import { PanelLeftClose, PanelLeft, LogOut, Plus, Search, Sparkles, Settings as SettingsIcon } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -115,6 +115,14 @@ export function Sidebar({ user, onLogout }: { user: AppUser; onLogout: () => voi
         {user.role === 'master' && (
           <Link
             href="/architect"
+            onClick={(e) => {
+              // Already home (a live chat with in-page state) — a same-route
+              // Link nav won't reset it, so force a fresh start.
+              if (pathname === '/architect') {
+                e.preventDefault()
+                window.location.reload()
+              }
+            }}
             className={cn(
               'flex items-center gap-2.5 rounded-[10px] bg-[var(--color-gold)] text-[var(--color-ink)] text-sm font-semibold hover:bg-[#d4b46a] hover:shadow-[var(--shadow-glow-gold)] active:scale-[0.98] transition-all duration-200 cursor-pointer',
               collapsed ? 'w-10 h-10 justify-center mx-auto' : 'px-3 py-2.5',
@@ -234,6 +242,29 @@ export function Sidebar({ user, onLogout }: { user: AppUser; onLogout: () => voi
         </div>
       )}
       {(collapsed || projectRows.length === 0) && <div className="flex-1" />}
+
+      {/* Settings — everything not Dashboard/Projects lives behind here */}
+      <div className="px-2 pt-2 flex-shrink-0">
+        <Link
+          href="/settings"
+          className={cn(
+            'flex items-center gap-3 px-3 py-2 rounded-[8px] transition-all duration-100 group',
+            pathname.startsWith('/settings')
+              ? 'bg-[var(--color-gold-muted)] text-[var(--color-gold)]'
+              : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface-elevated)]',
+            collapsed && 'justify-center px-0',
+          )}
+        >
+          <SettingsIcon
+            size={17}
+            className={cn(
+              'flex-shrink-0 transition-colors duration-100',
+              pathname.startsWith('/settings') ? 'text-[var(--color-gold)]' : 'text-[var(--color-text-tertiary)] group-hover:text-[var(--color-text-primary)]',
+            )}
+          />
+          {!collapsed && <span className="text-sm whitespace-nowrap overflow-hidden font-medium">Settings</span>}
+        </Link>
+      </div>
 
       {/* User + logout */}
       <div className="px-2 pb-2 pt-2 border-t border-[var(--color-border-brand)] flex-shrink-0">

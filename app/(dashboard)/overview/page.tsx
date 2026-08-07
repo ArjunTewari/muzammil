@@ -1,9 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
-import { Composer } from '@/components/shared/composer'
 import { HeadlineStats } from '@/components/overview/headline-stats'
 import { RevenueSnapshot } from '@/components/overview/revenue-snapshot'
 import { ProjectHealth } from '@/components/overview/project-health'
@@ -12,9 +9,7 @@ import { Collections } from '@/components/overview/collections'
 import { Approvals } from '@/components/overview/approvals'
 import { ClientHealth } from '@/components/overview/client-health'
 import { OpportunityAlerts } from '@/components/overview/opportunity-alerts'
-import { AiInsights } from '@/components/shared/ai-insights'
 import { TeamShipping } from '@/components/agents/team-shipping'
-import { overviewNextSteps } from '@/lib/ai-insights'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 
 function SectionWrapper({
@@ -40,14 +35,6 @@ function SectionWrapper({
 }
 
 export default function OverviewPage() {
-  const router = useRouter()
-  const [ask, setAsk] = useState('')
-
-  function startFromAsk(text: string) {
-    sessionStorage.setItem('maestro-architect-prefill', text)
-    router.push('/architect')
-  }
-
   return (
     <div className="p-4 sm:p-6 max-w-[1400px] mx-auto space-y-4 sm:space-y-6">
       {/* Page header */}
@@ -67,34 +54,13 @@ export default function OverviewPage() {
         </p>
       </motion.div>
 
-      {/* Hero composer — the Claude-homepage entry point into the Architect */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: 0.05 }}
-      >
-        <Composer
-          value={ask}
-          onChange={setAsk}
-          onSubmit={startFromAsk}
-          size="lg"
-          placeholder="What are we building today? Describe a new project and the Architect will take it from here…"
-          submitLabel="Start with the Architect"
-        />
-      </motion.div>
-
       {/* Headline stats */}
       <SectionWrapper delay={0.1}>
         <HeadlineStats />
       </SectionWrapper>
 
-      {/* AI next steps */}
-      <SectionWrapper delay={0.15}>
-        <AiInsights steps={overviewNextSteps} subtitle="What needs the founder's attention today" />
-      </SectionWrapper>
-
       {/* What the team is shipping via their agents */}
-      <SectionWrapper delay={0.2}>
+      <SectionWrapper delay={0.15}>
         <TeamShipping />
       </SectionWrapper>
 

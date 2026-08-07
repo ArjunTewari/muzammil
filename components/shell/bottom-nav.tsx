@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { MoreHorizontal, X } from 'lucide-react'
+import { MoreHorizontal, X, Settings } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
@@ -12,7 +12,9 @@ import type { AppUser } from '@/lib/users'
 export function BottomNav({ user }: { user: AppUser }) {
   const pathname = usePathname()
   const [moreOpen, setMoreOpen] = useState(false)
-  const all = getNavForRole(user.role)
+  // The sidebar's Settings entry is desktop-only (footer button) — bottom nav
+  // needs its own way in, since Settings isn't part of MASTER_NAV/OPERATOR_NAV.
+  const all: NavItem[] = [...getNavForRole(user.role), { label: 'Settings', href: '/settings', icon: Settings }]
 
   // If more than 5 items, show first 4 + a "More" button; otherwise show all.
   const overflow = all.length > 5

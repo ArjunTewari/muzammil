@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Search, CornerDownLeft, Plus, FlaskConical, ClipboardList, ArrowRight } from 'lucide-react'
-import { getNavForRole, type NavItem } from '@/lib/nav'
+import { getNavForRole, SETTINGS_NAV, type NavItem } from '@/lib/nav'
 import { clients } from '@/lib/mock-data'
 import { getAgents } from '@/lib/studio/agent-store'
 import type { AppUser } from '@/lib/users'
@@ -78,6 +78,10 @@ export function CommandPalette({ user }: { user: AppUser }) {
     )
 
     if (isMaster) {
+      // Settings sub-pages — not top-nav tabs, still searchable
+      SETTINGS_NAV.forEach((n: NavItem) =>
+        out.push({ id: `s-${n.href}`, label: n.label, group: 'Settings', icon: n.icon, href: n.href }),
+      )
       // Clients
       clients.forEach((c) =>
         out.push({ id: `c-${c.id}`, label: c.name, sublabel: `${c.shortName} · client`, group: 'Clients', icon: ClipboardList, href: `/clients/${c.id}` }),
@@ -96,7 +100,7 @@ export function CommandPalette({ user }: { user: AppUser }) {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    if (!q) return items.filter((i) => i.group === 'Actions' || i.group === 'Go to')
+    if (!q) return items.filter((i) => i.group === 'Actions' || i.group === 'Go to' || i.group === 'Settings')
     return items
       .map((i) => {
         const hay = `${i.label} ${i.sublabel ?? ''}`.toLowerCase()
@@ -115,6 +119,12 @@ export function CommandPalette({ user }: { user: AppUser }) {
 
   function go(item: CmdItem) {
     setOpen(false)
+    // The Architect is a live chat with in-page state — a client-side nav to
+    // the same route won't reset it, so force a hard reload for "New Project".
+    if (item.id === 'a-newproject') {
+      window.location.href = item.href
+      return
+    }
     router.push(item.href)
   }
 
@@ -132,7 +142,7 @@ export function CommandPalette({ user }: { user: AppUser }) {
   }
 
   // Group the filtered items in stable order.
-  const groups = ['Actions', 'Go to', 'Clients', 'Agents']
+  const groups = ['Actions', 'Go to', 'Settings', 'Clients', 'Agents']
   let runningIndex = -1
 
   return (

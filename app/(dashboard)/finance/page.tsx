@@ -5,13 +5,11 @@ import Link from 'next/link'
 import { ArrowRight, AlertCircle, TrendingUp, Wallet, Receipt } from 'lucide-react'
 import { RevenueSnapshot } from '@/components/overview/revenue-snapshot'
 import { Collections } from '@/components/overview/collections'
-import { AiInsights } from '@/components/shared/ai-insights'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { invoices } from '@/lib/mock-data'
 import { USERS } from '@/lib/users'
 import { getEmployeeProject, type AgentStatus } from '@/lib/employee-projects'
-import { financeNextSteps } from '@/lib/ai-insights'
 import { formatLakhs } from '@/lib/utils'
 
 const EMPLOYEE_IDS = ['priya', 'rohan', 'divya', 'arjit', 'sneha', 'karan']
@@ -111,9 +109,6 @@ export default function FinancePage() {
           </div>
         </div>
       </motion.div>
-
-      {/* AI next steps */}
-      <AiInsights steps={financeNextSteps} subtitle="Prioritised across collections & billing" />
 
       {/* Stat cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">

@@ -12,6 +12,7 @@ import { AmbientBackground } from '@/components/backdrop/ambient-background'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import { useTutorial } from '@/hooks/use-tutorial'
 import { useAuth } from '@/hooks/use-auth'
+import { CurrentUserProvider } from '@/hooks/use-current-user'
 import { MASTER_ONLY_ROUTES } from '@/lib/nav'
 
 const EASE_PREMIUM: [number, number, number, number] = [0.22, 1, 0.36, 1]
@@ -36,9 +37,9 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       router.replace('/my-work')
       return
     }
-    // Master has no personal "My Work" — send to Overview
+    // Master has no personal "My Work" — send home (the Architect chat)
     if (user.role === 'master' && pathname.startsWith('/my-work')) {
-      router.replace('/overview')
+      router.replace('/architect')
     }
   }, [ready, user, pathname, router])
 
@@ -74,7 +75,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               transition={{ duration: prefersReduced ? 0.1 : 0.3, ease: EASE_PREMIUM }}
               className="min-h-full"
             >
-              {children}
+              <CurrentUserProvider value={user}>{children}</CurrentUserProvider>
             </motion.div>
           </AnimatePresence>
         </main>

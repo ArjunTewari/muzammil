@@ -3,11 +3,9 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, AlertCircle, Loader, CheckCircle2 } from 'lucide-react'
-import { AiInsights } from '@/components/shared/ai-insights'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { clients } from '@/lib/mock-data'
-import { clientsNextSteps } from '@/lib/ai-insights'
 import { getEmployeeProjectByClient, agentProgress } from '@/lib/employee-projects'
 import { getUserById } from '@/lib/users'
 import { getAgent } from '@/lib/agents'
@@ -42,9 +40,6 @@ export default function ClientsPage() {
           {clients.length} relationships · {managed} with a live campaign on the agent suite
         </p>
       </motion.div>
-
-      {/* AI next steps */}
-      <AiInsights steps={clientsNextSteps} subtitle="Account-level moves worth making" />
 
       {/* Client grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">

@@ -28,7 +28,6 @@ export default function ArchitectPage() {
   const [reviseOpen, setReviseOpen] = useState(false)
 
   const slotsRef = useRef<BriefSlots>({})
-  const startedRef = useRef(false)
   const bottomRef = useRef<HTMLDivElement>(null)
 
   const toChat = (m: UiMessage[]): ChatMsg[] => m.map((x) => ({ role: x.role, content: x.content }))
@@ -83,23 +82,12 @@ export default function ArchitectPage() {
     }
   }
 
-  // Kick off the interview the moment the page opens. If Muzammil started
-  // from the Overview hero composer, open with what he actually typed there.
-  useEffect(() => {
-    if (startedRef.current) return
-    startedRef.current = true
-    const prefill = typeof window !== 'undefined' ? sessionStorage.getItem('maestro-architect-prefill') : null
-    if (prefill) sessionStorage.removeItem('maestro-architect-prefill')
-    const first: UiMessage[] = [{ role: 'user', content: prefill?.trim() || 'I want to create a new project.' }]
-    setMessages(first)
-    runTurn(toChat(first))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
   }, [messages, loading, brief])
 
+  // The very first send starts the interview — no auto-fired trigger message,
+  // this page opens blank (a real "home") until Muzammil actually types.
   function send(text: string) {
     const t = text.trim()
     if (!t || loading || brief) return
@@ -142,6 +130,58 @@ export default function ArchitectPage() {
 
   const showClientChips = !slots.client && !loading && !brief && messages.length <= 2
   const owner = assigned ? getUserById(assigned.assignedTo) : null
+  const started = messages.length > 0
+
+  // Idle "home" state — quiet, no chrome, just a greeting and the composer.
+  // Mirrors Claude's blank homepage; becomes the chat once you send something.
+  if (!started) {
+    return (
+      <div className="min-h-[70vh] flex flex-col items-center justify-center p-4 sm:p-6">
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3 }}
+          className="text-center mb-6"
+        >
+          <h1
+            className="text-2xl sm:text-3xl text-[var(--color-text-primary)] mb-1"
+            style={{ fontFamily: 'var(--font-instrument-serif)' }}
+          >
+            Good morning, Muzammil.
+          </h1>
+          <p className="text-sm text-[var(--color-text-tertiary)]">What are we building today?</p>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, delay: 0.08 }}
+          className="w-full max-w-2xl"
+        >
+          <Composer
+            value={input}
+            onChange={setInput}
+            onSubmit={send}
+            size="lg"
+            placeholder="Describe a new project and the Architect will take it from here…"
+            submitLabel="Start with the Architect"
+            autoFocus
+          />
+          <div className="flex flex-wrap gap-1.5 mt-3 justify-center">
+            {CLIENT_CHIPS.map((c) => (
+              <button
+                key={c}
+                onClick={() => send(c)}
+                className="text-xs text-[var(--color-text-secondary)] rounded-full border border-[var(--color-border-brand)] bg-[var(--color-surface)] px-2.5 py-1 hover:border-[var(--color-gold-border)] hover:text-[var(--color-text-primary)] transition-colors cursor-pointer"
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        </motion.div>
+      </div>
+    )
+  }
 
   return (
     <div className="p-4 sm:p-6 max-w-[1400px] mx-auto">

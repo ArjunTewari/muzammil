@@ -5,13 +5,11 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { ArrowRight, AlertCircle, Loader, Sparkles } from 'lucide-react'
 import { AgentSuiteStrip } from '@/components/agents/agent-suite-strip'
-import { AiInsights } from '@/components/shared/ai-insights'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { USERS } from '@/lib/users'
 import { getEmployeeProject, agentProgress } from '@/lib/employee-projects'
 import { getAgent } from '@/lib/agents'
-import { teamNextSteps } from '@/lib/ai-insights'
 import { newProjectCount, subscribeProjects } from '@/lib/project-store'
 
 const EMPLOYEE_IDS = ['priya', 'rohan', 'divya', 'arjit', 'sneha', 'karan']
@@ -36,18 +34,28 @@ export default function TeamPage() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
       >
-        <h1
-          className="text-2xl sm:text-3xl text-[var(--color-text-primary)] mb-1"
-          style={{ fontFamily: 'var(--font-instrument-serif)' }}
-        >
-          Team
-        </h1>
-        <p className="text-sm text-[var(--color-text-tertiary)]">
-          6 employees · each running a full campaign on the agent suite
-          {totalNeedsInput > 0 && (
-            <span className="text-[var(--color-status-red)]"> · {totalNeedsInput} agents need a human</span>
-          )}
-        </p>
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h1
+              className="text-2xl sm:text-3xl text-[var(--color-text-primary)] mb-1"
+              style={{ fontFamily: 'var(--font-instrument-serif)' }}
+            >
+              Projects
+            </h1>
+            <p className="text-sm text-[var(--color-text-tertiary)]">
+              6 employees · each running a full campaign on the agent suite
+              {totalNeedsInput > 0 && (
+                <span className="text-[var(--color-status-red)]"> · {totalNeedsInput} agents need a human</span>
+              )}
+            </p>
+          </div>
+          <Link
+            href="/projects"
+            className="text-xs text-[var(--color-gold)] hover:underline flex items-center gap-1 flex-shrink-0"
+          >
+            Example: Axis MF gated workflow <ArrowRight size={12} />
+          </Link>
+        </div>
       </motion.div>
 
       {/* Agent suite explainer */}
@@ -57,15 +65,6 @@ export default function TeamPage() {
         transition={{ duration: 0.4, delay: 0.08 }}
       >
         <AgentSuiteStrip />
-      </motion.div>
-
-      {/* AI next steps */}
-      <motion.div
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, delay: 0.12 }}
-      >
-        <AiInsights steps={teamNextSteps} subtitle="Where to intervene across the team" />
       </motion.div>
 
       {/* Employee grid */}

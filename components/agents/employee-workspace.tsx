@@ -3,7 +3,6 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, Database, Activity, CornerDownRight, CalendarClock } from 'lucide-react'
-import { AgentPipeline } from '@/components/agents/agent-pipeline'
 import { AssignedProjects } from '@/components/agents/assigned-projects'
 import { ProjectMemory } from '@/components/agents/project-memory'
 import { Composer } from '@/components/shared/composer'
@@ -183,14 +182,6 @@ export function EmployeeWorkspace({
           )}
         </AnimatePresence>
       </motion.div>
-
-      {/* Agent pipeline */}
-      <div>
-        <h2 className="text-sm font-medium text-[var(--color-text-secondary)] uppercase tracking-wider mb-3">
-          Your agent suite on this campaign
-        </h2>
-        <AgentPipeline project={project} />
-      </div>
 
       {/* Memory + Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">

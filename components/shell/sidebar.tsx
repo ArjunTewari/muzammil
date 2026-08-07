@@ -2,24 +2,15 @@
 
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { PanelLeftClose, PanelLeft, LogOut, Plus, Search, Sparkles, Settings as SettingsIcon } from 'lucide-react'
+import { PanelLeftClose, PanelLeft, LogOut, Search, Sparkles, Settings as SettingsIcon } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { cn } from '@/lib/utils'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import { getNavForRole } from '@/lib/nav'
-import { getUserById, type AppUser } from '@/lib/users'
-import { allEmployeeProjects } from '@/lib/employee-projects'
-import { getProjectsForEmployee, subscribeProjects } from '@/lib/project-store'
-
-interface ProjectRow {
-  id: string
-  title: string
-  subtitle: string
-  href: string
-  dot: string
-  isNew: boolean
-}
+import type { AppUser } from '@/lib/users'
+import { getProjectRows, type ProjectRow } from '@/lib/project-rows'
+import { subscribeProjects } from '@/lib/project-store'
 
 function openPalette() {
   window.dispatchEvent(new CustomEvent('maestro:open-command-palette'))
@@ -31,35 +22,7 @@ function openPalette() {
 function useProjectRows(user: AppUser): ProjectRow[] {
   const [, setTick] = useState(0)
   useEffect(() => subscribeProjects(() => setTick((t) => t + 1)), [])
-
-  if (user.role === 'master') {
-    return allEmployeeProjects().map((p) => {
-      const owner = getUserById(p.employeeId)
-      const assigned = getProjectsForEmployee(p.employeeId).find((a) => a.status === 'new')
-      return {
-        id: p.employeeId,
-        title: assigned ? assigned.title : p.projectTitle,
-        subtitle: `${owner?.name.split(' ')[0] ?? p.employeeId} · ${assigned ? assigned.client : p.client}`,
-        href: `/team/${p.employeeId}`,
-        dot: owner?.accentColor ?? 'var(--color-gold)',
-        isNew: !!assigned,
-      }
-    })
-  }
-
-  const assigned = getProjectsForEmployee(user.id)
-  const rows: ProjectRow[] = assigned.map((a) => ({
-    id: a.id,
-    title: a.title,
-    subtitle: a.client,
-    href: '/my-work',
-    dot: user.accentColor,
-    isNew: a.status === 'new',
-  }))
-  if (rows.length === 0) {
-    // Fall back to nothing extra — /my-work already shows their campaign.
-  }
-  return rows
+  return getProjectRows(user)
 }
 
 export function Sidebar({ user, onLogout }: { user: AppUser; onLogout: () => void }) {
@@ -110,30 +73,8 @@ export function Sidebar({ user, onLogout }: { user: AppUser; onLogout: () => voi
         </button>
       </div>
 
-      {/* New Project + Search — the two things Claude puts right under its logo */}
+      {/* Search — projects are already listed below, so this is the one entry point */}
       <div className="px-2 pt-3 space-y-1.5 flex-shrink-0">
-        {user.role === 'master' && (
-          <Link
-            href="/architect"
-            onClick={(e) => {
-              // Already home (a live chat with in-page state) — a same-route
-              // Link nav won't reset it, so force a fresh start.
-              if (pathname === '/architect') {
-                e.preventDefault()
-                window.location.reload()
-              }
-            }}
-            className={cn(
-              'flex items-center gap-2.5 rounded-[10px] bg-[var(--color-gold)] text-[var(--color-ink)] text-sm font-semibold hover:bg-[#d4b46a] hover:shadow-[var(--shadow-glow-gold)] active:scale-[0.98] transition-all duration-200 cursor-pointer',
-              collapsed ? 'w-10 h-10 justify-center mx-auto' : 'px-3 py-2.5',
-            )}
-            title="New Project"
-          >
-            <Plus size={16} className="flex-shrink-0" />
-            {!collapsed && <span className="whitespace-nowrap overflow-hidden">New Project</span>}
-          </Link>
-        )}
-
         <button
           onClick={openPalette}
           className={cn(

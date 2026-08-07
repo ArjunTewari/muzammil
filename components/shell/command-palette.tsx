@@ -3,10 +3,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
-import { Search, CornerDownLeft, Plus, FlaskConical, ClipboardList, ArrowRight } from 'lucide-react'
+import { Search, CornerDownLeft, Plus, FlaskConical, ClipboardList, FolderKanban, ArrowRight } from 'lucide-react'
 import { getNavForRole, SETTINGS_NAV, type NavItem } from '@/lib/nav'
 import { clients } from '@/lib/mock-data'
 import { getAgents } from '@/lib/studio/agent-store'
+import { getProjectRows } from '@/lib/project-rows'
 import type { AppUser } from '@/lib/users'
 import type { LucideIcon } from 'lucide-react'
 
@@ -77,6 +78,12 @@ export function CommandPalette({ user }: { user: AppUser }) {
       out.push({ id: `p-${n.href}`, label: n.label, group: 'Go to', icon: n.icon, href: n.href }),
     )
 
+    // Actual projects — every employee's campaign/brief, same rows the
+    // sidebar shows, so search reaches inside the projects themselves.
+    getProjectRows(user).forEach((row) =>
+      out.push({ id: `proj-${row.id}`, label: row.title, sublabel: row.subtitle, group: 'Projects', icon: FolderKanban, href: row.href }),
+    )
+
     if (isMaster) {
       // Settings sub-pages — not top-nav tabs, still searchable
       SETTINGS_NAV.forEach((n: NavItem) =>
@@ -100,7 +107,7 @@ export function CommandPalette({ user }: { user: AppUser }) {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    if (!q) return items.filter((i) => i.group === 'Actions' || i.group === 'Go to' || i.group === 'Settings')
+    if (!q) return items.filter((i) => i.group === 'Actions' || i.group === 'Go to' || i.group === 'Projects' || i.group === 'Settings')
     return items
       .map((i) => {
         const hay = `${i.label} ${i.sublabel ?? ''}`.toLowerCase()
@@ -142,7 +149,7 @@ export function CommandPalette({ user }: { user: AppUser }) {
   }
 
   // Group the filtered items in stable order.
-  const groups = ['Actions', 'Go to', 'Settings', 'Clients', 'Agents']
+  const groups = ['Actions', 'Go to', 'Projects', 'Settings', 'Clients', 'Agents']
   let runningIndex = -1
 
   return (
@@ -169,7 +176,7 @@ export function CommandPalette({ user }: { user: AppUser }) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 onKeyDown={onKeyDown}
-                placeholder="Search clients, agents, pages, actions…"
+                placeholder="Search projects, clients, agents, pages…"
                 className="flex-1 bg-transparent py-3.5 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] outline-none"
               />
               <kbd className="text-[10px] text-[var(--color-text-tertiary)] bg-[var(--color-border-brand)] px-1.5 py-0.5 rounded font-mono flex-shrink-0">esc</kbd>

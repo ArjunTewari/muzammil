@@ -1,6 +1,5 @@
 import {
   LayoutDashboard,
-  FolderKanban,
   Receipt,
   Globe,
   Bot,
@@ -16,14 +15,12 @@ export interface NavItem {
   icon: LucideIcon
 }
 
-// The founder's home is the chat (the Architect); these two are the only
-// persistent tabs — everything else lives under Settings or is reachable
-// via the command palette (⌘K). "Projects" is the multi-employee hub
-// (/team) — every campaign, one row each — not the single legacy demo page.
-const MASTER_NAV: NavItem[] = [
-  { label: 'Dashboard', href: '/overview', icon: LayoutDashboard },
-  { label: 'Projects', href: '/team', icon: FolderKanban },
-]
+// The founder's home is the chat (the Architect); Dashboard is the only
+// persistent tab — everything else lives under Settings or is reachable
+// via the command palette (⌘K). No separate "Projects" nav link: the
+// sidebar's live Projects list below already covers that, and the /team
+// hub is still reachable via "Back to Team" from any project workspace.
+const MASTER_NAV: NavItem[] = [{ label: 'Dashboard', href: '/overview', icon: LayoutDashboard }]
 
 const OPERATOR_NAV: NavItem[] = [{ label: 'My Work', href: '/my-work', icon: LayoutDashboard }]
 

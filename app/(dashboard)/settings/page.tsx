@@ -30,7 +30,7 @@ export default function SettingsPage() {
         </h1>
         <p className="text-sm text-[var(--color-text-tertiary)]">
           {isMaster
-            ? 'Everything beyond Dashboard and Projects lives here.'
+            ? 'Everything beyond Dashboard, Execution and Finance lives here.'
             : 'Workspace preferences.'}
         </p>
       </motion.div>

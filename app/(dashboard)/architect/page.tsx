@@ -3,11 +3,12 @@
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Send, Workflow, ArrowRight, CheckCircle2, Radio } from 'lucide-react'
+import { Workflow, ArrowRight, CheckCircle2, Radio } from 'lucide-react'
 import { ChatMessage, ThinkingIndicator, type UiMessage } from '@/components/architect/chat-message'
 import { SlotChecklist } from '@/components/architect/slot-checklist'
 import { BriefCard } from '@/components/architect/brief-card'
 import { ReasonDialog } from '@/components/architect/reason-dialog'
+import { Composer } from '@/components/shared/composer'
 import { getUserById } from '@/lib/users'
 import { addMemory, memoryToPromptLines } from '@/lib/memory-store'
 import { assignProject, getWorkloads, type AssignedProject } from '@/lib/project-store'
@@ -82,11 +83,14 @@ export default function ArchitectPage() {
     }
   }
 
-  // Kick off the interview the moment the page opens.
+  // Kick off the interview the moment the page opens. If Muzammil started
+  // from the Overview hero composer, open with what he actually typed there.
   useEffect(() => {
     if (startedRef.current) return
     startedRef.current = true
-    const first: UiMessage[] = [{ role: 'user', content: 'I want to create a new project.' }]
+    const prefill = typeof window !== 'undefined' ? sessionStorage.getItem('maestro-architect-prefill') : null
+    if (prefill) sessionStorage.removeItem('maestro-architect-prefill')
+    const first: UiMessage[] = [{ role: 'user', content: prefill?.trim() || 'I want to create a new project.' }]
     setMessages(first)
     runTurn(toChat(first))
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -244,24 +248,14 @@ export default function ArchitectPage() {
                     ))}
                   </div>
                 )}
-                <div className="flex items-center gap-2 rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] px-3 py-2 transition-all focus-within:border-[var(--color-gold-border)] focus-within:shadow-[var(--shadow-glow-gold)]">
-                  <input
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => e.key === 'Enter' && send(input)}
-                    disabled={loading}
-                    placeholder={loading ? 'The Architect is thinking…' : 'Type your answer…'}
-                    className="flex-1 bg-transparent text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] outline-none disabled:opacity-60"
-                  />
-                  <button
-                    onClick={() => send(input)}
-                    disabled={loading || !input.trim()}
-                    className="w-8 h-8 rounded-[8px] bg-[var(--color-gold)] flex items-center justify-center flex-shrink-0 hover:opacity-90 active:scale-95 transition-all cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-                    aria-label="Send"
-                  >
-                    <Send size={14} className="text-[var(--color-ink)]" />
-                  </button>
-                </div>
+                <Composer
+                  value={input}
+                  onChange={setInput}
+                  onSubmit={send}
+                  disabled={loading}
+                  placeholder={loading ? 'The Architect is thinking…' : 'Type your answer…'}
+                  autoFocus
+                />
               </div>
             )}
           </div>

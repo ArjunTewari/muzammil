@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { Instrument_Serif, Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
-import { CommandPalette } from '@/components/shell/command-palette'
 
 const instrumentSerif = Instrument_Serif({
   variable: '--font-instrument-serif',
@@ -39,10 +38,7 @@ export default function RootLayout({
       lang="en"
       className={`${instrumentSerif.variable} ${inter.variable} ${jetbrainsMono.variable} h-full`}
     >
-      <body className="h-full antialiased">
-        {children}
-        <CommandPalette />
-      </body>
+      <body className="h-full antialiased">{children}</body>
     </html>
   )
 }

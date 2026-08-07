@@ -2,9 +2,10 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Play, Workflow, Wand2 } from 'lucide-react'
+import { Wand2 } from 'lucide-react'
 import { RunResult } from '@/components/studio/run-result'
 import { ReasonDialog } from '@/components/architect/reason-dialog'
+import { Composer } from '@/components/shared/composer'
 import { addMemory, memoryLines, recordRun } from '@/lib/studio/agent-store'
 import type { AgentRunResult, Finding, StudioAgent } from '@/lib/studio/types'
 
@@ -23,8 +24,8 @@ export function RunConsole({ agent }: { agent: StudioAgent }) {
   const [acted, setActed] = useState<Record<string, 'accepted' | 'dismissed'>>({})
   const [dismissTarget, setDismissTarget] = useState<Finding | null>(null)
 
-  async function run() {
-    if (!input.trim() || running) return
+  async function run(text: string) {
+    if (!text.trim() || running) return
     setRunning(true)
     setResult(null)
     setActed({})
@@ -32,7 +33,7 @@ export function RunConsole({ agent }: { agent: StudioAgent }) {
       const res = await fetch('/api/studio/run', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ agent, input, memory: memoryLines(agent.id) }),
+        body: JSON.stringify({ agent, input: text, memory: memoryLines(agent.id) }),
       })
       const data = (await res.json()) as { result: AgentRunResult; engine: 'live' | 'simulated' }
       setResult(data.result)
@@ -69,29 +70,18 @@ export function RunConsole({ agent }: { agent: StudioAgent }) {
         </button>
       </div>
 
-      <textarea
+      <Composer
         value={input}
-        onChange={(e) => setInput(e.target.value)}
-        rows={5}
+        onChange={setInput}
+        onSubmit={run}
+        busy={running}
+        size="lg"
         placeholder={agent.mode === 'review' ? 'Paste a script, caption, or copy to check…' : 'Describe what you want the agent to produce…'}
-        className="w-full rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] px-3 py-2.5 text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] outline-none focus:border-[var(--color-gold-border)] focus:shadow-[var(--shadow-glow-gold)] transition-all resize-y"
+        submitLabel={`Run ${agent.name}`}
       />
-
-      <button
-        onClick={run}
-        disabled={running || !input.trim()}
-        className="mt-3 w-full h-11 rounded-[10px] bg-[var(--color-gold)] text-[var(--color-ink)] text-sm font-semibold flex items-center justify-center gap-2 hover:bg-[#d4b46a] hover:shadow-[var(--shadow-glow-gold)] active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
-      >
-        {running ? (
-          <>
-            <Workflow size={15} className="animate-spin" /> {agent.name} is thinking…
-          </>
-        ) : (
-          <>
-            <Play size={15} /> Run {agent.name}
-          </>
-        )}
-      </button>
+      {running && (
+        <p className="text-xs text-[var(--color-text-tertiary)] mt-2 text-center">{agent.name} is thinking…</p>
+      )}
 
       {result && (
         <div className="mt-4">

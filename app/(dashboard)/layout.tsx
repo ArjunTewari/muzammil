@@ -6,12 +6,13 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { Sidebar } from '@/components/shell/sidebar'
 import { Topbar } from '@/components/shell/topbar'
 import { BottomNav } from '@/components/shell/bottom-nav'
+import { CommandPalette } from '@/components/shell/command-palette'
 import { TutorialOverlay } from '@/components/tutorial/tutorial-overlay'
 import { AmbientBackground } from '@/components/backdrop/ambient-background'
 import { useReducedMotion } from '@/hooks/use-reduced-motion'
 import { useTutorial } from '@/hooks/use-tutorial'
 import { useAuth } from '@/hooks/use-auth'
-import { MASTER_ONLY_ROUTES, homeForRole } from '@/lib/nav'
+import { MASTER_ONLY_ROUTES } from '@/lib/nav'
 
 const EASE_PREMIUM: [number, number, number, number] = [0.22, 1, 0.36, 1]
 
@@ -80,6 +81,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       </div>
 
       <BottomNav user={user} />
+      <CommandPalette user={user} />
 
       {tutReady && show && <TutorialOverlay onDismiss={dismiss} />}
     </div>

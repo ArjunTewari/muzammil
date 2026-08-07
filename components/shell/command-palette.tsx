@@ -1,13 +1,13 @@
 'use client'
 
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import { Search, CornerDownLeft, Plus, FlaskConical, ClipboardList, ArrowRight } from 'lucide-react'
-import { useAuth } from '@/hooks/use-auth'
 import { getNavForRole, type NavItem } from '@/lib/nav'
 import { clients } from '@/lib/mock-data'
 import { getAgents } from '@/lib/studio/agent-store'
+import type { AppUser } from '@/lib/users'
 import type { LucideIcon } from 'lucide-react'
 
 interface CmdItem {
@@ -19,16 +19,18 @@ interface CmdItem {
   href: string
 }
 
-export function CommandPalette() {
-  const { user, ready } = useAuth()
+// Takes the already-resolved user from the dashboard layout rather than
+// calling useAuth() itself — a second independent auth fetch here was racy
+// against the layout's own call and could leave the palette permanently
+// un-rendered (it renders null while unauthenticated).
+export function CommandPalette({ user }: { user: AppUser }) {
   const router = useRouter()
-  const pathname = usePathname()
   const [open, setOpen] = useState(false)
   const [query, setQuery] = useState('')
   const [active, setActive] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const isMaster = user?.role === 'master'
+  const isMaster = user.role === 'master'
 
   // Global ⌘K / Ctrl+K, plus an external trigger (the sidebar search field
   // dispatches this so it doesn't need to own palette state itself).
@@ -60,7 +62,6 @@ export function CommandPalette() {
   }, [open])
 
   const items = useMemo<CmdItem[]>(() => {
-    if (!user) return []
     const out: CmdItem[] = []
 
     if (isMaster) {
@@ -129,9 +130,6 @@ export function CommandPalette() {
       go(filtered[active])
     }
   }
-
-  // Never render on the auth screen or before we know who the user is.
-  if (!ready || !user || pathname === '/login') return null
 
   // Group the filtered items in stable order.
   const groups = ['Actions', 'Go to', 'Clients', 'Agents']

@@ -2,10 +2,11 @@
 
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Send, Sparkles, Database, Activity, CornerDownRight, CalendarClock } from 'lucide-react'
+import { Sparkles, Database, Activity, CornerDownRight, CalendarClock } from 'lucide-react'
 import { AgentPipeline } from '@/components/agents/agent-pipeline'
 import { AssignedProjects } from '@/components/agents/assigned-projects'
 import { AiInsights } from '@/components/shared/ai-insights'
+import { Composer } from '@/components/shared/composer'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { agentProgress, type EmployeeProject } from '@/lib/employee-projects'
 import type { AppUser } from '@/lib/users'
@@ -132,22 +133,13 @@ export function EmployeeWorkspace({
             — describe what you need, it routes the rest
           </span>
         </div>
-        <div className="flex items-center gap-2 rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] px-3 py-2 transition-all duration-200 focus-within:border-[var(--color-gold-border)] focus-within:shadow-[var(--shadow-glow-gold)]">
-          <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && runCommand(input)}
-            placeholder="e.g. Draft 3 reel scripts and check them for compliance"
-            className="flex-1 bg-transparent text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] outline-none"
-          />
-          <button
-            onClick={() => runCommand(input)}
-            className="w-8 h-8 rounded-[8px] bg-[var(--color-gold)] flex items-center justify-center flex-shrink-0 hover:opacity-90 transition-opacity cursor-pointer"
-            aria-label="Send to Master Agent"
-          >
-            <Send size={14} className="text-[var(--color-ink)]" />
-          </button>
-        </div>
+        <Composer
+          value={input}
+          onChange={setInput}
+          onSubmit={runCommand}
+          placeholder="e.g. Draft 3 reel scripts and check them for compliance"
+          submitLabel="Send to Master Agent"
+        />
 
         {/* Example chips */}
         <div className="flex flex-wrap gap-2 mt-3">

@@ -10,7 +10,7 @@ export interface UiMessage {
   mode?: 'live' | 'simulated'
 }
 
-export function ChatMessage({ message }: { message: UiMessage }) {
+export function ChatMessage({ message, userInitials = '·' }: { message: UiMessage; userInitials?: string }) {
   const isUser = message.role === 'user'
 
   return (
@@ -51,7 +51,7 @@ export function ChatMessage({ message }: { message: UiMessage }) {
       {isUser && (
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[var(--color-gold)] to-[#a07830] flex items-center justify-center flex-shrink-0 mt-0.5">
           <span className="text-[var(--color-ink)] text-[10px] font-semibold" style={{ fontFamily: 'var(--font-instrument-serif)' }}>
-            MR
+            {userInitials}
           </span>
         </div>
       )}

@@ -1,16 +1,24 @@
 'use client'
 
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { Sparkles, Database, Activity, CornerDownRight, CalendarClock } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
+import { motion } from 'framer-motion'
+import { CalendarClock } from 'lucide-react'
 import { AssignedProjects } from '@/components/agents/assigned-projects'
 import { ProjectMemory } from '@/components/agents/project-memory'
+import { ChatMessage, ThinkingIndicator, type UiMessage } from '@/components/architect/chat-message'
 import { Composer } from '@/components/shared/composer'
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
+import { WorkflowTracker } from '@/components/project/workflow-tracker'
 import { agentProgress, type EmployeeProject } from '@/lib/employee-projects'
+import { simulateMasterAgentReply } from '@/lib/master-agent-simulate'
 import type { AppUser } from '@/lib/users'
 import { formatLakhs } from '@/lib/utils'
 import { DeliverableBadge } from '@/components/shared/deliverable-badge'
+
+// The 11-stage rail only has whole indices — scale the project's rough
+// completion percentage onto it for a reasonable "where are we" read.
+function stageIndexFromPct(pct: number): number {
+  return Math.max(0, Math.min(10, Math.round((pct / 100) * 10)))
+}
 
 export function EmployeeWorkspace({
   user,
@@ -21,23 +29,50 @@ export function EmployeeWorkspace({
   project: EmployeeProject
   viewedByMaster?: boolean
 }) {
+  const [messages, setMessages] = useState<UiMessage[]>([])
   const [input, setInput] = useState('')
-  const [routed, setRouted] = useState<string | null>(null)
+  const [thinking, setThinking] = useState(false)
+  const bottomRef = useRef<HTMLDivElement>(null)
   const progress = agentProgress(project)
 
-  function runCommand(text: string) {
-    if (!text.trim()) return
-    setRouted(text.trim())
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' })
+  }, [messages, thinking])
+
+  function send(text: string) {
+    const t = text.trim()
+    if (!t || thinking) return
+    setMessages((prev) => [...prev, { role: 'user', content: t }])
     setInput('')
+    setThinking(true)
+    setTimeout(() => {
+      const reply = simulateMasterAgentReply(t)
+      setMessages((prev) => [...prev, { role: 'assistant', content: reply.content, reasoning: reply.reasoning, mode: 'simulated' }])
+      setThinking(false)
+    }, 700)
   }
 
   return (
     <div className="p-4 sm:p-6 max-w-[1400px] mx-auto space-y-4 sm:space-y-6">
-      {/* Header */}
+      {/* Project timeline */}
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
+        className="rounded-[12px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] p-4"
+        style={{ boxShadow: 'var(--shadow-card)' }}
+      >
+        <p className="text-xs font-medium text-[var(--color-text-secondary)] uppercase tracking-wider mb-3">
+          Project Timeline
+        </p>
+        <WorkflowTracker currentStageIndex={stageIndexFromPct(project.stagePct)} />
+      </motion.div>
+
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3, delay: 0.05 }}
       >
         {viewedByMaster ? (
           <p className="text-xs uppercase tracking-widest text-[var(--color-text-tertiary)] mb-1">
@@ -65,7 +100,7 @@ export function EmployeeWorkspace({
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: 0.05 }}
+        transition={{ duration: 0.35, delay: 0.1 }}
         className="relative rounded-[12px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] p-4 sm:p-5 overflow-hidden"
         style={{ boxShadow: 'var(--shadow-card)' }}
       >
@@ -118,117 +153,47 @@ export function EmployeeWorkspace({
         </div>
       </motion.div>
 
-      {/* Command bar */}
+      {/* Chat — the employee's own composer to the agent suite */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.35, delay: 0.1 }}
-        className="rounded-[12px] border border-[var(--color-gold-border)] bg-[linear-gradient(180deg,var(--color-gold-muted),var(--color-surface))] p-4 sm:p-5"
+        transition={{ duration: 0.35, delay: 0.15 }}
+        className="rounded-[14px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] flex flex-col overflow-hidden"
+        style={{ boxShadow: 'var(--shadow-card)', minHeight: messages.length > 0 ? '420px' : 'auto' }}
       >
-        <div className="flex items-center gap-2 mb-3">
-          <Sparkles size={15} className="text-[var(--color-gold)]" />
-          <p className="text-sm font-semibold text-[var(--color-text-primary)]">
-            Ask the Master Agent
-          </p>
-          <span className="text-xs text-[var(--color-text-tertiary)]">
-            — describe what you need, it routes the rest
-          </span>
-        </div>
-        <Composer
-          value={input}
-          onChange={setInput}
-          onSubmit={runCommand}
-          placeholder="e.g. Draft 3 reel scripts and check them for compliance"
-          submitLabel="Send to Master Agent"
-        />
-
-        {/* Example chips */}
-        <div className="flex flex-wrap gap-2 mt-3">
-          {project.commandExamples.map((ex) => (
-            <button
-              key={ex}
-              onClick={() => runCommand(ex)}
-              className="text-xs text-[var(--color-text-secondary)] rounded-full border border-[var(--color-border-brand)] bg-[var(--color-surface)] px-2.5 py-1 hover:border-[var(--color-gold-border)] hover:text-[var(--color-text-primary)] transition-colors duration-100 cursor-pointer"
-            >
-              {ex}
-            </button>
-          ))}
-        </div>
-
-        {/* Routing result */}
-        <AnimatePresence>
-          {routed && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.25 }}
-              className="mt-3 rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] p-3"
-            >
-              <p className="text-xs text-[var(--color-text-tertiary)] mb-1.5 flex items-center gap-1.5">
-                <Sparkles size={11} className="text-[var(--color-gold)]" /> Master Agent received:{' '}
-                <span className="text-[var(--color-text-secondary)] italic">&ldquo;{routed}&rdquo;</span>
-              </p>
-              <p className="text-xs text-[var(--color-text-secondary)] flex items-center gap-1.5 flex-wrap">
-                <CornerDownRight size={11} className="text-[var(--color-gold)]" />
-                Routing → <span className="text-[var(--color-text-primary)]">Brief Decoder</span> →{' '}
-                <span className="text-[var(--color-text-primary)]">Copywriter</span> →{' '}
-                <span className="text-[var(--color-text-primary)]">Compliance Guardian</span>. Context passed
-                automatically; results will appear in the pipeline below.
-              </p>
-            </motion.div>
+        <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4" style={{ maxHeight: '480px' }}>
+          {messages.length === 0 ? (
+            <div className="flex flex-wrap gap-2">
+              {project.commandExamples.map((ex) => (
+                <button
+                  key={ex}
+                  onClick={() => send(ex)}
+                  className="text-xs text-[var(--color-text-secondary)] rounded-full border border-[var(--color-border-brand)] bg-[var(--color-surface-elevated)] px-2.5 py-1 hover:border-[var(--color-gold-border)] hover:text-[var(--color-text-primary)] transition-colors duration-100 cursor-pointer"
+                >
+                  {ex}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <>
+              {messages.map((m, i) => (
+                <ChatMessage key={i} message={m} userInitials={user.initials} />
+              ))}
+              {thinking && <ThinkingIndicator simulated />}
+              <div ref={bottomRef} />
+            </>
           )}
-        </AnimatePresence>
+        </div>
+        <div className="border-t border-[var(--color-border-brand)] p-3 sm:p-4">
+          <Composer
+            value={input}
+            onChange={setInput}
+            onSubmit={send}
+            disabled={thinking}
+            placeholder={thinking ? 'Routing to the right agents…' : 'e.g. Draft 3 reel scripts and check them for compliance'}
+          />
+        </div>
       </motion.div>
-
-      {/* Memory + Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-        <Card goldRule hover={false}>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <Database size={15} className="text-[var(--color-gold)]" />
-              <CardTitle>Maestro Memory</CardTitle>
-            </div>
-            <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">
-              What the system remembered and applied to this project
-            </p>
-          </CardHeader>
-          <CardContent className="pt-2 space-y-2">
-            {project.memory.map((m, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-2.5 rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface-elevated)] p-3"
-              >
-                <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-gold)] flex-shrink-0 mt-1.5" />
-                <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{m}</p>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        <Card goldRule hover={false}>
-          <CardHeader>
-            <div className="flex items-center gap-2">
-              <Activity size={15} className="text-[var(--color-gold)]" />
-              <CardTitle>Agent Activity</CardTitle>
-            </div>
-            <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">Latest actions across the suite</p>
-          </CardHeader>
-          <CardContent className="pt-2 space-y-2">
-            {project.activity.map((a, i) => (
-              <div key={i} className="flex items-start gap-2.5 p-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-status-green)] flex-shrink-0 mt-1.5" />
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm text-[var(--color-text-secondary)] leading-snug">
-                    <span className="text-[var(--color-text-primary)] font-medium">{a.agent}</span> {a.action}
-                  </p>
-                  <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">{a.time}</p>
-                </div>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-      </div>
 
       {/* Files attached to this project — its uploadable memory */}
       <ProjectMemory projectId={user.id} />

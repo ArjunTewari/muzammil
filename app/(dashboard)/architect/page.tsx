@@ -13,10 +13,12 @@ import { getUserById } from '@/lib/users'
 import { addMemory, memoryToPromptLines } from '@/lib/memory-store'
 import { assignProject, getWorkloads, type AssignedProject } from '@/lib/project-store'
 import type { ArchitectResponse, BriefSlots, ChatMessage as ChatMsg, ProjectBrief } from '@/lib/architect/types'
+import { useCurrentUser } from '@/hooks/use-current-user'
 
 const CLIENT_CHIPS = ['Axis MF', 'Kotak MF', 'HDFC AMC', 'DSP MF', 'Motilal Oswal', 'Nippon MF', 'Tata MF', 'Invesco MF']
 
 export default function ArchitectPage() {
+  const currentUser = useCurrentUser()
   const [messages, setMessages] = useState<UiMessage[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -225,7 +227,7 @@ export default function ArchitectPage() {
             {/* Messages */}
             <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4">
               {messages.map((m, i) => (
-                <ChatMessage key={i} message={m} />
+                <ChatMessage key={i} message={m} userInitials={currentUser?.initials} />
               ))}
               {loading && <ThinkingIndicator simulated={mode === 'simulated'} />}
 

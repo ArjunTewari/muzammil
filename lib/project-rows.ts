@@ -1,5 +1,5 @@
 import { getUserById, type AppUser } from './users'
-import { allEmployeeProjects } from './employee-projects'
+import { allEmployeeProjects, getEmployeeProject } from './employee-projects'
 import { getProjectsForEmployee } from './project-store'
 import type { DeliverableType } from './deliverable-type'
 
@@ -33,13 +33,31 @@ export function getProjectRows(user: AppUser): ProjectRow[] {
     })
   }
 
-  return getProjectsForEmployee(user.id).map((a) => ({
-    id: a.id,
-    title: a.title,
-    subtitle: a.client,
-    href: '/my-work',
-    dot: user.accentColor,
-    isNew: a.status === 'new',
-    deliverableType: a.brief.deliverableType,
-  }))
+  // Operators: their own running campaign first, then anything Muzammil has
+  // freshly assigned via the Architect — both live at /my-work.
+  const rows: ProjectRow[] = []
+  const base = getEmployeeProject(user.id)
+  if (base) {
+    rows.push({
+      id: user.id,
+      title: base.projectTitle,
+      subtitle: base.client,
+      href: '/my-work',
+      dot: user.accentColor,
+      isNew: false,
+      deliverableType: base.deliverableType,
+    })
+  }
+  getProjectsForEmployee(user.id).forEach((a) =>
+    rows.push({
+      id: a.id,
+      title: a.title,
+      subtitle: a.client,
+      href: '/my-work',
+      dot: user.accentColor,
+      isNew: a.status === 'new',
+      deliverableType: a.brief.deliverableType,
+    }),
+  )
+  return rows
 }

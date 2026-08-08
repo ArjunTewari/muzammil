@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { ArrowRight, Settings as SettingsIcon } from 'lucide-react'
-import { Card } from '@/components/ui/card'
+import { ArrowRight, Database, Activity, Settings as SettingsIcon } from 'lucide-react'
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { useCurrentUser } from '@/hooks/use-current-user'
 import { SETTINGS_NAV } from '@/lib/nav'
+import { getEmployeeProject } from '@/lib/employee-projects'
 
 const DESCRIPTIONS: Record<string, string> = {
   '/finance': 'Revenue, collections and billing — run by the Finance Agent across every campaign.',
@@ -18,6 +19,7 @@ const DESCRIPTIONS: Record<string, string> = {
 export default function SettingsPage() {
   const user = useCurrentUser()
   const isMaster = user?.role === 'master'
+  const ownProject = user && !isMaster ? getEmployeeProject(user.id) : null
 
   return (
     <div className="p-4 sm:p-6 max-w-[1400px] mx-auto space-y-4 sm:space-y-6">
@@ -31,7 +33,7 @@ export default function SettingsPage() {
         <p className="text-sm text-[var(--color-text-tertiary)]">
           {isMaster
             ? 'Everything beyond Dashboard lives here.'
-            : 'Workspace preferences.'}
+            : 'What Maestro has learned about your campaign, and what your agents have been doing.'}
         </p>
       </motion.div>
 
@@ -69,13 +71,61 @@ export default function SettingsPage() {
             )
           })}
         </div>
+      ) : ownProject ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+          <Card goldRule hover={false}>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Database size={15} className="text-[var(--color-gold)]" />
+                <CardTitle>Maestro Memory</CardTitle>
+              </div>
+              <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">
+                What the system remembered and applied to this project
+              </p>
+            </CardHeader>
+            <CardContent className="pt-2 space-y-2">
+              {ownProject.memory.map((m, i) => (
+                <div
+                  key={i}
+                  className="flex items-start gap-2.5 rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface-elevated)] p-3"
+                >
+                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-gold)] flex-shrink-0 mt-1.5" />
+                  <p className="text-sm text-[var(--color-text-secondary)] leading-relaxed">{m}</p>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card goldRule hover={false}>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <Activity size={15} className="text-[var(--color-gold)]" />
+                <CardTitle>Agent Activity</CardTitle>
+              </div>
+              <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">Latest actions across the suite</p>
+            </CardHeader>
+            <CardContent className="pt-2 space-y-2">
+              {ownProject.activity.map((a, i) => (
+                <div key={i} className="flex items-start gap-2.5 p-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[var(--color-status-green)] flex-shrink-0 mt-1.5" />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm text-[var(--color-text-secondary)] leading-snug">
+                      <span className="text-[var(--color-text-primary)] font-medium">{a.agent}</span> {a.action}
+                    </p>
+                    <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">{a.time}</p>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
       ) : (
         <div className="rounded-[12px] border border-[var(--color-border-brand)] bg-[var(--color-surface)] p-12 text-center">
           <div className="w-12 h-12 rounded-full bg-[var(--color-gold-muted)] border border-[var(--color-gold-border)] flex items-center justify-center mx-auto mb-4">
             <SettingsIcon size={20} className="text-[var(--color-gold)]" />
           </div>
           <p className="text-[var(--color-text-secondary)] text-sm">
-            Notification and account preferences will live here.
+            No campaign assigned to this account yet.
           </p>
         </div>
       )}

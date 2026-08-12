@@ -15,7 +15,7 @@ export interface ProjectFile {
   addedAt: number
 }
 
-const KEY = 'maestro-project-files'
+const KEY = 'supra-project-files'
 const listeners = new Set<() => void>()
 
 function read(): ProjectFile[] {

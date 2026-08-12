@@ -21,7 +21,7 @@ const pageTitles: Record<string, string> = {
 function titleFor(pathname: string): string {
   if (pathname.startsWith('/team/')) return 'Team Member'
   const match = Object.keys(pageTitles).find((k) => pathname === k || pathname.startsWith(k + '/'))
-  return match ? pageTitles[match] : 'Maestro'
+  return match ? pageTitles[match] : 'Supra'
 }
 
 export function Topbar({

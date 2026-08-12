@@ -5,7 +5,7 @@ import { ArrowUp, Loader2, Paperclip } from 'lucide-react'
 
 // A single, reusable "Claude-style" composer: rounded pill, auto-growing
 // textarea, an attach stub on the left, a circular send button on the right.
-// Enter submits, Shift+Enter inserts a newline. Used everywhere Maestro asks
+// Enter submits, Shift+Enter inserts a newline. Used everywhere Supra asks
 // the founder (or an agent) a free-text question, so every text interaction
 // in the app feels like one consistent chat surface.
 
@@ -13,7 +13,7 @@ export function Composer({
   value,
   onChange,
   onSubmit,
-  placeholder = 'Message Maestro…',
+  placeholder = 'Message Supra…',
   disabled = false,
   busy = false,
   autoFocus = false,

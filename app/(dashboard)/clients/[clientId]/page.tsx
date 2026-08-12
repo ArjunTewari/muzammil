@@ -127,7 +127,7 @@ export default function ClientDetailPage({
             </Link>
           </div>
           <p className="text-sm text-[var(--color-text-secondary)] mb-3">
-            Run end-to-end by <span className="text-[var(--color-text-primary)]">{owner.name}</span> on the Maestro
+            Run end-to-end by <span className="text-[var(--color-text-primary)]">{owner.name}</span> on the Supra
             agent suite. {project.objective}
           </p>
           <AgentPipeline project={project} />

@@ -13,7 +13,7 @@ export function AgentSuiteStrip() {
         </div>
         <div>
           <p className="text-sm font-semibold text-[var(--color-text-primary)]">
-            The Maestro Agent Suite
+            The Supra Agent Suite
           </p>
           <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">
             Every employee gets the full set. The {MASTER_AGENT.name} orchestrates routing and handoffs.

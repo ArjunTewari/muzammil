@@ -10,7 +10,7 @@ export interface ProjectBlueprintState {
   satisfied: string[]
 }
 
-const KEY = 'maestro-blueprint'
+const KEY = 'supra-blueprint'
 const listeners = new Set<() => void>()
 
 function readAll(): Record<string, ProjectBlueprintState> {

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-const STORAGE_KEY = 'maestro-tutorial-done'
+const STORAGE_KEY = 'supra-tutorial-done'
 
 export function useTutorial() {
   const [show, setShow] = useState(false)
@@ -10,8 +10,10 @@ export function useTutorial() {
 
   useEffect(() => {
     const done = localStorage.getItem(STORAGE_KEY)
-    if (!done) setShow(true)
-    setReady(true)
+    queueMicrotask(() => {
+      if (!done) setShow(true)
+      setReady(true)
+    })
   }, [])
 
   function dismiss() {

@@ -11,9 +11,9 @@ import {
 // localStorage-backed store for the Agent Studio (demo). Swap these functions
 // for /api/v1 calls to make it durable + cross-device later.
 
-const AGENTS_KEY = 'maestro-studio-agents'
-const MEM_KEY = 'maestro-studio-memory'
-const STATS_KEY = 'maestro-studio-stats'
+const AGENTS_KEY = 'supra-studio-agents'
+const MEM_KEY = 'supra-studio-memory'
+const STATS_KEY = 'supra-studio-stats'
 const listeners = new Set<() => void>()
 
 function emit() {

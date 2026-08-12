@@ -22,7 +22,7 @@ export interface MemoryEntry {
   createdAt: number
 }
 
-const KEY = 'maestro-memory'
+const KEY = 'supra-memory'
 const listeners = new Set<() => void>()
 
 function read(): MemoryEntry[] {

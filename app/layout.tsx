@@ -24,7 +24,7 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Maestro — ZiWorks Command Center',
+  title: 'Supra — ZiWorks Command Center',
   description: 'CEO/Founder operating system for ZiWorks Advertising',
 }
 

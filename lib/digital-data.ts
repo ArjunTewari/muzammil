@@ -49,7 +49,7 @@ export interface ScheduledPost {
   status: PostStatus
 }
 
-// The single company website Maestro monitors.
+// The single company website Supra monitors.
 export const ziworksSite: WebsiteHealth = {
   domain: 'ziworks.in',
   status: 'operational',

@@ -7,7 +7,7 @@ export const runtime = 'nodejs'
 export const maxDuration = 60
 
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages'
-const MODEL = process.env.MAESTRO_MODEL ?? 'claude-sonnet-5'
+const MODEL = process.env.SUPRA_MODEL ?? 'claude-sonnet-5'
 
 export async function POST(request: Request) {
   let req: ArchitectRequest

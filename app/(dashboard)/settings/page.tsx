@@ -13,7 +13,7 @@ const DESCRIPTIONS: Record<string, string> = {
   '/digital': "ZiWorks's own website health and social presence.",
   '/studio': 'Build and train your own agents — define a goal, task and rules.',
   '/agent-control': 'Production agent runs, approvals and calibration.',
-  '/memory': "Everything Maestro has learned — instructions, approvals, corrections.",
+  '/memory': "Everything Supra has learned — instructions, approvals, corrections.",
 }
 
 export default function SettingsPage() {
@@ -33,7 +33,7 @@ export default function SettingsPage() {
         <p className="text-sm text-[var(--color-text-tertiary)]">
           {isMaster
             ? 'Everything beyond Dashboard lives here.'
-            : 'What Maestro has learned about your campaign, and what your agents have been doing.'}
+            : 'What Supra has learned about your campaign, and what your agents have been doing.'}
         </p>
       </motion.div>
 
@@ -77,7 +77,7 @@ export default function SettingsPage() {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <Database size={15} className="text-[var(--color-gold)]" />
-                <CardTitle>Maestro Memory</CardTitle>
+                <CardTitle>Supra Memory</CardTitle>
               </div>
               <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">
                 What the system remembered and applied to this project

@@ -5,7 +5,7 @@ import type { LeadStage } from './types'
 // Persists drag-and-drop stage moves for leads without mutating the mock data.
 // localStorage for the demo; swap for PATCH /api/v1/leads/:id later.
 
-const KEY = 'maestro-pipeline-stages'
+const KEY = 'supra-pipeline-stages'
 const listeners = new Set<() => void>()
 
 function read(): Record<string, LeadStage> {

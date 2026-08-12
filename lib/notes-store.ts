@@ -10,7 +10,7 @@ export interface ClientNote {
   createdAt: number
 }
 
-const KEY = 'maestro-client-notes'
+const KEY = 'supra-client-notes'
 const listeners = new Set<() => void>()
 
 function read(): ClientNote[] {

@@ -1,6 +1,6 @@
-# Maestro — ZiWorks agent platform
+# Supra — ZiWorks agent platform
 
-Maestro is a human-controlled marketing operations platform. The existing Next.js dashboard remains on Vercel; a Python control service owns CRM data and approval state on Google Cloud; Google ADK specialists execute one authorized stage at a time on Vertex AI Agent Engine.
+Supra is a human-controlled marketing operations platform. The existing Next.js dashboard remains on Vercel; a Python control service owns CRM data and approval state on Google Cloud; Google ADK specialists execute one authorized stage at a time on Vertex AI Agent Engine.
 
 ## Production architecture
 
@@ -29,7 +29,7 @@ A **self-contained**, ship-today slice built to prove instant value to the owner
 
 - **Runtime:** `app/api/studio/run/route.ts` calls the Anthropic Messages API directly with **extended thinking** (mirrors `/api/architect`); falls back to a deterministic BFSI red-flag simulation when `ANTHROPIC_API_KEY` is absent, so the demo never breaks.
 - **State:** `lib/studio/*` on `localStorage` for the demo — shapes are forward-compatible with the control service's agent-scoped memory (`PlatformMemory.scope:'agent'`), so this can migrate onto `/api/v1` later without a redesign.
-- **Env:** set `ANTHROPIC_API_KEY` (and optional `MAESTRO_MODEL`, default `claude-sonnet-5`) to make it a live thinking agent.
+- **Env:** set `ANTHROPIC_API_KEY` (and optional `SUPRA_MODEL`, default `claude-sonnet-5`) to make it a live thinking agent.
 
 This is deliberately separate from the production **Agent Control** / Vertex pipeline above: the Studio is the wedge that gets a "yes"; the control service is the platform it grows into.
 

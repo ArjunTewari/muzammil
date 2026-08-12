@@ -47,10 +47,10 @@ export function CommandPalette({ user }: { user: AppUser }) {
       setOpen(true)
     }
     window.addEventListener('keydown', onKey)
-    window.addEventListener('maestro:open-command-palette', onExternalOpen)
+    window.addEventListener('supra:open-command-palette', onExternalOpen)
     return () => {
       window.removeEventListener('keydown', onKey)
-      window.removeEventListener('maestro:open-command-palette', onExternalOpen)
+      window.removeEventListener('supra:open-command-palette', onExternalOpen)
     }
   }, [])
 

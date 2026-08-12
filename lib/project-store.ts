@@ -20,7 +20,7 @@ export interface AssignedProject {
   createdAt: number
 }
 
-const KEY = 'maestro-projects'
+const KEY = 'supra-projects'
 const listeners = new Set<() => void>()
 
 function read(): AssignedProject[] {

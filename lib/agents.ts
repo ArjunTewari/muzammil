@@ -1,4 +1,4 @@
-// The Maestro agent suite. Every employee gets the full set; the Master Agent
+// The Supra agent suite. Every employee gets the full set; the Master Agent
 // orchestrates routing, sequencing and handoffs between the six specialists.
 
 export type AgentId = 'brief' | 'research' | 'copy' | 'compliance' | 'client' | 'finance'

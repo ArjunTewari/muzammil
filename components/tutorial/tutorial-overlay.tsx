@@ -17,8 +17,8 @@ const STEPS = [
   {
     icon: Sparkles,
     iconColor: 'var(--color-gold)',
-    title: 'Welcome to Maestro',
-    body: "Maestro takes Muzzammil's judgment — his standards, his experience — out of his head and puts it into a system, so quality doesn't depend on him being in the room.",
+    title: 'Welcome to Supra',
+    body: "Supra takes Muzzammil's judgment — his standards, his experience — out of his head and puts it into a system, so quality doesn't depend on him being in the room.",
   },
   {
     icon: Workflow,

@@ -14,7 +14,7 @@ import { subscribeProjects } from '@/lib/project-store'
 import { DeliverableBadge } from '@/components/shared/deliverable-badge'
 
 function openPalette() {
-  window.dispatchEvent(new CustomEvent('maestro:open-command-palette'))
+  window.dispatchEvent(new CustomEvent('supra:open-command-palette'))
 }
 
 // Master sees one row per employee — the brief the Architect just assigned
@@ -47,7 +47,7 @@ export function Sidebar({ user, onLogout }: { user: AppUser; onLogout: () => voi
         <div className="flex items-center gap-2 min-w-0 px-1">
           <div className="flex-shrink-0 w-7 h-7 rounded-[6px] bg-[var(--color-gold)] flex items-center justify-center">
             <span className="text-[var(--color-ink)] text-xs font-semibold" style={{ fontFamily: 'var(--font-instrument-serif)' }}>
-              M
+              S
             </span>
           </div>
           <AnimatePresence>
@@ -60,7 +60,7 @@ export function Sidebar({ user, onLogout }: { user: AppUser; onLogout: () => voi
                 className="text-[var(--color-text-primary)] font-medium tracking-tight whitespace-nowrap overflow-hidden"
                 style={{ fontFamily: 'var(--font-instrument-serif)', fontSize: '17px' }}
               >
-                Maestro
+                Supra
               </motion.span>
             )}
           </AnimatePresence>

@@ -10,7 +10,7 @@ import { getEmployeeProject } from '@/lib/employee-projects'
 
 const DESCRIPTIONS: Record<string, string> = {
   '/finance': 'Revenue, collections and billing — run by the Finance Agent across every campaign.',
-  '/digital': "ZiWorks's own website health and social presence.",
+  '/digital': "Your agency's own website health and social presence.",
   '/studio': 'Build and train your own agents — define a goal, task and rules.',
   '/agent-control': 'Production agent runs, approvals and calibration.',
   '/memory': "Everything Supra has learned — instructions, approvals, corrections.",

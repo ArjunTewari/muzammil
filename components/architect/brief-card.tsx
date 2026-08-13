@@ -96,10 +96,10 @@ export function BriefCard({
           </Section>
         )}
 
-        {brief.muzammilInstructions?.length > 0 && (
+        {brief.founderInstructions?.length > 0 && (
           <Section icon={Quote} title="Your instructions (remembered)">
             <div className="space-y-1.5">
-              {brief.muzammilInstructions.map((q, i) => (
+              {brief.founderInstructions.map((q, i) => (
                 <p key={i} className="text-xs text-[var(--color-text-secondary)] italic border-l-2 border-[var(--color-gold-border)] pl-2.5 leading-snug">
                   &ldquo;{q}&rdquo;
                 </p>

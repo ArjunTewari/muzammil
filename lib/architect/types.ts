@@ -68,7 +68,7 @@ export interface ProjectBrief {
   creativeDirection: string
   successMetrics: string[]
   assumptions: string[]
-  muzammilInstructions: string[] // verbatim quotes worth remembering
+  founderInstructions: string[] // verbatim quotes worth remembering
   suggestedOwner: OwnerSuggestion
 }
 

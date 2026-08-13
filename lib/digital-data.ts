@@ -1,11 +1,11 @@
-// ZiWorks's OWN web + social presence — the agency's own website and the
+// The agency's OWN web + social presence — its own website and the
 // company/founder social handles. (Client campaign channels live under
 // Projects/Team, not here.)
 // TODO: replace with GET /api/digital
 
 export type SiteStatus = 'operational' | 'degraded' | 'maintenance'
 export type SocialPlatform = 'LinkedIn' | 'Instagram' | 'Twitter' | 'YouTube'
-export type SocialOwner = 'ZiWorks' | 'Muzzammil'
+export type SocialOwner = 'Agency' | 'Founder'
 export type PostStatus = 'scheduled' | 'awaiting-approval' | 'published' | 'draft'
 
 export interface SitePage {
@@ -50,8 +50,8 @@ export interface ScheduledPost {
 }
 
 // The single company website Supra monitors.
-export const ziworksSite: WebsiteHealth = {
-  domain: 'ziworks.in',
+export const agencySite: WebsiteHealth = {
+  domain: 'youragency.com',
   status: 'operational',
   uptime: 99.97,
   monthlyVisitors: 8420,
@@ -73,13 +73,13 @@ export const ziworksSite: WebsiteHealth = {
   ],
 }
 
-// ZiWorks company handles + Muzzammil's founder handles.
+// Agency company handles + the founder's personal handles.
 export const socialAccounts: SocialAccount[] = [
   {
     id: 's1',
-    owner: 'Muzzammil',
+    owner: 'Founder',
     platform: 'LinkedIn',
-    handle: 'Muzzammil Sayed',
+    handle: 'The Founder',
     followers: 18900,
     growth30d: 6.8,
     engagementRate: 7.1,
@@ -88,9 +88,9 @@ export const socialAccounts: SocialAccount[] = [
   },
   {
     id: 's2',
-    owner: 'ZiWorks',
+    owner: 'Agency',
     platform: 'LinkedIn',
-    handle: 'ZiWorks Advertising',
+    handle: 'Your Agency',
     followers: 6200,
     growth30d: 5.4,
     engagementRate: 4.8,
@@ -99,9 +99,9 @@ export const socialAccounts: SocialAccount[] = [
   },
   {
     id: 's3',
-    owner: 'ZiWorks',
+    owner: 'Agency',
     platform: 'Instagram',
-    handle: '@ziworks.advertising',
+    handle: '@your.agency',
     followers: 3100,
     growth30d: 3.1,
     engagementRate: 3.2,
@@ -110,9 +110,9 @@ export const socialAccounts: SocialAccount[] = [
   },
   {
     id: 's4',
-    owner: 'Muzzammil',
+    owner: 'Founder',
     platform: 'Twitter',
-    handle: '@muzammilrashid',
+    handle: '@thefounder',
     followers: 4500,
     growth30d: 2.2,
     engagementRate: 2.4,
@@ -121,9 +121,9 @@ export const socialAccounts: SocialAccount[] = [
   },
   {
     id: 's5',
-    owner: 'ZiWorks',
+    owner: 'Agency',
     platform: 'YouTube',
-    handle: 'ZiWorks Advertising',
+    handle: 'Your Agency',
     followers: 1250,
     growth30d: 1.5,
     engagementRate: 2.9,
@@ -132,11 +132,11 @@ export const socialAccounts: SocialAccount[] = [
   },
 ]
 
-// ZiWorks's OWN brand content pipeline (thought leadership, case studies, hiring).
+// The agency's OWN brand content pipeline (thought leadership, case studies, hiring).
 export const contentCalendar: ScheduledPost[] = [
   {
     id: 'p1',
-    owner: 'ZiWorks',
+    owner: 'Agency',
     platform: 'LinkedIn',
     title: 'Case study: how we grew an AMC\'s SIP sign-ups 3x',
     date: '2026-06-23',
@@ -144,7 +144,7 @@ export const contentCalendar: ScheduledPost[] = [
   },
   {
     id: 'p2',
-    owner: 'Muzzammil',
+    owner: 'Founder',
     platform: 'LinkedIn',
     title: 'Founder POV: compliance is a creative constraint, not a blocker',
     date: '2026-06-24',
@@ -152,7 +152,7 @@ export const contentCalendar: ScheduledPost[] = [
   },
   {
     id: 'p3',
-    owner: 'ZiWorks',
+    owner: 'Agency',
     platform: 'Instagram',
     title: 'Behind the scenes: shooting a retirement reel',
     date: '2026-06-24',
@@ -160,7 +160,7 @@ export const contentCalendar: ScheduledPost[] = [
   },
   {
     id: 'p4',
-    owner: 'ZiWorks',
+    owner: 'Agency',
     platform: 'LinkedIn',
     title: 'We\'re hiring: Senior Copywriter (BFSI)',
     date: '2026-06-25',
@@ -168,7 +168,7 @@ export const contentCalendar: ScheduledPost[] = [
   },
   {
     id: 'p5',
-    owner: 'Muzzammil',
+    owner: 'Founder',
     platform: 'Twitter',
     title: '3 SEBI rules every MF marketer gets wrong',
     date: '2026-06-26',
@@ -176,7 +176,7 @@ export const contentCalendar: ScheduledPost[] = [
   },
   {
     id: 'p6',
-    owner: 'ZiWorks',
+    owner: 'Agency',
     platform: 'Instagram',
     title: 'Team spotlight: meet the creative desk',
     date: '2026-06-27',
@@ -189,13 +189,13 @@ export function digitalSummary() {
   const postsAwaiting = contentCalendar.filter((p) => p.status === 'awaiting-approval').length
   const scheduled = contentCalendar.filter((p) => p.status === 'scheduled').length
   return {
-    monthlyVisitors: ziworksSite.monthlyVisitors,
-    visitorChangePct: ziworksSite.visitorChangePct,
-    leadsThisMonth: ziworksSite.leadsThisMonth,
+    monthlyVisitors: agencySite.monthlyVisitors,
+    visitorChangePct: agencySite.visitorChangePct,
+    leadsThisMonth: agencySite.leadsThisMonth,
     totalFollowers,
     postsAwaiting,
     scheduled,
-    uptime: ziworksSite.uptime,
-    pendingUpdates: ziworksSite.pendingUpdates.length,
+    uptime: agencySite.uptime,
+    pendingUpdates: agencySite.pendingUpdates.length,
   }
 }

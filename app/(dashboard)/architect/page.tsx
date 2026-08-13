@@ -54,8 +54,8 @@ export default function ArchitectPage() {
 
       if (data.turn.decision === 'finalize' && data.turn.brief) {
         const b = data.turn.brief
-        // Learn: capture Muzzammil's verbatim instructions as memory.
-        b.muzammilInstructions.forEach(
+        // Learn: capture the founder's verbatim instructions as memory.
+        b.founderInstructions.forEach(
           (q) => q && addMemory({ type: 'instruction', content: q, client: b.client, source: 'Architect interview' }),
         )
         setBrief(b)
@@ -89,7 +89,7 @@ export default function ArchitectPage() {
   }, [messages, loading, brief])
 
   // The very first send starts the interview — no auto-fired trigger message,
-  // this page opens blank (a real "home") until Muzzammil actually types.
+  // this page opens blank (a real "home") until the founder actually types.
   function send(text: string) {
     const t = text.trim()
     if (!t || loading || brief) return
@@ -149,7 +149,7 @@ export default function ArchitectPage() {
             className="text-2xl sm:text-3xl text-[var(--color-text-primary)] mb-1"
             style={{ fontFamily: 'var(--font-instrument-serif)' }}
           >
-            Good morning, Muzzammil.
+            Good morning, Founder.
           </h1>
           <p className="text-sm text-[var(--color-text-tertiary)]">What are we building today?</p>
         </motion.div>

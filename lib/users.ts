@@ -14,20 +14,20 @@ export interface AppUser {
 
 export const USERS: AppUser[] = [
   {
-    id: 'muzammil',
-    username: 'muzzammil',
-    password: 'maestro2026',
-    name: 'Muzzammil Sayed',
+    id: 'founder',
+    username: 'founder',
+    password: 'supra2026',
+    name: 'Founder',
     role: 'master',
     title: 'Founder & CEO',
-    initials: 'MS',
+    initials: 'FR',
     accentColor: '#C9A85C',
     teamOrder: 0,
   },
   {
     id: 'priya',
     username: 'kriti',
-    password: 'ziworks123',
+    password: 'supra123',
     name: 'Kriti',
     role: 'account-manager',
     title: 'Account Manager',
@@ -38,7 +38,7 @@ export const USERS: AppUser[] = [
   {
     id: 'rohan',
     username: 'trisha',
-    password: 'ziworks123',
+    password: 'supra123',
     name: 'Trisha',
     role: 'research',
     title: 'Research Analyst',
@@ -49,7 +49,7 @@ export const USERS: AppUser[] = [
   {
     id: 'divya',
     username: 'dipin',
-    password: 'ziworks123',
+    password: 'supra123',
     name: 'Dipin',
     role: 'creative',
     title: 'Creative Lead',
@@ -60,7 +60,7 @@ export const USERS: AppUser[] = [
   {
     id: 'arjit',
     username: 'vikas',
-    password: 'ziworks123',
+    password: 'supra123',
     name: 'Vikas',
     role: 'compliance',
     title: 'Compliance Officer',
@@ -71,7 +71,7 @@ export const USERS: AppUser[] = [
   {
     id: 'sneha',
     username: 'mupen',
-    password: 'ziworks123',
+    password: 'supra123',
     name: 'Mupen',
     role: 'finance',
     title: 'Finance Manager',

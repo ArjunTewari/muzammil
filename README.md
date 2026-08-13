@@ -1,4 +1,4 @@
-# Supra — ZiWorks agent platform
+# Supra — agent platform for marketing agencies
 
 Supra is a human-controlled marketing operations platform. The existing Next.js dashboard remains on Vercel; a Python control service owns CRM data and approval state on Google Cloud; Google ADK specialists execute one authorized stage at a time on Vertex AI Agent Engine.
 

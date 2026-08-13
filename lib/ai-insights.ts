@@ -100,17 +100,17 @@ export const teamNextSteps: NextStep[] = [
 
 export const digitalNextSteps: NextStep[] = [
   {
-    action: 'Approve the SIP case-study post for ZiWorks LinkedIn',
+    action: "Approve the SIP case-study post for the agency's LinkedIn",
     rationale: "It's the agency's strongest proof point and it's sitting in the approval queue.",
     priority: 'urgent',
   },
   {
-    action: "Publish Muzzammil's compliance POV",
-    rationale: 'Founder-led posts drive the most inbound to ziworks.in — this one is written and waiting.',
+    action: "Publish the founder's compliance POV",
+    rationale: 'Founder-led posts drive the most inbound to the site — this one is written and waiting.',
     priority: 'recommended',
   },
   {
-    action: 'Add 2 case studies to ziworks.in/work',
+    action: 'Add 2 case studies to the site',
     rationale: '14 inbound leads this month against a thin portfolio page — more proof lifts conversion.',
     priority: 'opportunity',
   },

@@ -63,7 +63,7 @@ export function assignProject(
     title: brief.title,
     client: brief.client,
     brief,
-    instructions: brief.muzammilInstructions.filter(Boolean),
+    instructions: brief.founderInstructions.filter(Boolean),
     assignedTo,
     status: 'new',
     createdAt: Date.now(),

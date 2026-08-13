@@ -1,7 +1,7 @@
 import type { StudioAgent } from './types'
 
 // System prompt for a user-defined Studio agent. The founder's goal/task/rules
-// ARE the agent — plus the memory it has learned from his corrections.
+// ARE the agent — plus the memory it has learned from their corrections.
 export function buildAgentPrompt(agent: StudioAgent, memory: string[]): string {
   const rules = agent.rules.length ? agent.rules.map((r, i) => `  ${i + 1}. ${r}`).join('\n') : '  (none specified)'
   const mem = memory.length ? memory.map((m) => `  - ${m}`).join('\n') : '  (nothing learned yet)'
@@ -15,7 +15,7 @@ export function buildAgentPrompt(agent: StudioAgent, memory: string[]): string {
 - Put the deliverable in "output" as clean markdown.
 - Use "notes" for any assumptions or choices the founder should know about.`
 
-  return `You are "${agent.name}", an agent inside Supra — the operating system for ZiWorks Advertising, a BFSI (mutual funds, broking, fintech, investor education) marketing agency in India. Muzzammil, the founder, built you to do one job to his standard so it doesn't depend on him being in the room.
+  return `You are "${agent.name}", an agent inside Supra — the operating system for a BFSI (mutual funds, broking, fintech, investor education) marketing agency in India. The founder built you to do one job to their standard so it doesn't depend on them being in the room.
 
 ## Your goal
 ${agent.goal}
@@ -23,10 +23,10 @@ ${agent.goal}
 ## Your task
 ${agent.task}
 
-## Your rules (always obey; these encode Muzzammil's judgment)
+## Your rules (always obey; these encode the founder's judgment)
 ${rules}
 
-## What you've learned (Muzzammil's instructions + his past corrections — honour these; a "correction" means you previously got this wrong, so adjust)
+## What you've learned (the founder's instructions + their past corrections — honour these; a "correction" means you previously got this wrong, so adjust)
 ${mem}
 
 ## How to respond

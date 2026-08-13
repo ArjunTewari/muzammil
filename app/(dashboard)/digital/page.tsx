@@ -19,7 +19,7 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import {
-  ziworksSite,
+  agencySite,
   socialAccounts,
   contentCalendar,
   digitalSummary,
@@ -44,8 +44,8 @@ const siteStatusBadge: Record<SiteStatus, { variant: 'green' | 'amber' | 'defaul
 }
 
 const ownerMeta: Record<SocialOwner, { color: string }> = {
-  ZiWorks: { color: 'var(--color-gold)' },
-  Muzzammil: { color: 'var(--color-status-blue)' },
+  Agency: { color: 'var(--color-gold)' },
+  Founder: { color: 'var(--color-status-blue)' },
 }
 
 const postStatusBadge: Record<PostStatus, { variant: 'amber' | 'blue' | 'green' | 'default'; label: string }> = {
@@ -69,7 +69,7 @@ function fmtDuration(sec: number): string {
 
 export default function DigitalPage() {
   const summary = digitalSummary()
-  const status = siteStatusBadge[ziworksSite.status]
+  const status = siteStatusBadge[agencySite.status]
 
   const statCards = [
     {
@@ -82,14 +82,14 @@ export default function DigitalPage() {
     {
       label: 'Inbound leads',
       value: `${summary.leadsThisMonth}`,
-      sub: 'from ziworks.in this month',
+      sub: 'from your site this month',
       icon: MousePointerClick,
       accent: 'var(--color-gold)',
     },
     {
       label: 'Social reach',
       value: fmtNum(summary.totalFollowers),
-      sub: 'ZiWorks + founder followers',
+      sub: 'Agency + founder followers',
       icon: Users2,
       accent: 'var(--color-status-blue)',
     },
@@ -110,7 +110,7 @@ export default function DigitalPage() {
           Web &amp; Social
         </h1>
         <p className="text-sm text-[var(--color-text-tertiary)]">
-          ZiWorks&apos;s own website and the team&apos;s social presence — how the agency markets itself
+          Your agency&apos;s own website and the team&apos;s social presence — how it markets itself
         </p>
       </motion.div>
 
@@ -145,7 +145,7 @@ export default function DigitalPage() {
             </div>
             <div className="flex items-center gap-2">
               <span className="text-xs text-[var(--color-text-secondary)]" style={{ fontFamily: 'var(--font-jetbrains-mono)' }}>
-                {ziworksSite.domain}
+                {agencySite.domain}
               </span>
               <Badge variant={status.variant}>{status.label}</Badge>
             </div>
@@ -155,10 +155,10 @@ export default function DigitalPage() {
           {/* Health metrics */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
             {[
-              { k: 'Uptime', v: `${ziworksSite.uptime}%` },
-              { k: 'Avg. session', v: fmtDuration(ziworksSite.avgSessionSec) },
-              { k: 'Bounce rate', v: `${ziworksSite.bounceRate}%` },
-              { k: 'Leads / mo', v: `${ziworksSite.leadsThisMonth}` },
+              { k: 'Uptime', v: `${agencySite.uptime}%` },
+              { k: 'Avg. session', v: fmtDuration(agencySite.avgSessionSec) },
+              { k: 'Bounce rate', v: `${agencySite.bounceRate}%` },
+              { k: 'Leads / mo', v: `${agencySite.leadsThisMonth}` },
             ].map((m) => (
               <div key={m.k} className="rounded-[10px] border border-[var(--color-border-brand)] bg-[var(--color-surface-elevated)] p-3">
                 <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-tertiary)]">{m.k}</p>
@@ -172,7 +172,7 @@ export default function DigitalPage() {
           {/* Top pages */}
           <p className="text-[10px] uppercase tracking-wider text-[var(--color-text-tertiary)] mb-2">Top pages · last 30 days</p>
           <div className="space-y-1.5 mb-4">
-            {ziworksSite.topPages.map((p) => {
+            {agencySite.topPages.map((p) => {
               const up = p.changePct >= 0
               return (
                 <div key={p.path} className="flex items-center gap-3 rounded-[8px] px-2.5 py-2 hover:bg-[var(--color-surface-elevated)] transition-colors">
@@ -195,13 +195,13 @@ export default function DigitalPage() {
           </div>
 
           {/* Pending updates */}
-          {ziworksSite.pendingUpdates.length > 0 && (
+          {agencySite.pendingUpdates.length > 0 && (
             <div className="pt-3 border-t border-[var(--color-border-brand)]">
               <p className="flex items-center gap-1.5 text-[10px] uppercase tracking-wider text-[var(--color-text-tertiary)] mb-2">
                 <Wrench size={11} /> Pending updates
               </p>
               <div className="space-y-1.5">
-                {ziworksSite.pendingUpdates.map((u, i) => (
+                {agencySite.pendingUpdates.map((u, i) => (
                   <div key={i} className="flex items-center gap-2 text-sm text-[var(--color-text-secondary)]">
                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-status-amber)] flex-shrink-0" />
                     {u}
@@ -218,7 +218,7 @@ export default function DigitalPage() {
         <CardHeader>
           <CardTitle>Social Presence</CardTitle>
           <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">
-            ZiWorks company handles &amp; Muzzammil&apos;s founder accounts
+            Agency company handles &amp; the founder&apos;s personal accounts
           </p>
         </CardHeader>
         <CardContent className="pt-3">
@@ -278,7 +278,7 @@ export default function DigitalPage() {
             <CardTitle>Brand Content Calendar</CardTitle>
           </div>
           <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">
-            ZiWorks&apos;s own posts · {summary.postsAwaiting} awaiting your approval
+            The agency&apos;s own posts · {summary.postsAwaiting} awaiting your approval
           </p>
         </CardHeader>
         <CardContent className="pt-2 space-y-2">

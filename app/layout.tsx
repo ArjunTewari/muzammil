@@ -24,8 +24,8 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'Supra — ZiWorks Command Center',
-  description: 'CEO/Founder operating system for ZiWorks Advertising',
+  title: 'Supra — Founder Command Center',
+  description: 'CEO/Founder operating system for marketing agencies',
 }
 
 export default function RootLayout({

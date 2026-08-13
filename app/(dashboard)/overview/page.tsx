@@ -41,10 +41,10 @@ export default function OverviewPage() {
           className="text-2xl sm:text-3xl text-[var(--color-text-primary)] mb-1"
           style={{ fontFamily: 'var(--font-instrument-serif)' }}
         >
-          Good morning, Muzzammil.
+          Good morning, Founder.
         </h1>
         <p className="text-sm text-[var(--color-text-tertiary)]">
-          Saturday, 21 June 2026 · ZiWorks Advertising
+          Saturday, 21 June 2026 · Your Agency
         </p>
       </motion.div>
 

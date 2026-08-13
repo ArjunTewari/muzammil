@@ -155,7 +155,7 @@ export function simulateTurn(req: ArchitectRequest): { turn: ArchitectTurn; turn
           slots.keyMessage ?? `Lead with clarity and trust; make ${client}'s value tangible, not salesy.`,
         successMetrics: [slots.successMetric ?? 'Engagement + qualified lead lift vs last campaign'],
         assumptions,
-        muzammilInstructions: instructions.length > 0 ? instructions : [slots.objective ?? ''],
+        founderInstructions: instructions.length > 0 ? instructions : [slots.objective ?? ''],
         suggestedOwner: pickOwner(req, client),
       },
     },

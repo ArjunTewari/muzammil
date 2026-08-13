@@ -60,7 +60,7 @@ const PROJECTS: Record<string, EmployeeProject> = {
     ],
     memory: [
       'Applied Axis MF brand voice guide v3 (calm, precise, never salesy).',
-      'Reused the "retirement math" angle Muzzammil approved for Axis last quarter.',
+      'Reused the "retirement math" angle the founder approved for Axis last quarter.',
       'Remembered: Axis compliance always requires a past-performance disclaimer on return figures.',
     ],
     activity: [
@@ -111,7 +111,7 @@ const PROJECTS: Record<string, EmployeeProject> = {
       { agent: 'Client Liaison', action: 'sent concept note to Kotak', time: '1d ago' },
     ],
     nextSteps: [
-      { action: 'Escalate the ₹7.5L overdue to Muzzammil before shipping more', rationale: 'Finance flagged it; Kotak is already at-risk.', priority: 'urgent' },
+      { action: 'Escalate the ₹7.5L overdue to the founder before shipping more', rationale: 'Finance flagged it; Kotak is already at-risk.', priority: 'urgent' },
       { action: 'Unblock AMFI portal access for the Researcher', rationale: 'The category data pull is the only thing gating the Copywriter.', priority: 'recommended' },
       { action: 'Chase Kotak on the concept note', rationale: 'Client Liaison can send a nudge to keep scripting on schedule.', priority: 'opportunity' },
     ],

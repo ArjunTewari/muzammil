@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Supra — Agentic Framework</title>
+<style>
+:root {
+  --bg: #080E0A;
+  --surface: #0D1812;
+  --card: #111F15;
+  --border: #1C2E20;
+  --accent: #1A5C38;
+  --accent-b: #22753F;
+  --flow: #3DD68C;
+  --gold: #C9A84C;
+  --red: #A85252;
+  --text: #DFE8E0;
+  --muted: #7A9480;
+  --dim: #4A5E50;
+  --font-d: 'Palatino Linotype', Palatino, 'Book Antiqua', serif;
+  --font-u: 'Gill Sans MT', 'Gill Sans', Optima, 'Segoe UI', sans-serif;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-u);
+  font-size: 16px;
+  line-height: 1.65;
+  min-width: 900px;
+  overflow-x: hidden;
+}
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+.reveal.vis { opacity: 1; transform: translateY(0); }
+.d1 { transition-delay: 0.1s; }
+.d2 { transition-delay: 0.2s; }
+.d3 { transition-delay: 0.3s; }
+.d4 { transition-delay: 0.4s; }
+.d5 { transition-delay: 0.5s; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  * { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; }
+}
+.container { max-width: 1080px; margin: 0 auto; padding: 0 48px; }
+section { padding: 96px 0; border-bottom: 1px solid var(--border); }
+.sec-label {
+  font-family: var(--font-u);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 18px;
+}
+.divider { width: 40px; height: 1px; background: var(--accent); margin-bottom: 28px; }
+
+/* NAV */
+.sticky-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  background: rgba(8,14,10,0.94);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 48px;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 50px;
+  transform: translateY(-100%);
+  transition: transform 0.3s ease;
+}
+.sticky-nav.vis { transform: translateY(0); }
+.nav-brand { font-family: var(--font-d); font-size: 16px; color: var(--text); }
+.nav-brand span { color: var(--accent); }
+.nav-links { display: flex; gap: 28px; list-style: none; }
+.nav-links a { font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); text-decoration: none; transition: color 0.2s; }
+.nav-links a:hover { color: var(--text); }
+
+/* HERO */
+#hero {
+  min-height: 100vh; display: flex; align-items: center;
+  border-bottom: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+#hero::before {
+  content: ''; position: absolute; top: 0; right: 0;
+  width: 45%; height: 100%;
+  background: radial-gradient(ellipse at 80% 50%, rgba(26,92,56,0.07) 0%, transparent 68%);
+  pointer-events: none;
+}
+.hero-eye { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 28px; }
+.hero-h1 {
+  font-family: var(--font-d);
+  font-size: clamp(34px, 5vw, 60px);
+  line-height: 1.1; font-weight: normal;
+  color: var(--text); max-width: 820px; margin-bottom: 36px;
+}
+.hero-h1 em { font-style: italic; color: var(--flow); }
+.hero-sub { font-size: 17px; color: var(--muted); max-width: 520px; line-height: 1.7; margin-bottom: 52px; }
+.hero-stats { display: flex; gap: 44px; }
+.hero-stat { border-left: 2px solid var(--accent); padding-left: 16px; }
+.stat-n { font-family: var(--font-d); font-size: 26px; color: var(--text); line-height: 1; margin-bottom: 4px; }
+.stat-l { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+
+/* PROBLEM */
+#problem .prob-text {
+  font-family: var(--font-d);
+  font-size: clamp(18px, 2.4vw, 26px);
+  line-height: 1.6; color: var(--text); max-width: 760px; margin-bottom: 36px;
+}
+#problem .prob-text strong { color: var(--flow); font-weight: normal; }
+.prob-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 1px; background: var(--border); border: 1px solid var(--border); margin-top: 44px;
+}
+.prob-cell { background: var(--surface); padding: 28px 24px; }
+.prob-cell-lbl { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+.prob-cell-txt { font-family: var(--font-d); font-size: 16px; line-height: 1.55; color: var(--text); }
+
+/* ARCHITECTURE */
+#architecture h2 { font-family: var(--font-d); font-size: clamp(22px, 3vw, 34px); color: var(--text); margin-bottom: 10px; }
+.arch-sub { font-size: 15px; color: var(--muted); margin-bottom: 48px; max-width: 540px; }
+.diagram-wrap {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 3px; padding: 24px; overflow: hidden;
+}
+
+/* AGENTS */
+#agents h2 { font-family: var(--font-d); font-size: clamp(22px, 3vw, 34px); color: var(--text); margin-bottom: 44px; }
+.agents-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 1px; background: var(--border); border: 1px solid var(--border);
+}
+.agent-card {
+  background: var(--surface); padding: 30px 26px;
+  position: relative; transition: background 0.2s;
+}
+.agent-card:hover { background: var(--card); }
+.a-num {
+  font-family: var(--font-d); font-size: 44px; color: var(--border);
+  position: absolute; top: 14px; right: 18px; line-height: 1; user-select: none;
+}
+.a-tag { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+.a-name { font-family: var(--font-d); font-size: 20px; color: var(--text); margin-bottom: 12px; line-height: 1.2; }
+.a-desc { font-size: 14px; color: var(--muted); line-height: 1.65; }
+.a-gate {
+  margin-top: 14px; padding: 8px 12px;
+  background: rgba(168,82,82,0.08); border-left: 2px solid var(--red);
+  font-size: 12px; color: #C47A7A; letter-spacing: 0.03em;
+}
+
+/* MASTER AGENT */
+#master-agent h2 { font-family: var(--font-d); font-size: clamp(22px, 3vw, 34px); color: var(--text); margin-bottom: 10px; }
+.master-intro { font-size: 15px; color: var(--muted); max-width: 540px; margin-bottom: 48px; }
+.master-fns { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.master-fn {
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 30px 26px; position: relative;
+}
+.master-fn::before {
+  content: ''; position: absolute; top: 0; left: 0;
+  width: 3px; height: 100%;
+}
+.fn-orch::before { background: var(--accent); }
+.fn-gate::before { background: var(--gold); }
+.fn-judg::before { background: var(--flow); }
+.fn-lbl { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
+.fn-title { font-family: var(--font-d); font-size: 20px; color: var(--text); margin-bottom: 14px; line-height: 1.2; }
+.fn-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+.fn-mini { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--border); }
+
+/* PHASES */
+#phases h2 { font-family: var(--font-d); font-size: clamp(22px, 3vw, 34px); color: var(--text); margin-bottom: 36px; }
+.phase-toggle { display: flex; border: 1px solid var(--border); width: fit-content; margin-bottom: 44px; }
+.phase-btn {
+  padding: 11px 28px;
+  font-family: var(--font-u); font-size: 11px; letter-spacing: 0.13em; text-transform: uppercase;
+  cursor: pointer; border: none; background: transparent; color: var(--muted);
+  transition: all 0.2s;
+}
+.phase-btn.on { background: var(--accent); color: var(--text); }
+.phase-btn:hover:not(.on) { background: var(--surface); color: var(--text); }
+.phase-pane { display: none; grid-template-columns: 1fr 1fr; gap: 28px; }
+.phase-pane.on { display: grid; }
+.p-panel { background: var(--surface); border: 1px solid var(--border); padding: 32px 28px; }
+.p-badge {
+  display: inline-block; padding: 3px 10px; font-size: 10px;
+  letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 14px;
+}
+.p-badge.g1 { background: rgba(201,168,76,0.1); color: var(--gold); border: 1px solid rgba(201,168,76,0.25); }
+.p-badge.g2 { background: rgba(61,214,140,0.08); color: var(--flow); border: 1px solid rgba(61,214,140,0.2); }
+.p-title { font-family: var(--font-d); font-size: 20px; color: var(--text); margin-bottom: 18px; }
+.p-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.p-list li { display: flex; gap: 13px; font-size: 14px; color: var(--muted); line-height: 1.6; }
+.p-list li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; margin-top: 8px; flex-shrink: 0; }
+.g1 .p-list li::before { background: var(--gold); }
+.g2 .p-list li::before { background: var(--flow); }
+.p-note { margin-top: 22px; padding: 14px 16px; font-size: 13px; color: var(--muted); line-height: 1.65; }
+.p-note strong { color: var(--text); font-weight: normal; }
+
+/* LEARNING */
+#learning h2 { font-family: var(--font-d); font-size: clamp(22px, 3vw, 34px); color: var(--text); margin-bottom: 10px; }
+.learn-sub { font-size: 15px; color: var(--muted); max-width: 540px; margin-bottom: 44px; }
+.learn-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.learn-steps { display: flex; flex-direction: column; }
+.l-step { display: flex; gap: 18px; padding: 18px 0; border-bottom: 1px solid var(--border); }
+.l-step:last-child { border-bottom: none; }
+.l-conn { display: flex; flex-direction: column; align-items: center; gap: 4px; flex-shrink: 0; padding-top: 4px; }
+.l-dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--accent); background: var(--bg); flex-shrink: 0; }
+.l-line { width: 1px; flex: 1; background: var(--border); min-height: 24px; }
+.l-title { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--accent); margin-bottom: 5px; }
+.l-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+.meter-panel { background: var(--surface); border: 1px solid var(--border); padding: 28px 24px; }
+.m-lbl { font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 22px; }
+.conf-row { display: flex; justify-content: space-between; margin-bottom: 7px; }
+.conf-row span { font-size: 12px; color: var(--muted); }
+.conf-row .cv { color: var(--flow); }
+.conf-bg { height: 5px; background: var(--border); border-radius: 2px; overflow: hidden; margin-bottom: 28px; }
+.conf-fill { height: 100%; background: var(--flow); border-radius: 2px; width: 0; transition: width 1.6s ease 0.2s; }
+.corpus-rows { display: flex; flex-direction: column; gap: 10px; }
+.c-row { display: flex; align-items: center; gap: 10px; }
+.c-period { font-size: 10px; color: var(--dim); width: 56px; flex-shrink: 0; text-align: right; }
+.c-bg { flex: 1; height: 18px; background: var(--border); overflow: hidden; }
+.c-fill { height: 100%; background: linear-gradient(to right, var(--accent), var(--accent-b)); width: 0; }
+.c-count { font-size: 10px; color: var(--muted); width: 80px; }
+
+/* EMPLOYEE EXPERIENCE */
+#employee-experience h2 { font-family: var(--font-d); font-size: clamp(22px, 3vw, 34px); color: var(--text); margin-bottom: 10px; }
+.exp-sub { font-size: 15px; color: var(--muted); margin-bottom: 44px; max-width: 540px; }
+.exp-steps { display: grid; grid-template-columns: repeat(7, 1fr); }
+.exp-step {
+  background: var(--surface); border: 1px solid var(--border); border-right: none;
+  padding: 22px 16px;
+}
+.exp-step:last-child { border-right: 1px solid var(--border); }
+.exp-step.dp { border-color: var(--gold); }
+.e-num { font-family: var(--font-d); font-size: 30px; color: var(--border); line-height: 1; margin-bottom: 10px; }
+.e-title { font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); margin-bottom: 7px; }
+.exp-step.dp .e-title { color: var(--gold); }
+.e-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+/* FOUNDER EXPERIENCE */
+#founder-experience h2 { font-family: var(--font-d); font-size: clamp(22px, 3vw, 34px); color: var(--text); margin-bottom: 44px; }
+.fdr-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.fdr-panel { background: var(--surface); border: 1px solid var(--border); padding: 32px 28px; }
+.fdr-pl { font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 10px; }
+.fdr-pl.g1 { color: var(--gold); } .fdr-pl.g2 { color: var(--flow); }
+.fdr-title { font-family: var(--font-d); font-size: 20px; color: var(--text); margin-bottom: 18px; }
+.fdr-items { display: flex; flex-direction: column; gap: 13px; }
+.fdr-item { display: flex; gap: 11px; font-size: 14px; color: var(--muted); line-height: 1.6; }
+.mi-dot { width: 5px; height: 5px; border-radius: 50%; margin-top: 8px; flex-shrink: 0; }
+.g1-d .mi-dot { background: var(--gold); } .g2-d .mi-dot { background: var(--flow); }
+.fdr-ev {
+  grid-column: 1 / -1; margin-top: 8px;
+  padding: 24px 28px;
+  background: rgba(26,92,56,0.07); border: 1px solid rgba(26,92,56,0.25);
+}
+.fdr-ev-txt { font-family: var(--font-d); font-size: 19px; color: var(--text); line-height: 1.5; }
+.fdr-ev-txt em { font-style: italic; color: var(--flow); }
+
+/* HARD PROBLEMS */
+#hard-problems h2 { font-family: var(--font-d); font-size: clamp(22px, 3vw, 34px); color: var(--text); margin-bottom: 44px; }
+.problems-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.prob-card { background: var(--surface); border: 1px solid var(--border); padding: 32px 28px; }
+.prob-n { font-family: var(--font-d); font-size: 52px; color: rgba(201,168,76,0.1); line-height: 1; margin-bottom: 6px; }
+.prob-title { font-family: var(--font-d); font-size: 22px; color: var(--text); margin-bottom: 14px; }
+.prob-stmt { font-size: 14px; color: var(--text); line-height: 1.7; margin-bottom: 18px; }
+.prob-res { padding: 14px 16px; border-left: 2px solid var(--accent); font-size: 13px; color: var(--muted); line-height: 1.65; }
+.prob-res strong { color: var(--text); font-weight: normal; }
+
+/* CLOSING */
+#closing {
+  min-height: 55vh; display: flex; align-items: center;
+  border-bottom: none; position: relative; overflow: hidden;
+}
+#closing::before {
+  content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+  background: radial-gradient(ellipse at 50% 60%, rgba(26,92,56,0.05) 0%, transparent 65%);
+  pointer-events: none;
+}
+.close-txt {
+  font-family: var(--font-d);
+  font-size: clamp(26px, 4vw, 50px);
+  line-height: 1.25; color: var(--text); max-width: 800px; margin-bottom: 36px;
+}
+.close-txt em { font-style: italic; color: var(--flow); }
+.close-by { font-size: 12px; color: var(--dim); letter-spacing: 0.1em; }
+</style>
+</head>
+<body>
+
+<!-- STICKY NAV -->
+<nav class="sticky-nav" id="sNav">
+  <div class="nav-brand">Supra <span>/ Agency</span></div>
+  <ul class="nav-links">
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#agents">Agents</a></li>
+    <li><a href="#master-agent">Master Agent</a></li>
+    <li><a href="#phases">Phases</a></li>
+    <li><a href="#learning">Learning</a></li>
+    <li><a href="#closing">Vision</a></li>
+  </ul>
+</nav>
+
+<!-- 1. HERO -->
+<section id="hero">
+  <div class="container">
+    <p class="hero-eye reveal">Internal Architecture Document</p>
+    <h1 class="hero-h1 reveal d1">
+      An agency's quality has always been<br>
+      capped by one person's availability.<br>
+      <em>Supra breaks that.</em>
+    </h1>
+    <p class="hero-sub reveal d2">A multi-agent AI framework that encodes the founder's judgment into a system — so every employee, on every brief, has access to the same quality bar.</p>
+    <div class="hero-stats reveal d3">
+      <div class="hero-stat"><div class="stat-n">1</div><div class="stat-l">Master Agent</div></div>
+      <div class="hero-stat"><div class="stat-n">6</div><div class="stat-l">Specialist Agents</div></div>
+      <div class="hero-stat"><div class="stat-n">2</div><div class="stat-l">Phases of Maturity</div></div>
+      <div class="hero-stat"><div class="stat-n">∞</div><div class="stat-l">Decisions Encoded</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. PROBLEM -->
+<section id="problem">
+  <div class="container">
+    <p class="sec-label reveal">The Problem</p>
+    <div class="divider reveal"></div>
+    <p class="prob-text reveal">The agency produces BFSI-grade content marketing. The work is good <strong>when the founder is in the loop.</strong> When they aren't — approvals slip, creative drifts, compliance gets guessed at. The bottleneck isn't effort. It's judgment.</p>
+    <p class="prob-text reveal d1" style="font-size:clamp(16px,2vw,20px);color:var(--muted);">Judgment cannot be delegated. But it can be encoded.</p>
+    <div class="prob-grid reveal d2">
+      <div class="prob-cell">
+        <div class="prob-cell-lbl">The Reality</div>
+        <div class="prob-cell-txt">One person holds the quality bar. Every decision routes through them. The system scales with their availability — which is finite.</div>
+      </div>
+      <div class="prob-cell">
+        <div class="prob-cell-lbl">The Consequence</div>
+        <div class="prob-cell-txt">Work piles at decision points. Employees guess. Quality variance increases. Client relationships absorb the uncertainty.</div>
+      </div>
+      <div class="prob-cell">
+        <div class="prob-cell-lbl">The Solution</div>
+        <div class="prob-cell-txt">Build a system that learns how the founder thinks. Route every decision through it. Over time, the system makes the calls.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. ARCHITECTURE DIAGRAM -->
+<section id="architecture">
+  <div class="container">
+    <p class="sec-label reveal">The Architecture</p>
+    <div class="divider reveal"></div>
+    <h2 class="reveal">The living system</h2>
+    <p class="arch-sub reveal d1">Every task flows through this structure. Nothing bypasses the Master Agent. Nothing reaches a client without passing Compliance.</p>
+    <div class="diagram-wrap reveal d2" id="archWrap">
+      <svg id="archSvg" viewBox="0 0 960 480" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block;">
+        <defs>
+          <marker id="arr" markerWidth="7" markerHeight="7" refX="5.5" refY="2.8" orient="auto">
+            <path d="M0,0 L0,5.6 L7,2.8 z" fill="#1C2E20"/>
+          </marker>
+          <marker id="arr-a" markerWidth="7" markerHeight="7" refX="5.5" refY="2.8" orient="auto">
+            <path d="M0,0 L0,5.6 L7,2.8 z" fill="#1A5C38"/>
+          </marker>
+          <marker id="arr-g" markerWidth="7" markerHeight="7" refX="5.5" refY="2.8" orient="auto">
+            <path d="M0,0 L0,5.6 L7,2.8 z" fill="#C9A84C"/>
+          </marker>
+          <marker id="arr-f" markerWidth="7" markerHeight="7" refX="5.5" refY="2.8" orient="auto">
+            <path d="M0,0 L0,5.6 L7,2.8 z" fill="#3DD68C"/>
+          </marker>
+          <marker id="arr-r" markerWidth="7" markerHeight="7" refX="5.5" refY="2.8" orient="auto">
+            <path d="M0,0 L0,5.6 L7,2.8 z" fill="#A85252"/>
+          </marker>
+        </defs>
+
+        <!-- bg -->
+        <rect width="960" height="480" fill="#0D1812" rx="2"/>
+        <g opacity="0.05">
+          <line x1="0" y1="96" x2="960" y2="96" stroke="#3DD68C" stroke-width="0.5"/>
+          <line x1="0" y1="192" x2="960" y2="192" stroke="#3DD68C" stroke-width="0.5"/>
+          <line x1="0" y1="288" x2="960" y2="288" stroke="#3DD68C" stroke-width="0.5"/>
+          <line x1="0" y1="384" x2="960" y2="384" stroke="#3DD68C" stroke-width="0.5"/>
+          <line x1="160" y1="0" x2="160" y2="480" stroke="#3DD68C" stroke-width="0.5"/>
+          <line x1="320" y1="0" x2="320" y2="480" stroke="#3DD68C" stroke-width="0.5"/>
+          <line x1="480" y1="0" x2="480" y2="480" stroke="#3DD68C" stroke-width="0.5"/>
+          <line x1="640" y1="0" x2="640" y2="480" stroke="#3DD68C" stroke-width="0.5"/>
+          <line x1="800" y1="0" x2="800" y2="480" stroke="#3DD68C" stroke-width="0.5"/>
+        </g>
+
+        <!-- EMPLOYEE -->
+        <g transform="translate(68,240)">
+          <rect x="-48" y="-24" width="96" height="48" rx="3" fill="#0A1410" stroke="#1C2E20" stroke-width="1.5"/>
+          <text y="-6" text-anchor="middle" fill="#4A5E50" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="2">EMPLOYEE</text>
+          <text y="9" text-anchor="middle" fill="#7A9480" font-size="11" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Input</text>
+        </g>
+
+        <!-- Employee → Master path -->
+        <path id="pEM" d="M 116 240 L 218 240" stroke="#1A5C38" stroke-width="1.5" fill="none" marker-end="url(#arr-a)"/>
+
+        <!-- MASTER AGENT -->
+        <g transform="translate(310,240)">
+          <rect x="-76" y="-46" width="152" height="92" rx="5" fill="#0A1410" stroke="#1A5C38" stroke-width="0.5" opacity="0.5"/>
+          <rect x="-70" y="-40" width="140" height="80" rx="4" fill="#0F2018" stroke="#1A5C38" stroke-width="2"/>
+          <text y="-14" text-anchor="middle" fill="#4A5E50" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="3">MASTER</text>
+          <text y="4" text-anchor="middle" fill="#3DD68C" font-size="15" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="1">AGENT</text>
+          <text y="20" text-anchor="middle" fill="#2A5E40" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="2">ORCHESTRATOR</text>
+        </g>
+        <!-- pulse ring -->
+        <circle cx="310" cy="240" r="50" fill="none" stroke="#1A5C38" stroke-width="1">
+          <animate attributeName="r" values="50;72" dur="2.4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0.35;0" dur="2.4s" repeatCount="indefinite"/>
+        </circle>
+
+        <!-- Master → 6 agents paths -->
+        <path id="pS" d="M 380 224 Q 488 70 560 48" stroke="#1C2E20" stroke-width="1.2" fill="none" marker-end="url(#arr)"/>
+        <path id="pR" d="M 380 232 Q 488 140 560 118" stroke="#1C2E20" stroke-width="1.2" fill="none" marker-end="url(#arr)"/>
+        <path id="pC" d="M 380 238 L 560 188" stroke="#1C2E20" stroke-width="1.2" fill="none" marker-end="url(#arr)"/>
+        <path id="pCO" d="M 380 242 L 560 258" stroke="#A85252" stroke-width="1.4" fill="none" marker-end="url(#arr-r)"/>
+        <path id="pA" d="M 380 248 Q 488 340 560 328" stroke="#1C2E20" stroke-width="1.2" fill="none" marker-end="url(#arr)"/>
+        <path id="pAN" d="M 380 256 Q 488 410 560 398" stroke="#1C2E20" stroke-width="1.2" fill="none" marker-end="url(#arr)"/>
+
+        <!-- 6 AGENT NODES -->
+        <!-- Strategist -->
+        <g transform="translate(618,48)">
+          <rect x="-54" y="-17" width="108" height="34" rx="3" fill="#0A1410" stroke="#1C2E20" stroke-width="1.2"/>
+          <text y="-4" text-anchor="middle" fill="#1A5C38" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="2">STRATEGIST</text>
+          <text y="10" text-anchor="middle" fill="#4A5E50" font-size="9" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Decodes the brief</text>
+        </g>
+        <!-- Researcher -->
+        <g transform="translate(618,118)">
+          <rect x="-54" y="-17" width="108" height="34" rx="3" fill="#0A1410" stroke="#1C2E20" stroke-width="1.2"/>
+          <text y="-4" text-anchor="middle" fill="#1A5C38" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="2">RESEARCHER</text>
+          <text y="10" text-anchor="middle" fill="#4A5E50" font-size="9" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Maps the landscape</text>
+        </g>
+        <!-- Copywriter -->
+        <g transform="translate(618,188)">
+          <rect x="-54" y="-17" width="108" height="34" rx="3" fill="#0A1410" stroke="#1C2E20" stroke-width="1.2"/>
+          <text y="-4" text-anchor="middle" fill="#1A5C38" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="2">COPYWRITER</text>
+          <text y="10" text-anchor="middle" fill="#4A5E50" font-size="9" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Brand voice writer</text>
+        </g>
+        <!-- Compliance -->
+        <g transform="translate(618,258)">
+          <rect x="-54" y="-17" width="108" height="34" rx="3" fill="#120A0A" stroke="#A85252" stroke-width="1.5"/>
+          <text y="-4" text-anchor="middle" fill="#A85252" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="2">COMPLIANCE</text>
+          <text y="10" text-anchor="middle" fill="#6A3A3A" font-size="9" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Hard gate — SEBI/AMFI</text>
+        </g>
+        <!-- Account Manager -->
+        <g transform="translate(618,328)">
+          <rect x="-54" y="-17" width="108" height="34" rx="3" fill="#0A1410" stroke="#1C2E20" stroke-width="1.2"/>
+          <text y="-4" text-anchor="middle" fill="#1A5C38" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="1">ACCOUNT MGR</text>
+          <text y="10" text-anchor="middle" fill="#4A5E50" font-size="9" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Client relationship</text>
+        </g>
+        <!-- Analyst -->
+        <g transform="translate(618,398)">
+          <rect x="-54" y="-17" width="108" height="34" rx="3" fill="#0A1410" stroke="#1C2E20" stroke-width="1.2"/>
+          <text y="-4" text-anchor="middle" fill="#1A5C38" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="2">ANALYST</text>
+          <text y="10" text-anchor="middle" fill="#4A5E50" font-size="9" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Closes the loop</text>
+        </g>
+
+        <!-- Agents → Decision Gateway (dashed convergence) -->
+        <path d="M 672 48 Q 800 48 800 172" stroke="#1C2E20" stroke-width="1" fill="none" stroke-dasharray="3 3"/>
+        <path d="M 672 118 Q 800 118 800 178" stroke="#1C2E20" stroke-width="1" fill="none" stroke-dasharray="3 3"/>
+        <path d="M 672 188 L 800 188" stroke="#1C2E20" stroke-width="1" fill="none" stroke-dasharray="3 3"/>
+        <path d="M 672 258 L 800 212" stroke="#A85252" stroke-width="1" fill="none" stroke-dasharray="3 2"/>
+        <path d="M 672 328 Q 800 328 800 228" stroke="#1C2E20" stroke-width="1" fill="none" stroke-dasharray="3 3"/>
+        <path d="M 672 398 Q 800 398 800 240" stroke="#1C2E20" stroke-width="1" fill="none" stroke-dasharray="3 3"/>
+
+        <!-- DECISION GATEWAY -->
+        <g transform="translate(800,208)">
+          <rect x="-62" y="-24" width="124" height="48" rx="3" fill="#111008" stroke="#C9A84C" stroke-width="1.5"/>
+          <text y="-7" text-anchor="middle" fill="#706030" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="2">DECISION</text>
+          <text y="8" text-anchor="middle" fill="#C9A84C" font-size="11" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="1">GATEWAY</text>
+          <text y="21" text-anchor="middle" fill="#504820" font-size="7" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="2">MASTER AGENT</text>
+        </g>
+
+        <!-- Phase 1 path: Decision Gateway → Founder -->
+        <g id="g-p1">
+          <path d="M 800 184 L 800 138 L 856 112" stroke="#C9A84C" stroke-width="1.5" fill="none" marker-end="url(#arr-g)"/>
+          <g transform="translate(896,96)">
+            <rect x="-44" y="-17" width="88" height="34" rx="3" fill="#111008" stroke="#C9A84C" stroke-width="1.5"/>
+            <text y="-4" text-anchor="middle" fill="#C9A84C" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="1">FOUNDER</text>
+            <text y="10" text-anchor="middle" fill="#706030" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Phase 1 review</text>
+          </g>
+        </g>
+
+        <!-- Phase 2 path: Decision Gateway → Judgment Engine -->
+        <g id="g-p2" opacity="0.28">
+          <path d="M 800 232 L 800 296 L 856 320" stroke="#3DD68C" stroke-width="1.5" fill="none" marker-end="url(#arr-f)" stroke-dasharray="5 3"/>
+          <g transform="translate(900,336)">
+            <rect x="-50" y="-20" width="100" height="40" rx="3" fill="#081410" stroke="#3DD68C" stroke-width="1.5"/>
+            <text y="-5" text-anchor="middle" fill="#2A6E44" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="2">JUDGMENT</text>
+            <text y="10" text-anchor="middle" fill="#3DD68C" font-size="11" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="1">ENGINE</text>
+            <text y="22" text-anchor="middle" fill="#1A4428" font-size="7" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif" letter-spacing="2">PHASE 2</text>
+          </g>
+        </g>
+
+        <!-- ANIMATED DOTS -->
+        <!-- Employee → Master -->
+        <circle r="3.5" fill="#3DD68C" opacity="0.9">
+          <animateMotion dur="2s" repeatCount="indefinite" begin="0s">
+            <mpath xlink:href="#pEM" href="#pEM"/>
+          </animateMotion>
+        </circle>
+        <!-- Master → Strategist -->
+        <circle r="2.5" fill="#1A5C38" opacity="0.85">
+          <animateMotion dur="1.8s" repeatCount="indefinite" begin="0.3s">
+            <mpath xlink:href="#pS" href="#pS"/>
+          </animateMotion>
+        </circle>
+        <!-- Master → Researcher -->
+        <circle r="2.5" fill="#1A5C38" opacity="0.85">
+          <animateMotion dur="1.8s" repeatCount="indefinite" begin="0.6s">
+            <mpath xlink:href="#pR" href="#pR"/>
+          </animateMotion>
+        </circle>
+        <!-- Master → Copywriter -->
+        <circle r="2.5" fill="#1A5C38" opacity="0.85">
+          <animateMotion dur="1.8s" repeatCount="indefinite" begin="0.9s">
+            <mpath xlink:href="#pC" href="#pC"/>
+          </animateMotion>
+        </circle>
+        <!-- Master → Compliance (red) -->
+        <circle r="2.5" fill="#A85252" opacity="0.9">
+          <animateMotion dur="1.8s" repeatCount="indefinite" begin="1.2s">
+            <mpath xlink:href="#pCO" href="#pCO"/>
+          </animateMotion>
+        </circle>
+        <!-- Master → Account Mgr -->
+        <circle r="2.5" fill="#1A5C38" opacity="0.85">
+          <animateMotion dur="1.8s" repeatCount="indefinite" begin="1.5s">
+            <mpath xlink:href="#pA" href="#pA"/>
+          </animateMotion>
+        </circle>
+        <!-- Master → Analyst -->
+        <circle r="2.5" fill="#1A5C38" opacity="0.85">
+          <animateMotion dur="1.8s" repeatCount="indefinite" begin="1.8s">
+            <mpath xlink:href="#pAN" href="#pAN"/>
+          </animateMotion>
+        </circle>
+
+        <!-- LEGEND -->
+        <g transform="translate(18,458)">
+          <circle cx="0" cy="0" r="3" fill="#3DD68C"/>
+          <text x="9" y="4" fill="#4A5E50" font-size="8.5" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Task flow</text>
+          <circle cx="90" cy="0" r="3" fill="#A85252"/>
+          <text x="99" y="4" fill="#4A5E50" font-size="8.5" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Compliance gate</text>
+          <circle cx="200" cy="0" r="3" fill="#C9A84C"/>
+          <text x="209" y="4" fill="#4A5E50" font-size="8.5" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Decision checkpoint</text>
+          <line x1="330" y1="0" x2="348" y2="0" stroke="#3DD68C" stroke-width="1.5" stroke-dasharray="4 2"/>
+          <text x="356" y="4" fill="#4A5E50" font-size="8.5" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Phase 2 path (active later)</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- 4. THE 6 AGENTS -->
+<section id="agents">
+  <div class="container">
+    <p class="sec-label reveal">The Specialist Agents</p>
+    <div class="divider reveal"></div>
+    <h2 class="reveal">Six roles. One ensemble.</h2>
+    <p style="color:var(--muted);font-size:15px;max-width:520px;margin-bottom:44px;" class="reveal d1">Each agent has a precisely bounded job. They don't overlap. They don't guess outside their domain.</p>
+    <div class="agents-grid">
+      <div class="agent-card reveal">
+        <div class="a-num">01</div>
+        <div class="a-tag">Specialist Agent</div>
+        <div class="a-name">Strategist</div>
+        <div class="a-desc">Decodes the brief. Finds the real objective behind the ask. Maps constraints — what is fixed, what is flexible, what success actually looks like. Nothing moves to execution without a clear strategic frame.</div>
+      </div>
+      <div class="agent-card reveal d1">
+        <div class="a-num">02</div>
+        <div class="a-tag">Specialist Agent</div>
+        <div class="a-name">Researcher</div>
+        <div class="a-desc">Category scan, competitor scan, audience insight, reference hunting. Never goes to execution without knowing the landscape. Stops the team from reinventing wheels or missing what competitors already own.</div>
+      </div>
+      <div class="agent-card reveal d2">
+        <div class="a-num">03</div>
+        <div class="a-tag">Specialist Agent</div>
+        <div class="a-name">Copywriter</div>
+        <div class="a-desc">Scripts, hooks, captions, emailers, blogs, carousels. Format-aware. Trained on approved agency work. Writes in the brand's voice — not a generic AI voice. Output sounds like the agency, not an LLM.</div>
+      </div>
+      <div class="agent-card reveal d1">
+        <div class="a-num">04</div>
+        <div class="a-tag">Specialist Agent</div>
+        <div class="a-name">Compliance Reviewer</div>
+        <div class="a-desc">SEBI/AMFI rules. Client-specific rules. Flags risk, rewrites where needed, logs every decision and its justification.</div>
+        <div class="a-gate">Hard gate — nothing reaches a client without passing here</div>
+      </div>
+      <div class="agent-card reveal d2">
+        <div class="a-num">05</div>
+        <div class="a-tag">Specialist Agent</div>
+        <div class="a-name">Account Manager</div>
+        <div class="a-desc">Client communication, feedback capture, commitment tracking, relationship notes. Knows what each stakeholder likes, dislikes, and has been promised. Institutional memory for every client relationship.</div>
+      </div>
+      <div class="agent-card reveal d3">
+        <div class="a-num">06</div>
+        <div class="a-tag">Specialist Agent</div>
+        <div class="a-name">Analyst</div>
+        <div class="a-desc">Post-live performance. What worked, what didn't, what the data says, what to do next. Closes the loop between execution and learning. Every campaign becomes an input to the next.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 5. MASTER AGENT — THREE FUNCTIONS -->
+<section id="master-agent">
+  <div class="container">
+    <p class="sec-label reveal">The Master Agent</p>
+    <div class="divider reveal"></div>
+    <h2 class="reveal">Three functions. One system.</h2>
+    <p class="master-intro reveal d1">The Master Agent is not a seventh specialist. It is the intelligence that coordinates the other six — and progressively absorbs the founder's judgment.</p>
+    <div class="master-fns">
+      <div class="master-fn fn-orch reveal">
+        <div class="fn-lbl">Function 01</div>
+        <div class="fn-title">Orchestrator</div>
+        <div class="fn-desc">Receives every task that enters Supra. Decides which specialist agents to activate, in what order, and what context to pass each one. Employees describe what they need — they never decide which agent handles it. Routing is automatic and invisible.</div>
+        <div class="fn-mini">
+          <svg viewBox="0 0 220 90" style="width:100%;height:auto;">
+            <rect x="0" y="33" width="56" height="24" rx="2" fill="#0A1410" stroke="#1C2E20" stroke-width="1"/>
+            <text x="28" y="47" text-anchor="middle" fill="#4A5E50" font-size="9" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">TASK IN</text>
+            <path d="M 56 45 L 78 45" stroke="#1A5C38" stroke-width="1.2" marker-end="url(#arr-a)"/>
+            <rect x="80" y="33" width="56" height="24" rx="2" fill="#0F2018" stroke="#1A5C38" stroke-width="1.5"/>
+            <text x="108" y="48" text-anchor="middle" fill="#3DD68C" font-size="10" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">MASTER</text>
+            <path d="M 136 42 L 150 22" stroke="#1C2E20" stroke-width="1" marker-end="url(#arr)"/>
+            <path d="M 136 45 L 150 45" stroke="#1C2E20" stroke-width="1" marker-end="url(#arr)"/>
+            <path d="M 136 48 L 150 68" stroke="#1C2E20" stroke-width="1" marker-end="url(#arr)"/>
+            <rect x="152" y="12" width="44" height="18" rx="2" fill="#0A1410" stroke="#1C2E20" stroke-width="1"/>
+            <text x="174" y="24" text-anchor="middle" fill="#4A5E50" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Agent A</text>
+            <rect x="152" y="36" width="44" height="18" rx="2" fill="#0A1410" stroke="#1C2E20" stroke-width="1"/>
+            <text x="174" y="48" text-anchor="middle" fill="#4A5E50" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Agent B</text>
+            <rect x="152" y="60" width="44" height="18" rx="2" fill="#0A1410" stroke="#1C2E20" stroke-width="1"/>
+            <text x="174" y="72" text-anchor="middle" fill="#4A5E50" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Agent C</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="master-fn fn-gate reveal d1">
+        <div class="fn-lbl">Function 02 — Phase 1</div>
+        <div class="fn-title">Decision Gateway</div>
+        <div class="fn-desc">Every decision point gets packaged into a clean structured brief and sent to the founder: situation, options, recommended path. They tap approve or redirect. Two minutes per decision. Their answer is logged with full context and stored.</div>
+        <div class="fn-mini">
+          <svg viewBox="0 0 220 90" style="width:100%;height:auto;">
+            <rect x="0" y="28" width="72" height="34" rx="2" fill="#111008" stroke="#C9A84C" stroke-width="1.2"/>
+            <text x="36" y="42" text-anchor="middle" fill="#706030" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">DECISION</text>
+            <text x="36" y="55" text-anchor="middle" fill="#C9A84C" font-size="9" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">PACKAGED</text>
+            <path d="M 72 45 L 94 45" stroke="#C9A84C" stroke-width="1.2" marker-end="url(#arr-g)"/>
+            <rect x="96" y="28" width="68" height="34" rx="2" fill="#111008" stroke="#C9A84C" stroke-width="1.5"/>
+            <text x="130" y="42" text-anchor="middle" fill="#C9A84C" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">FOUNDER</text>
+            <text x="130" y="55" text-anchor="middle" fill="#706030" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">2 min review</text>
+            <path d="M 164 45 L 186 45" stroke="#1A5C38" stroke-width="1.2" marker-end="url(#arr-a)"/>
+            <rect x="188" y="36" width="28" height="18" rx="2" fill="#0A1410" stroke="#1A5C38" stroke-width="1"/>
+            <text x="202" y="48" text-anchor="middle" fill="#3DD68C" font-size="7.5" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">LOG</text>
+          </svg>
+        </div>
+      </div>
+
+      <div class="master-fn fn-judg reveal d2">
+        <div class="fn-lbl">Function 03 — Phase 2</div>
+        <div class="fn-title">Judgment Engine</div>
+        <div class="fn-desc">Every founder decision is stored with full context. Over time, a pattern library of their judgment builds. New situations are matched against past decisions. High confidence → decides and reports. Low confidence → escalates. Threshold rises as the corpus proves itself.</div>
+        <div class="fn-mini">
+          <svg viewBox="0 0 220 90" style="width:100%;height:auto;">
+            <rect x="0" y="28" width="60" height="34" rx="2" fill="#081410" stroke="#3DD68C" stroke-width="1"/>
+            <text x="30" y="42" text-anchor="middle" fill="#2A5E40" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">CORPUS</text>
+            <text x="30" y="55" text-anchor="middle" fill="#3DD68C" font-size="9" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">MATCH</text>
+            <path d="M 60 45 L 80 45" stroke="#3DD68C" stroke-width="1.2" marker-end="url(#arr-f)"/>
+            <rect x="82" y="24" width="68" height="42" rx="2" fill="#081410" stroke="#3DD68C" stroke-width="1.5"/>
+            <text x="116" y="39" text-anchor="middle" fill="#3DD68C" font-size="8" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">CONFIDENCE</text>
+            <text x="116" y="53" text-anchor="middle" fill="#4A5E50" font-size="9" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">score &gt; 80%?</text>
+            <path d="M 150 36 L 168 20" stroke="#3DD68C" stroke-width="1.2" marker-end="url(#arr-f)"/>
+            <text x="175" y="20" fill="#3DD68C" font-size="9" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Act</text>
+            <path d="M 150 54 L 168 70" stroke="#C9A84C" stroke-width="1.2" marker-end="url(#arr-g)"/>
+            <text x="172" y="73" fill="#C9A84C" font-size="9" font-family="Gill Sans MT,Gill Sans,Optima,sans-serif">Ask</text>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 6. PHASES TOGGLE -->
+<section id="phases">
+  <div class="container">
+    <p class="sec-label reveal">The Journey</p>
+    <div class="divider reveal"></div>
+    <h2 class="reveal">Two phases. One direction.</h2>
+    <p style="color:var(--muted);font-size:15px;max-width:540px;margin-bottom:36px;" class="reveal d1">The system begins with full human oversight and progressively requires less of it — as the judgment corpus grows and proves itself.</p>
+    <div class="phase-toggle reveal d2">
+      <button class="phase-btn on" onclick="switchPhase(1)" id="pBtn1">Phase 1 — In the Loop</button>
+      <button class="phase-btn" onclick="switchPhase(2)" id="pBtn2">Phase 2 — Out of the Loop</button>
+    </div>
+
+    <div class="phase-pane on" id="pPane1">
+      <div class="p-panel g1">
+        <div class="p-badge g1">Phase 1 — Early Months</div>
+        <div class="p-title">Founder in the loop</div>
+        <ul class="p-list">
+          <li>Every non-trivial decision routes to the founder as a structured brief</li>
+          <li>They receive clean decision requests — not raw questions from employees</li>
+          <li>One tap: approve or redirect. Two minutes per decision</li>
+          <li>Every answer is logged with full context and stored in the corpus</li>
+          <li>The system learns the shape of their judgment with each interaction</li>
+          <li>Volume of decisions builds the corpus — this is the investment period</li>
+        </ul>
+      </div>
+      <div class="p-panel g1">
+        <div class="p-badge g1">What changes for employees</div>
+        <div class="p-title">Structured, not chaotic</div>
+        <ul class="p-list">
+          <li>No more guessing at decision points — the system flags them explicitly</li>
+          <li>Work is never stuck: if Master Agent can't decide, it escalates cleanly</li>
+          <li>Every escalation is a structured brief, not a Slack message</li>
+          <li>Response time: minutes, not hours</li>
+          <li>All decisions traceable — no "I thought you said…" moments</li>
+        </ul>
+        <div class="p-note" style="background:rgba(201,168,76,0.06);border:1px solid rgba(201,168,76,0.18);margin-top:20px;">
+          <strong style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:6px;">This phase is also the build</strong>
+          The corpus doesn't exist at launch. Phase 1 is how it gets built. More decisions logged = faster transition to Phase 2.
+        </div>
+      </div>
+    </div>
+
+    <div class="phase-pane" id="pPane2">
+      <div class="p-panel g2">
+        <div class="p-badge g2">Phase 2 — Over Time</div>
+        <div class="p-title">Founder out of the loop</div>
+        <ul class="p-list">
+          <li>Master Agent makes the calls based on the accumulated judgment corpus</li>
+          <li>The founder receives a morning digest: what ran on autopilot, what's outstanding</li>
+          <li>Genuinely novel situations still escalate — but they are rare</li>
+          <li>Every correction immediately feeds back into the model</li>
+          <li>Escalation threshold tightens as corpus grows and outcomes prove the model</li>
+          <li>They manage exceptions only — the system runs the agency</li>
+        </ul>
+      </div>
+      <div class="p-panel g2">
+        <div class="p-badge g2">What changes for employees</div>
+        <div class="p-title">Autonomous, with transparency</div>
+        <ul class="p-list">
+          <li>Decision points resolve automatically — work flows without stopping</li>
+          <li>Every automated decision is explained: what was decided and why</li>
+          <li>Override remains available at every step</li>
+          <li>Employees can see which past decisions informed the current one</li>
+          <li>The system never hides its reasoning</li>
+        </ul>
+        <div class="p-note" style="background:rgba(61,214,140,0.05);border:1px solid rgba(61,214,140,0.15);margin-top:20px;">
+          <strong style="font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--flow);display:block;margin-bottom:6px;">The difference is the corpus</strong>
+          Phase 2 is not a different system. It is the same system, with enough accumulated judgment to act confidently on the founder's behalf.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 7. LEARNING MECHANISM -->
+<section id="learning">
+  <div class="container">
+    <p class="sec-label reveal">The Learning Mechanism</p>
+    <div class="divider reveal"></div>
+    <h2 class="reveal">How judgment becomes code</h2>
+    <p class="learn-sub reveal d1">Every decision the founder makes is stored as a structured record. Over time, these records become a searchable model of how they think.</p>
+    <div class="learn-layout">
+      <div class="learn-steps reveal">
+        <div class="l-step">
+          <div class="l-conn"><div class="l-dot" style="border-color:var(--accent);background:var(--accent);"></div><div class="l-line"></div></div>
+          <div><div class="l-title">Decision Stored</div><div class="l-desc">Situation, options presented, path chosen, reasoning, and eventual outcome. All five fields. Always.</div></div>
+        </div>
+        <div class="l-step">
+          <div class="l-conn"><div class="l-dot"></div><div class="l-line"></div></div>
+          <div><div class="l-title">Corpus Grows</div><div class="l-desc">Each new record adds signal. Patterns in similar situations begin to emerge. The model builds over weeks, not months.</div></div>
+        </div>
+        <div class="l-step">
+          <div class="l-conn"><div class="l-dot"></div><div class="l-line"></div></div>
+          <div><div class="l-title">Similarity Match</div><div class="l-desc">New situations are matched against the corpus. The system finds past decisions that resemble the current context and retrieves what was chosen.</div></div>
+        </div>
+        <div class="l-step">
+          <div class="l-conn"><div class="l-dot"></div><div class="l-line"></div></div>
+          <div><div class="l-title">Confidence Score</div><div class="l-desc">How similar are the past decisions to this one? How consistent was the pattern? The score determines whether to act or escalate.</div></div>
+        </div>
+        <div class="l-step">
+          <div class="l-conn"><div class="l-dot" style="border-color:var(--flow);background:var(--flow);"></div></div>
+          <div><div class="l-title">Threshold Logic</div><div class="l-desc">Below threshold → escalate to the founder. Above threshold → proceed and report. Threshold starts low, rises as outcomes prove the model right.</div></div>
+        </div>
+      </div>
+
+      <div class="meter-panel reveal d1" id="meterPanel">
+        <div class="m-lbl">Corpus maturity — indicative trajectory</div>
+        <div class="conf-row"><span>Confidence threshold achieved</span><span class="cv" id="cVal">0%</span></div>
+        <div class="conf-bg"><div class="conf-fill" id="cBar"></div></div>
+        <div class="corpus-rows" id="corpusRows">
+          <div class="c-row"><div class="c-period">Week 1</div><div class="c-bg"><div class="c-fill" data-w="4"></div></div><div class="c-count">~12 decisions</div></div>
+          <div class="c-row"><div class="c-period">Month 1</div><div class="c-bg"><div class="c-fill" data-w="14"></div></div><div class="c-count">~80 decisions</div></div>
+          <div class="c-row"><div class="c-period">Month 3</div><div class="c-bg"><div class="c-fill" data-w="33"></div></div><div class="c-count">~300 decisions</div></div>
+          <div class="c-row"><div class="c-period">Month 6</div><div class="c-bg"><div class="c-fill" data-w="57"></div></div><div class="c-count">~700 decisions</div></div>
+          <div class="c-row"><div class="c-period">Year 1</div><div class="c-bg"><div class="c-fill" data-w="80"></div></div><div class="c-count">2,000+ decisions</div></div>
+        </div>
+        <div style="margin-top:20px;padding-top:18px;border-top:1px solid var(--border);font-size:13px;color:var(--muted);line-height:1.65;">
+          Year 1 target: the founder personally reviews fewer than 10% of decisions. The rest run on their encoded judgment.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8. EMPLOYEE EXPERIENCE -->
+<section id="employee-experience">
+  <div class="container">
+    <p class="sec-label reveal">The Employee Experience</p>
+    <div class="divider reveal"></div>
+    <h2 class="reveal">A brief, from open to delivered</h2>
+    <p class="exp-sub reveal d1">What actually happens when an employee picks up a brief inside Supra.</p>
+    <div class="exp-steps reveal d2">
+      <div class="exp-step">
+        <div class="e-num">1</div>
+        <div class="e-title">Open</div>
+        <div class="e-desc">Pick up a project in Supra. The brief is already loaded, or enter it now.</div>
+      </div>
+      <div class="exp-step">
+        <div class="e-num">2</div>
+        <div class="e-title">Describe</div>
+        <div class="e-desc">Describe what you need in plain language. Don't select agents. Don't configure anything.</div>
+      </div>
+      <div class="exp-step">
+        <div class="e-num">3</div>
+        <div class="e-title">Route</div>
+        <div class="e-desc">Master Agent activates the right specialist agents in the right sequence. Automatically.</div>
+      </div>
+      <div class="exp-step">
+        <div class="e-num">4</div>
+        <div class="e-title">Review</div>
+        <div class="e-desc">Each agent's output comes back. You review and confirm, or flag issues for revision.</div>
+      </div>
+      <div class="exp-step dp">
+        <div class="e-num">5</div>
+        <div class="e-title">Decide</div>
+        <div class="e-desc">Decision point. Either the founder is asked — or Master Agent applies a learned decision and explains its reasoning.</div>
+      </div>
+      <div class="exp-step">
+        <div class="e-num">6</div>
+        <div class="e-title">Confirm</div>
+        <div class="e-desc">Employee confirms or overrides. Override is always available. Override feeds back immediately.</div>
+      </div>
+      <div class="exp-step">
+        <div class="e-num">7</div>
+        <div class="e-title">Forward</div>
+        <div class="e-desc">Work moves forward. Never stuck at a decision. Never waiting for a Slack reply.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 9. FOUNDER EXPERIENCE -->
+<section id="founder-experience">
+  <div class="container">
+    <p class="sec-label reveal">The Founder's Experience</p>
+    <div class="divider reveal"></div>
+    <h2 class="reveal">What their day actually looks like</h2>
+    <div class="fdr-grid">
+      <div class="fdr-panel reveal">
+        <div class="fdr-pl g1">Phase 1</div>
+        <div class="fdr-title">Clean decisions, not chaos</div>
+        <div class="fdr-items g1-d">
+          <div class="fdr-item"><div class="mi-dot"></div><span>Structured decision briefs arrive — situation, options, recommended path. Not raw questions.</span></div>
+          <div class="fdr-item"><div class="mi-dot"></div><span>One-tap approve or redirect. Typically two minutes per decision, not a twenty-minute conversation.</span></div>
+          <div class="fdr-item"><div class="mi-dot"></div><span>Every response is logged, stored, and becomes part of the judgment corpus.</span></div>
+          <div class="fdr-item"><div class="mi-dot"></div><span>The first weeks feel like more work. They are the investment. Every decision logged is one less decision to make again.</span></div>
+        </div>
+      </div>
+      <div class="fdr-panel reveal d1">
+        <div class="fdr-pl g2">Phase 2</div>
+        <div class="fdr-title">Morning digest, not a queue</div>
+        <div class="fdr-items g2-d">
+          <div class="fdr-item"><div class="mi-dot"></div><span>Morning digest: what ran on autopilot, what's outstanding, what genuinely needs them.</span></div>
+          <div class="fdr-item"><div class="mi-dot"></div><span>Corrections are immediate — override a decision, the model updates instantly.</span></div>
+          <div class="fdr-item"><div class="mi-dot"></div><span>The list of items needing them gets shorter each month as the corpus matures.</span></div>
+          <div class="fdr-item"><div class="mi-dot"></div><span>They see every decision the system made on their behalf. Transparency is non-negotiable.</span></div>
+        </div>
+      </div>
+      <div class="fdr-ev reveal d2">
+        <p style="font-size:10px;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Eventually</p>
+        <div class="fdr-ev-txt">They manage exceptions only. <em>The system runs the agency.</em> Their judgment is present in every piece of work — without requiring their presence.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. HARD PROBLEMS -->
+<section id="hard-problems">
+  <div class="container">
+    <p class="sec-label reveal">The Hard Problems</p>
+    <div class="divider reveal"></div>
+    <h2 class="reveal">Two problems that must be named</h2>
+    <p style="color:var(--muted);font-size:15px;max-width:540px;margin-bottom:44px;" class="reveal d1">These are not afterthoughts. They are central to whether the system works. Both are known. Both are addressed by design.</p>
+    <div class="problems-grid">
+      <div class="prob-card reveal">
+        <div class="prob-n">01</div>
+        <div class="prob-title">The Cold Start</div>
+        <div class="prob-stmt">The system launches with no decisions in the corpus. The first weeks will feel like more work for the founder, not less. Every decision point escalates because nothing has been learned yet.</div>
+        <div class="prob-res"><strong>The resolution:</strong> This is a finite, front-loaded investment. Accelerated by an onboarding sprint before going live — feed hypothetical decisions, known scenarios, documented past calls. The corpus doesn't have to start from zero on day one.</div>
+      </div>
+      <div class="prob-card reveal d1">
+        <div class="prob-n">02</div>
+        <div class="prob-title">The Wrong Call</div>
+        <div class="prob-stmt">The Master Agent will make mistakes. At high confidence, it will sometimes be confidently wrong. This is not a flaw — it is an expected property of any judgment system. The question is what happens next.</div>
+        <div class="prob-res"><strong>The resolution:</strong> A clean override-and-correct mechanism at every decision point. Every correction feeds back immediately into the corpus. Mistakes don't just get undone — they make the model smarter. The system is designed to learn from being wrong, not only from being right.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 11. CLOSING -->
+<section id="closing">
+  <div class="container">
+    <p class="sec-label reveal">Supra</p>
+    <div class="divider reveal"></div>
+    <div class="close-txt reveal d1">
+      This is not about replacing judgment.<br>
+      It is about making it <em>available<br>
+      to everyone, all the time.</em>
+    </div>
+    <p class="close-by reveal d2">Supra Agent Framework — Internal Architecture Document — 2025</p>
+  </div>
+</section>
+
+<script>
+// ── NAV SHOW/HIDE ──
+const sNav = document.getElementById('sNav');
+const heroEl = document.getElementById('hero');
+new IntersectionObserver(entries => {
+  sNav.classList.toggle('vis', !entries[0].isIntersecting);
+}, { threshold: 0.05 }).observe(heroEl);
+
+// ── SCROLL REVEAL ──
+const revEls = document.querySelectorAll('.reveal');
+const ro = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('vis'); ro.unobserve(e.target); }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -32px 0px' });
+revEls.forEach(el => ro.observe(el));
+
+// Hero: reveal immediately
+document.querySelectorAll('#hero .reveal').forEach((el, i) => {
+  setTimeout(() => el.classList.add('vis'), 80 + i * 80);
+});
+
+// ── PHASE TOGGLE ──
+function switchPhase(p) {
+  document.getElementById('pBtn1').classList.toggle('on', p === 1);
+  document.getElementById('pBtn2').classList.toggle('on', p === 2);
+  document.getElementById('pPane1').classList.toggle('on', p === 1);
+  document.getElementById('pPane2').classList.toggle('on', p === 2);
+  const gp1 = document.getElementById('g-p1');
+  const gp2 = document.getElementById('g-p2');
+  if (gp1 && gp2) {
+    gp1.style.opacity = p === 1 ? '1' : '0.25';
+    gp2.style.opacity = p === 2 ? '1' : '0.28';
+    if (p === 2) {
+      const dashPath = gp2.querySelector('path');
+      if (dashPath) dashPath.removeAttribute('stroke-dasharray');
+    }
+  }
+}
+
+// ── LEARNING METER ANIMATION ──
+let meterDone = false;
+const meterEl = document.getElementById('meterPanel');
+new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting && !meterDone) {
+    meterDone = true;
+    // Confidence bar
+    const cBar = document.getElementById('cBar');
+    const cVal = document.getElementById('cVal');
+    cBar.style.width = '78%';
+    let n = 0;
+    const t = setInterval(() => {
+      n += 2; cVal.textContent = n + '%';
+      if (n >= 78) { cVal.textContent = '78%'; clearInterval(t); }
+    }, 28);
+    // Corpus bars
+    document.querySelectorAll('.c-fill').forEach((bar, i) => {
+      setTimeout(() => {
+        bar.style.transition = 'width 1s ease';
+        bar.style.width = bar.getAttribute('data-w') + '%';
+      }, 150 + i * 180);
+    });
+  }
+}, { threshold: 0.25 }).observe(meterEl);
+</script>
+</body>
+</html>

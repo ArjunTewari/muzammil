@@ -1,6 +1,6 @@
 'use client'
 
-// Per-project file memory — files Muzammil (or an employee) attaches to a
+// Per-project file memory — files the founder (or an employee) attaches to a
 // project so its context sticks around. For this demo the files are stored
 // and shown, not yet parsed into any agent prompt — that wiring comes later.
 

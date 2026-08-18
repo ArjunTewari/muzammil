@@ -14,7 +14,7 @@ export interface AssignedProject {
   title: string
   client: string
   brief: ProjectBrief
-  instructions: string[] // Muzammil's verbatim instructions
+  instructions: string[] // the founder's verbatim instructions
   assignedTo: string // employeeId
   status: AssignedStatus
   createdAt: number

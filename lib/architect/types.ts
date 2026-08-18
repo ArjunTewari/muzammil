@@ -1,5 +1,5 @@
 // Shared types for the Architect agent — the thinking interviewer that
-// turns Muzammil's intent into a structured, assignable project brief.
+// turns the founder's intent into a structured, assignable project brief.
 
 import type { DeliverableType } from '../deliverable-type'
 

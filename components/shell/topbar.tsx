@@ -45,7 +45,7 @@ export function Topbar({
             className="text-[var(--color-ink)] text-xs font-semibold"
             style={{ fontFamily: 'var(--font-instrument-serif)' }}
           >
-            M
+            S
           </span>
         </div>
         <span

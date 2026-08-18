@@ -25,7 +25,7 @@ Copy `.env.example` to `.env.local`. With no control-service URL, development lo
 
 ## MVP wedge — Agent Studio (`/studio`)
 
-A **self-contained**, ship-today slice built to prove instant value to the owner (no control service required). Muzammil **builds a trainable agent himself**: he defines its **goal, task, and rules**, then runs inputs, checks the result, and corrects it — corrections and rules become per-agent memory injected into every future run, so it visibly gets smarter. A live counter (runs · risks caught · time saved) makes the ROI obvious. It ships seeded with a ready-to-use **SEBI & AMFI Compliance Guardian**, but agents aren't fixed to any preset roles.
+A **self-contained**, ship-today slice built to prove instant value to the owner (no control service required). The founder **builds a trainable agent themselves**: they define its **goal, task, and rules**, then run inputs, check the result, and correct it — corrections and rules become per-agent memory injected into every future run, so it visibly gets smarter. A live counter (runs · risks caught · time saved) makes the ROI obvious. It ships seeded with a ready-to-use **SEBI & AMFI Compliance Guardian**, but agents aren't fixed to any preset roles.
 
 - **Runtime:** `app/api/studio/run/route.ts` calls the Anthropic Messages API directly with **extended thinking** (mirrors `/api/architect`); falls back to a deterministic BFSI red-flag simulation when `ANTHROPIC_API_KEY` is absent, so the demo never breaks.
 - **State:** `lib/studio/*` on `localStorage` for the demo — shapes are forward-compatible with the control service's agent-scoped memory (`PlatformMemory.scope:'agent'`), so this can migrate onto `/api/v1` later without a redesign.

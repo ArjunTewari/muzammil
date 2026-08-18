@@ -138,7 +138,7 @@ export function EmployeeWorkspace({
         </div>
       </motion.div>
 
-      {/* Projects Muzammil assigned via the Architect */}
+      {/* Projects the founder assigned via the Architect */}
       <AssignedProjects employeeId={user.id} viewedByMaster={viewedByMaster} />
 
       {/* The chat — the single surface for the whole agent suite */}

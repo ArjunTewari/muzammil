@@ -1,4 +1,4 @@
-// Agent Studio — Muzammil builds a trainable agent by defining its goal, task
+// Agent Studio — the founder builds a trainable agent by defining its goal, task
 // and rules, then runs inputs, checks results, and corrects it. Corrections +
 // rules become per-agent memory injected into every future run.
 

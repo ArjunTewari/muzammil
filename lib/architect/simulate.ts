@@ -71,25 +71,41 @@ function pickOwner(req: ArchitectRequest, client?: string): { employeeId: string
   return { employeeId: 'divya', reason: 'Assigned to Divya as a capable generalist.' }
 }
 
-// Naive extraction: assign the latest user message to the first unfilled slot,
-// in interview order. Deterministic and good enough for an offline demo.
+const KNOWN_CLIENTS = ['Axis MF', 'Kotak MF', 'HDFC AMC', 'DSP MF', 'Motilal Oswal', 'Nippon MF', 'Tata MF', 'Invesco MF']
+
+// Pull whatever concrete signals are unambiguous wherever they appear in the
+// message, so a client-chip click or a single information-dense message both
+// register correctly instead of being swallowed whole by one slot.
+function extractSignals(text: string): Partial<BriefSlots> {
+  const found: Partial<BriefSlots> = {}
+  const client = KNOWN_CLIENTS.find((c) => text.toLowerCase().includes(c.toLowerCase()))
+  if (client) found.client = client
+  const budget = text.match(/₹?\s*[\d.]+\s*(cr|crore|lakh|lac|l)\b/i)
+  if (budget) found.budget = budget[0].trim()
+  const timeline = text.match(/\b\d+\s*(day|week|month)s?\b/i)
+  if (timeline) found.timeline = timeline[0].trim()
+  const deliverables = text.match(/\b\d+\s*(?:[a-z]+\s+){0,2}(reels?|statics?|posts?|videos?|carousels?|creatives?)\b/i)
+  if (deliverables) found.deliverables = deliverables[0].trim()
+  return found
+}
+
+// Extract whatever signals we can find, then — for whichever slot the
+// interview is still waiting on — fall back to the raw message as its
+// answer. Deterministic and good enough for an offline demo.
 function absorbAnswer(slots: BriefSlots, lastUser: string | undefined): BriefSlots {
   if (!lastUser) return slots
+  const next = { ...slots, ...extractSignals(lastUser) }
   const order: (keyof BriefSlots)[] = [...REQUIRED_SLOTS, ...ENRICHERS]
-  const next = order.find((k) => !slots[k])
-  if (!next) return slots
-  if (next === 'deliverableType') return { ...slots, deliverableType: inferDeliverableType(lastUser) }
-  return { ...slots, [next]: lastUser.trim() }
+  const pending = order.find((k) => !next[k])
+  if (!pending) return next
+  if (pending === 'deliverableType') return { ...next, deliverableType: inferDeliverableType(lastUser) }
+  return { ...next, [pending]: lastUser.trim() }
 }
 
 export function simulateTurn(req: ArchitectRequest): { turn: ArchitectTurn; turnNumber: number } {
   const userTurns = req.messages.filter((m) => m.role === 'user').length
   const lastUser = [...req.messages].reverse().find((m) => m.role === 'user')?.content
-
-  // The first user message is "I want to create a new project" — treat as trigger,
-  // not a slot answer, so don't absorb it into `client`.
-  const slots =
-    userTurns <= 1 ? { ...req.slots } : absorbAnswer({ ...req.slots }, lastUser)
+  const slots = absorbAnswer({ ...req.slots }, lastUser)
 
   const missingRequired = REQUIRED_SLOTS.filter((k) => !slots[k])
   const nextEnricher = ENRICHERS.find((k) => !slots[k])
@@ -112,6 +128,16 @@ export function simulateTurn(req: ArchitectRequest): { turn: ArchitectTurn; turn
 
   // Finalize
   const client = slots.client ?? 'the client'
+  // Free-text answers can be a full sentence; when we splice them into a
+  // template sentence, use just the first clause so the grammar holds up.
+  const firstClause = (text: string | undefined, fallback: string, maxLen = 60): string => {
+    if (!text) return fallback
+    const clause = text.split(/[.!?]/)[0].trim()
+    return clause.length > 0 ? clause.slice(0, maxLen) : fallback
+  }
+  const objectiveTitle = (slots.objective ?? 'New Campaign')
+    .replace(new RegExp(`^${client.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}[,\\s—-]*`, 'i'), '')
+    .trim()
   const { value: budget, assumed: budgetAssumed } = parseBudget(slots.budget)
   const assumptions: string[] = []
   if (budgetAssumed) assumptions.push('Budget not specified — assumed ₹5L as a mid-range campaign default.')
@@ -138,10 +164,10 @@ export function simulateTurn(req: ArchitectRequest): { turn: ArchitectTurn; turn
       updatedSlots: slots,
       decision: 'finalize',
       brief: {
-        title: `${client} — ${(slots.objective ?? 'New Campaign').slice(0, 48)}`,
+        title: `${client} — ${objectiveTitle.slice(0, 48) || 'New Campaign'}`,
         client,
         objective: slots.objective ?? 'Drive awareness and consideration.',
-        decodedAsk: `Beyond the literal ask, the real objective is to move ${slots.audience ?? 'the target investor'} from passive awareness to action for ${client}, using ${deliverables.join(', ')}.`,
+        decodedAsk: `Beyond the literal ask, the real objective is to move ${firstClause(slots.audience, 'the target investor')} from passive awareness to action for ${client}, using ${deliverables.join(', ')}.`,
         deliverables,
         deliverableType: slots.deliverableType ?? inferDeliverableType(slots.deliverables ?? ''),
         budget,

@@ -33,7 +33,7 @@ export function getProjectRows(user: AppUser): ProjectRow[] {
     })
   }
 
-  // Operators: their own running campaign first, then anything Muzammil has
+  // Operators: their own running campaign first, then anything the founder has
   // freshly assigned via the Architect — both live at /my-work.
   const rows: ProjectRow[] = []
   const base = getEmployeeProject(user.id)

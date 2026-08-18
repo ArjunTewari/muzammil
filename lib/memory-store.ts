@@ -2,7 +2,7 @@
 
 import { allEmployeeProjects } from './employee-projects'
 
-// Learning memory. Two sources: (1) Muzammil's instructions, (2) every
+// Learning memory. Two sources: (1) the founder's instructions, (2) every
 // approval/rejection WITH the reason why. Injected into every Architect
 // session so the system gets sharper each job.
 //

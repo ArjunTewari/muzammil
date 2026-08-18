@@ -66,7 +66,7 @@ export default function ClientsPage() {
                         {client.name}
                       </p>
                       <p className="text-xs text-[var(--color-text-tertiary)] mt-0.5">
-                        {formatLakhs(client.retainerValue)}/mo · {client.activeProjects} projects
+                        {formatLakhs(client.retainerValue)}/mo · {client.activeProjects} project{client.activeProjects === 1 ? '' : 's'}
                       </p>
                     </div>
                     <Badge variant={sb.variant}>{sb.label}</Badge>

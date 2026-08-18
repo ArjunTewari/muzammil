@@ -50,7 +50,8 @@ export async function POST(request: Request) {
       body: JSON.stringify({
         model: MODEL,
         max_tokens: 4000,
-        thinking: { type: 'enabled', budget_tokens: 1500 },
+        thinking: { type: 'adaptive' },
+        output_config: { effort: 'medium' },
         system: buildAgentPrompt(req.agent, memory),
         tools: [agentRunTool],
         tool_choice: { type: 'auto' },

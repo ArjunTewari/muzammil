@@ -39,7 +39,8 @@ export async function POST(request: Request) {
         max_tokens: 4000,
         // Extended thinking = the "thinking agent". With thinking on, tool_choice
         // MUST be auto (cannot force a tool) and temperature must be default.
-        thinking: { type: 'enabled', budget_tokens: 1500 },
+        thinking: { type: 'adaptive' },
+        output_config: { effort: 'medium' },
         system: buildSystemPrompt(req),
         tools: [architectTool],
         tool_choice: { type: 'auto' },
